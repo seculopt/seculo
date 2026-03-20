@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Choose your Século Explorer plan. Search Portugal's property market across multiple portals, with map layers, GIS data, and export tools." />
+  <title>Plans &amp; Pricing — Século Explorer</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       NAVIGATION
+  ══════════════════════════════════════════ -->
+  <nav class="site-nav" id="site-nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="Século Explorer — Home">
+        <img src="assets/logo-light.svg" alt="Século Explorer" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" data-en="Home" data-pt="Início">Home</a></li>
+        <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona">How It Works</a></li>
+        <li><a href="index.html#use-cases" data-en="Use Cases" data-pt="Casos de Uso">Use Cases</a></li>
+        <li>
+          <a href="products.html" class="btn btn-outline" data-en="Start Searching" data-pt="Começar a Procurar">Start Searching</a>
+        </li>
+      </ul>
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <span>|</span>
+        <button class="lang-btn" data-lang="pt">PT</button>
+      </div>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+
+  <!-- ══════════════════════════════════════════
+       PAGE HEADER
+  ══════════════════════════════════════════ -->
+  <section class="pricing-hero">
+    <div class="container">
+      <span class="section-label" data-en="Plans &amp; Pricing" data-pt="Planos e Preços">Plans &amp; Pricing</span>
+      <h1
+        data-en="The whole Portuguese property market. Your terms."
+        data-pt="Todo o mercado imobiliário português. Nas suas condições.">The whole Portuguese property market. Your terms.</h1>
+      <p class="pricing-hero-sub"
+        data-en="Start free. Upgrade when you're ready. No password — access is always sent to your inbox."
+        data-pt="Comece gratuitamente. Faça upgrade quando estiver pronto. Sem palavra-passe — o acesso é sempre enviado para a sua caixa de entrada.">Start free. Upgrade when you're ready. No password — access is always sent to your inbox.</p>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+       PRICING CARDS
+  ══════════════════════════════════════════ -->
+  <section class="section pricing-section">
+    <div class="container">
+      <div class="plans-grid">
+
+        <!-- Free -->
+        <div class="plan-card">
+          <div class="plan-header">
+            <span class="plan-name" data-en="Free" data-pt="Grátis">Free</span>
+            <div class="plan-price">
+              <span class="plan-amount">0</span>
+              <span class="plan-currency">EUR</span>
+            </div>
+            <span class="plan-period" data-en="No card required" data-pt="Sem cartão necessário">No card required</span>
+          </div>
+          <ul class="plan-highlights">
+            <li data-en="2 portals" data-pt="2 portais">2 portals</li>
+            <li data-en="20 results per search" data-pt="20 resultados por pesquisa">20 results per search</li>
+            <li data-en="Interactive map" data-pt="Mapa interativo">Interactive map</li>
+          </ul>
+          <a href="https://app.seculopt.com/engine?tier=free" class="btn btn-outline plan-cta"
+            data-en="Start for Free" data-pt="Começar Gratuitamente">Start for Free</a>
+        </div>
+
+        <!-- Básico -->
+        <div class="plan-card">
+          <div class="plan-header">
+            <span class="plan-name" data-en="Basic" data-pt="Básico">Basic</span>
+            <div class="plan-price">
+              <span class="plan-amount">5</span>
+              <span class="plan-currency">EUR</span>
+            </div>
+            <span class="plan-period" data-en="per month" data-pt="por mês">per month</span>
+          </div>
+          <ul class="plan-highlights">
+            <li data-en="5 portals" data-pt="5 portais">5 portals</li>
+            <li data-en="50 results per search" data-pt="50 resultados por pesquisa">50 results per search</li>
+            <li data-en="Distance radius + POI" data-pt="Raio de distância + POI">Distance radius + POI</li>
+            <li data-en="CSV export" data-pt="Exportação CSV">CSV export</li>
+          </ul>
+          <button class="btn btn-outline plan-cta" data-tier="basic"
+            data-en="Get Basic" data-pt="Obter Básico">Get Basic</button>
+        </div>
+
+        <!-- Standard — highlighted -->
+        <div class="plan-card plan-card--featured">
+          <div class="plan-badge" data-en="Most Popular" data-pt="Mais Popular">Most Popular</div>
+          <div class="plan-header">
+            <span class="plan-name" data-en="Standard" data-pt="Standard">Standard</span>
+            <div class="plan-price">
+              <span class="plan-amount">10</span>
+              <span class="plan-currency">EUR</span>
+            </div>
+            <span class="plan-period" data-en="per month" data-pt="por mês">per month</span>
+          </div>
+          <ul class="plan-highlights">
+            <li data-en="10 portals" data-pt="10 portais">10 portals</li>
+            <li data-en="100 results per search" data-pt="100 resultados por pesquisa">100 results per search</li>
+            <li data-en="DT Isochrones (time radius)" data-pt="Isócronas DT (raio de tempo)">DT Isochrones (time radius)</li>
+            <li data-en="CSV with GIS data" data-pt="CSV com dados GIS">CSV with GIS data</li>
+          </ul>
+          <button class="btn btn-primary plan-cta" data-tier="standard"
+            data-en="Get Standard" data-pt="Obter Standard">Get Standard</button>
+        </div>
+
+        <!-- Pro -->
+        <div class="plan-card">
+          <div class="plan-header">
+            <span class="plan-name">Pro</span>
+            <div class="plan-price">
+              <span class="plan-amount">25</span>
+              <span class="plan-currency">EUR</span>
+            </div>
+            <span class="plan-period" data-en="per month" data-pt="por mês">per month</span>
+          </div>
+          <ul class="plan-highlights">
+            <li data-en="20 portals" data-pt="20 portais">20 portals</li>
+            <li data-en="250 results per search" data-pt="250 resultados por pesquisa">250 results per search</li>
+            <li data-en="GIS Map Layers" data-pt="Camadas GIS">GIS Map Layers</li>
+            <li data-en="PDF analysis report" data-pt="Relatório PDF de análise">PDF analysis report</li>
+          </ul>
+          <button class="btn btn-outline plan-cta" data-tier="pro"
+            data-en="Get Pro" data-pt="Obter Pro">Get Pro</button>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="plan-card">
+          <div class="plan-header">
+            <span class="plan-name" data-en="Enterprise" data-pt="Empresa">Enterprise</span>
+            <div class="plan-price">
+              <span class="plan-amount">500</span>
+              <span class="plan-currency">EUR</span>
+            </div>
+            <span class="plan-period" data-en="per month" data-pt="por mês">per month</span>
+          </div>
+          <ul class="plan-highlights">
+            <li data-en="50 portals" data-pt="50 portais">50 portals</li>
+            <li data-en="500 results per search" data-pt="500 resultados por pesquisa">500 results per search</li>
+            <li data-en="AI Consultant" data-pt="Consultor IA">AI Consultant</li>
+            <li data-en="PDF Agent report" data-pt="Relatório PDF do Agente">PDF Agent report</li>
+          </ul>
+          <button class="btn btn-outline plan-cta" data-tier="enterprise"
+            data-en="Get Enterprise" data-pt="Obter Enterprise">Get Enterprise</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+       FEATURE COMPARISON TABLE
+  ══════════════════════════════════════════ -->
+  <section class="section compare-section">
+    <div class="container">
+
+      <div class="compare-header">
+        <h2 data-en="Full Feature Comparison" data-pt="Comparação Completa de Funcionalidades">Full Feature Comparison</h2>
+        <p data-en="Everything included in each plan, side by side." data-pt="Tudo incluído em cada plano, lado a lado.">Everything included in each plan, side by side.</p>
+      </div>
+
+      <!-- Mobile plan tabs — hidden on desktop -->
+      <div class="compare-tabs" role="tablist">
+        <button class="compare-tab" data-col="2" data-en="Free" data-pt="Grátis">Free</button>
+        <button class="compare-tab" data-col="3" data-en="Basic" data-pt="Básico">Basic</button>
+        <button class="compare-tab compare-tab--featured compare-tab--active" data-col="4" data-en="Standard" data-pt="Standard">Standard</button>
+        <button class="compare-tab" data-col="5">Pro</button>
+        <button class="compare-tab" data-col="6" data-en="Enterprise" data-pt="Empresa">Enterprise</button>
+      </div>
+
+      <div class="compare-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th class="compare-feature-col" data-en="Feature" data-pt="Funcionalidade">Feature</th>
+              <th data-en="Free" data-pt="Grátis">Free</th>
+              <th data-en="Basic" data-pt="Básico">Basic</th>
+              <th class="compare-featured" data-en="Standard" data-pt="Standard">Standard</th>
+              <th>Pro</th>
+              <th data-en="Enterprise" data-pt="Empresa">Enterprise</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr class="compare-group-row">
+              <td colspan="6" data-en="Search" data-pt="Pesquisa">Search</td>
+            </tr>
+            <tr>
+              <td data-en="Portals searched" data-pt="Portais pesquisados">Portals searched</td>
+              <td><span class="compare-val">2</span></td>
+              <td><span class="compare-val">5</span></td>
+              <td class="compare-featured"><span class="compare-val">10</span></td>
+              <td><span class="compare-val">20</span></td>
+              <td><span class="compare-val">50</span></td>
+            </tr>
+            <tr>
+              <td data-en="Results per search" data-pt="Resultados por pesquisa">Results per search</td>
+              <td><span class="compare-val">20</span></td>
+              <td><span class="compare-val">50</span></td>
+              <td class="compare-featured"><span class="compare-val">100</span></td>
+              <td><span class="compare-val">250</span></td>
+              <td><span class="compare-val">500</span></td>
+            </tr>
+            <tr>
+              <td data-en="Duplicate removal" data-pt="Remoção de duplicados">Duplicate removal</td>
+              <td><span class="compare-no">—</span></td>
+              <td><span class="compare-no">—</span></td>
+              <td class="compare-featured"><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+            </tr>
+            <tr>
+              <td data-en="Interactive map" data-pt="Mapa interativo">Interactive map</td>
+              <td><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+              <td class="compare-featured"><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+            </tr>
+
+            <tr class="compare-group-row">
+              <td colspan="6" data-en="Location Intelligence" data-pt="Inteligência de Localização">Location Intelligence</td>
+            </tr>
+            <tr>
+              <td data-en="Distance Radius" data-pt="Raio de Distância">Distance Radius</td>
+              <td><span class="compare-no">—</span></td>
+              <td><span class="compare-yes">✓</span></td>
+              <td class="compare-featured"><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+            </tr>
+            <tr>
+              <td data-en="DT Isochrones (time radius)" data-pt="Isócronas DT (raio de tempo)">DT Isochrones (time radius)</td>
+              <td><span class="compare-no">—</span></td>
+              <td><span class="compare-no">—</span></td>
+              <td class="compare-featured"><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+            </tr>
+            <tr>
+              <td data-en="POI (Points of Interest)" data-pt="POI (Pontos de Interesse)">POI (Points of Interest)</td>
+              <td><span class="compare-no">—</span></td>
+              <td><span class="compare-yes">✓</span></td>
+              <td class="compare-featured"><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+            </tr>
+            <tr>
+              <td
+                data-en="GIS Map Layers (population, education, land use, flood zones &amp; more)"
+                data-pt="Camadas GIS (população, educação, uso do solo, zonas inundáveis e mais)">GIS Map Layers (population, education, land use, flood zones &amp; more)</td>
+              <td><span class="compare-no">—</span></td>
+              <td><span class="compare-no">—</span></td>
+              <td class="compare-featured"><span class="compare-no">—</span></td>
+              <td><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+            </tr>
+
+            <tr class="compare-group-row">
+              <td colspan="6" data-en="Export" data-pt="Exportação">Export</td>
+            </tr>
+            <tr>
+              <td
+                data-en="CSV Export — search results &amp; parameter comparison"
+                data-pt="Exportação CSV — resultados e comparação de parâmetros">CSV Export — search results &amp; parameter comparison</td>
+              <td><span class="compare-no">—</span></td>
+              <td><span class="compare-yes">✓</span></td>
+              <td class="compare-featured"><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+            </tr>
+            <tr>
+              <td
+                data-en="CSV + Location Analysis (GIS layers &amp; proximity data)"
+                data-pt="CSV + Análise de Localização (camadas GIS e dados de proximidade)">CSV + Location Analysis (GIS layers &amp; proximity data)</td>
+              <td><span class="compare-no">—</span></td>
+              <td><span class="compare-no">—</span></td>
+              <td class="compare-featured"><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+            </tr>
+            <tr>
+              <td data-en="PDF analysis report" data-pt="Relatório PDF de análise">PDF analysis report</td>
+              <td><span class="compare-no">—</span></td>
+              <td><span class="compare-no">—</span></td>
+              <td class="compare-featured"><span class="compare-no">—</span></td>
+              <td><span class="compare-yes">✓</span></td>
+              <td><span class="compare-yes">✓</span></td>
+            </tr>
+
+            <tr class="compare-group-row">
+              <td colspan="6" data-en="AI &amp; Advanced" data-pt="IA e Avançado">AI &amp; Advanced</td>
+            </tr>
+            <tr>
+              <td
+                data-en="AI Consultant — full property &amp; market analysis based on your search data"
+                data-pt="Consultor IA — análise completa de mercado e imóveis com base nos seus dados">AI Consultant — full property &amp; market analysis based on your search data</td>
+              <td><span class="compare-no">—</span></td>
+              <td><span class="compare-no">—</span></td>
+              <td class="compare-featured"><span class="compare-no">—</span></td>
+              <td><span class="compare-no">—</span></td>
+              <td><span class="compare-yes">✓</span></td>
+            </tr>
+
+            <tr class="compare-cta-row">
+              <td></td>
+              <td>
+                <a href="https://app.seculopt.com/engine?tier=free" class="btn btn-outline compare-plan-btn"
+                  data-en="Start Free" data-pt="Começar Grátis">Start Free</a>
+              </td>
+              <td>
+                <button class="btn btn-outline compare-plan-btn" data-tier="basic"
+                  data-en="Get Basic" data-pt="Obter Básico">Get Basic</button>
+              </td>
+              <td class="compare-featured">
+                <button class="btn btn-primary compare-plan-btn" data-tier="standard"
+                  data-en="Get Standard" data-pt="Obter Standard">Get Standard</button>
+              </td>
+              <td>
+                <button class="btn btn-outline compare-plan-btn" data-tier="pro"
+                  data-en="Get Pro" data-pt="Obter Pro">Get Pro</button>
+              </td>
+              <td>
+                <button class="btn btn-outline compare-plan-btn" data-tier="enterprise"
+                  data-en="Get Enterprise" data-pt="Obter Enterprise">Get Enterprise</button>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo">Século Explorer</span>
+          <p class="footer-tagline"
+            data-en="Find your home across Portugal's top property portals at once."
+            data-pt="Encontre a sua casa nos principais portais imobiliários portugueses de uma vez.">Find your home across Portugal's top property portals at once.</p>
+        </div>
+        <div>
+          <p class="footer-heading" data-en="Navigation" data-pt="Navegação">Navigation</p>
+          <ul class="footer-links">
+            <li><a href="index.html" data-en="Home" data-pt="Início">Home</a></li>
+            <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona">How It Works</a></li>
+            <li><a href="index.html#use-cases" data-en="Use Cases" data-pt="Casos de Uso">Use Cases</a></li>
+            <li><a href="contact.html" data-en="Contact" data-pt="Contacto">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-heading" data-en="Legal" data-pt="Legal">Legal</p>
+          <ul class="footer-links">
+            <li><a href="privacy-policy.html" data-en="Privacy Policy" data-pt="Política de Privacidade">Privacy Policy</a></li>
+            <li><a href="terms.html" data-en="Terms &amp; Conditions" data-pt="Termos e Condições">Terms &amp; Conditions</a></li>
+            <li><a href="cookie-policy.html" data-en="Cookie Policy" data-pt="Política de Cookies">Cookie Policy</a></li>
+            <li><a href="legal-notice.html" data-en="Legal Notice" data-pt="Aviso Legal">Legal Notice</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <p class="footer-heading" data-en="Get Started" data-pt="Começar">Get Started</p>
+          <a href="products.html" class="btn btn-outline" data-en="Start Searching" data-pt="Começar a Procurar">Start Searching</a>
+          <a href="mailto:privacy@seculopt.com" class="footer-email">privacy@seculopt.com</a>
+        </div>
+      </div>
+      <hr class="footer-divider" />
+      <div class="footer-bottom">
+        <span class="footer-copy"
+          data-en="&copy; 2026 S&eacute;culo Explorer. All rights reserved."
+          data-pt="&copy; 2026 S&eacute;culo Explorer. Todos os direitos reservados.">&copy; 2026 S&eacute;culo Explorer. All rights reserved.</span>
+        <div class="footer-lang">
+          <button class="lang-btn active" data-lang="en">EN</button>
+          <span>|</span>
+          <button class="lang-btn" data-lang="pt">PT</button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ══════════════════════════════════════════
+       SCRIPTS
+  ══════════════════════════════════════════ -->
+  <script src="js/nav.js"></script>
+  <script src="js/lang.js"></script>
+  <script src="js/cookies.js"></script>
+  <script>
+    /* ── Mobile comparison table: plan tab switcher ── */
+    (function () {
+      var tabs  = document.querySelectorAll('.compare-tab');
+      var table = document.querySelector('.compare-table');
+      if (!tabs.length || !table) return;
+
+      function activateCol(colIndex) {
+        // Remove active class from all cells
+        table.querySelectorAll('.mobile-active').forEach(function (el) {
+          el.classList.remove('mobile-active');
+        });
+        // Mark the selected column's cells
+        table.querySelectorAll('tr').forEach(function (row) {
+          var cell = row.children[colIndex - 1];
+          if (cell) cell.classList.add('mobile-active');
+        });
+        // Update tab states
+        tabs.forEach(function (t) {
+          t.classList.toggle('compare-tab--active', t.dataset.col === String(colIndex));
+        });
+      }
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          activateCol(parseInt(tab.dataset.col));
+        });
+      });
+
+      // Init Standard (col 4) as active on mobile
+      if (window.innerWidth <= 720) activateCol(4);
+      window.addEventListener('resize', function () {
+        if (window.innerWidth <= 720) activateCol(4);
+      });
+    })();
+  </script>
+
+
+  <!-- ══════════════════════════════════════════
+       PAGE STYLES
+  ══════════════════════════════════════════ -->
+  <style>
+
+    /* ── Pricing Hero ── */
+    .pricing-hero {
+      background: var(--color-primary);
+      background-image: repeating-linear-gradient(
+        135deg,
+        transparent, transparent 59px,
+        rgba(200, 169, 110, 0.06) 59px,
+        rgba(200, 169, 110, 0.06) 60px
+      );
+      padding: 96px 0 80px;
+      text-align: center;
+    }
+
+    .pricing-hero .section-label {
+      color: var(--color-accent);
+      margin-bottom: 20px;
+    }
+
+    .pricing-hero h1 {
+      color: var(--color-white);
+      font-size: 2.8rem;
+      max-width: 640px;
+      margin: 0 auto 20px;
+    }
+
+    .pricing-hero-sub {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 1rem;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ── Plans Grid ── */
+    .pricing-section {
+      background: var(--color-bg);
+    }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .plan-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-divider);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      position: relative;
+    }
+
+    .plan-card--featured {
+      background: var(--color-primary);
+      border-color: var(--color-accent);
+      padding-top: 44px;
+    }
+
+    .plan-badge {
+      position: absolute;
+      top: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--color-accent);
+      color: var(--color-primary);
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 0 0 var(--radius) var(--radius);
+      white-space: nowrap;
+    }
+
+    .plan-header {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .plan-name {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
+    .plan-card--featured .plan-name {
+      color: var(--color-white);
+    }
+
+    .plan-price {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .plan-amount {
+      font-family: var(--font-mono);
+      font-size: 2.4rem;
+      font-weight: 600;
+      color: var(--color-accent);
+      line-height: 1;
+    }
+
+    .plan-currency {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--color-accent);
+    }
+
+    .plan-period {
+      font-size: 0.8rem;
+      color: var(--color-mid);
+    }
+
+    .plan-card--featured .plan-period {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .plan-highlights {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .plan-highlights li {
+      font-size: 0.875rem;
+      color: var(--color-mid);
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .plan-highlights li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--color-accent);
+      font-weight: 600;
+    }
+
+    .plan-card--featured .plan-highlights li {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .plan-cta {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .plan-card--featured .btn-primary {
+      background: var(--color-accent);
+      color: var(--color-primary);
+    }
+
+    .plan-card--featured .btn-primary:hover {
+      background: var(--color-white);
+    }
+
+    /* ── Compare Section ── */
+    .compare-section {
+      background: var(--color-white);
+    }
+
+    .compare-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .compare-header h2 {
+      margin-bottom: 10px;
+    }
+
+    .compare-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .compare-table {
+      width: 100%;
+      min-width: 700px;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .compare-table thead tr {
+      border-bottom: 2px solid var(--color-accent);
+    }
+
+    .compare-table thead th {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      padding: 14px 16px;
+      text-align: center;
+    }
+
+    .compare-table thead th.compare-feature-col {
+      text-align: left;
+    }
+
+    .compare-table td {
+      padding: 12px 16px;
+      text-align: center;
+      color: var(--color-mid);
+      border-bottom: 1px solid var(--color-divider);
+      vertical-align: middle;
+    }
+
+    .compare-table td:first-child {
+      text-align: left;
+      color: var(--color-text);
+    }
+
+    .compare-table tbody tr:hover {
+      background: var(--color-bg);
+    }
+
+    .compare-group-row td {
+      background: var(--color-primary) !important;
+      color: var(--color-accent) !important;
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 10px 16px;
+      text-align: left !important;
+    }
+
+    .compare-featured {
+      background: rgba(200, 169, 110, 0.07);
+      border-left: 1px solid rgba(200, 169, 110, 0.25);
+      border-right: 1px solid rgba(200, 169, 110, 0.25);
+    }
+
+    thead th.compare-featured {
+      background: rgba(200, 169, 110, 0.12);
+      color: var(--color-accent) !important;
+    }
+
+    .compare-yes {
+      color: var(--color-accent);
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .compare-no {
+      color: var(--color-divider);
+    }
+
+    .compare-val {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--color-primary);
+      font-weight: 400;
+    }
+
+    .compare-cta-row td {
+      padding: 24px 16px;
+      border-bottom: none;
+    }
+
+    .compare-plan-btn {
+      width: 100%;
+      justify-content: center;
+      font-size: 0.82rem;
+      padding: 10px 12px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1100px) {
+      .plans-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* ── Mobile Plan Tabs ── */
+    .compare-tabs {
+      display: none;
+    }
+
+    @media (max-width: 720px) {
+      .plans-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .pricing-hero h1 {
+        font-size: 2rem;
+      }
+
+      /* Show tabs */
+      .compare-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 24px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+      .compare-tabs::-webkit-scrollbar { display: none; }
+
+      .compare-tab {
+        flex-shrink: 0;
+        padding: 8px 18px;
+        border: 1px solid var(--color-divider);
+        background: transparent;
+        border-radius: 100px;
+        font-family: var(--font-body);
+        font-size: 0.82rem;
+        color: var(--color-mid);
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s, border-color 0.15s;
+      }
+
+      .compare-tab--active {
+        background: var(--color-primary);
+        color: var(--color-white);
+        border-color: var(--color-primary);
+      }
+
+      .compare-tab--featured {
+        border-color: var(--color-accent);
+        color: var(--color-accent);
+      }
+
+      .compare-tab--featured.compare-tab--active {
+        background: var(--color-accent);
+        color: var(--color-primary);
+        border-color: var(--color-accent);
+      }
+
+      /* Hide non-active plan columns */
+      .compare-table td:not(:first-child):not(.mobile-active),
+      .compare-table th:not(:first-child):not(.mobile-active) {
+        display: none;
+      }
+
+      .compare-table {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .compare-wrap {
+        overflow-x: visible;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .plans-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+  </style>
+
+</body>
+</html>
