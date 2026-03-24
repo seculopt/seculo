@@ -4,7 +4,7 @@
    ============================================================ */
 
 (function () {
-  const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/general@neus42.com';
+  const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/hello@seculopt.com';
 
   const form       = document.getElementById('demo-form');
   const successMsg = document.getElementById('form-success');
