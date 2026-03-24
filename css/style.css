@@ -32,6 +32,12 @@
   padding: 0;
 }
 
+/* ── Prevent horizontal overflow on every page ── */
+html, body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
 ul, ol {
   list-style: none;
 }
@@ -103,6 +109,8 @@ a {
   transition: var(--transition);
   text-decoration: none;
   white-space: nowrap;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .btn-primary {
@@ -207,6 +215,8 @@ a {
   color: var(--color-white);
   border-color: var(--color-accent);
   margin-bottom: 16px;
+  white-space: normal;
+  width: 100%;
 }
 
 .footer-nav-col .btn-outline:hover {
@@ -275,6 +285,13 @@ a {
 }
 
 /* ── Responsive ── */
+@media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+}
+
 @media (max-width: 768px) {
   :root {
     --section-padding: 64px;

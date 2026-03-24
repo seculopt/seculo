@@ -27,17 +27,19 @@
         <img src="assets/logo-light.svg" alt="Século Explorer" />
       </a>
       <ul class="nav-links">
-        <li><a href="index.html" data-en="Home" data-pt="Início">Home</a></li>
-        <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona">How It Works</a></li>
-        <li><a href="index.html#use-cases" data-en="Use Cases" data-pt="Casos de Uso">Use Cases</a></li>
+        <li><a href="index.html" data-en="Home" data-pt="Início" data-es="Inicio">Home</a></li>
+        <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona" data-es="Cómo Funciona">How It Works</a></li>
+        <li><a href="index.html#use-cases" data-en="Use Cases" data-pt="Casos de Uso" data-es="Casos de Uso">Use Cases</a></li>
         <li>
-          <a href="contact.html" class="btn btn-outline" data-en="Request a Demo" data-pt="Pedir Demonstração">Request a Demo</a>
+          <a href="contact.html" class="btn btn-outline" data-en="Request a Demo" data-pt="Pedir Demonstração" data-es="Solicitar Demo">Request a Demo</a>
         </li>
       </ul>
       <div class="lang-toggle">
         <button class="lang-btn active" data-lang="en">EN</button>
         <span>|</span>
         <button class="lang-btn" data-lang="pt">PT</button>
+        <span>|</span>
+        <button class="lang-btn" data-lang="es">ES</button>
       </div>
       <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -52,9 +54,10 @@
   <section class="legal-hero">
     <div class="container">
       <span class="section-label">Legal</span>
-      <h1 data-en="Cookie Policy" data-pt="Política de Cookies">Cookie Policy</h1>
+      <h1 data-en="Cookie Policy" data-pt="Política de Cookies" data-es="Política de Cookies">Cookie Policy</h1>
       <p class="legal-hero-sub en-only">Effective date: March 17, 2026 &nbsp;·&nbsp; Século Florescente - Unipessoal Lda &nbsp;·&nbsp; NIF 515018422</p>
       <p class="legal-hero-sub pt-only">Data de entrada em vigor: 17 de Março de 2026 &nbsp;·&nbsp; Século Florescente - Unipessoal Lda &nbsp;·&nbsp; NIF 515018422</p>
+      <p class="legal-hero-sub es-only">Fecha de entrada en vigor: 17 de marzo de 2026 &nbsp;·&nbsp; Século Florescente - Unipessoal Lda &nbsp;·&nbsp; NIF 515018422</p>
     </div>
   </section>
 
@@ -190,6 +193,71 @@
 
 
   <!-- ══════════════════════════════════════════
+       CONTENT — SPANISH
+  ══════════════════════════════════════════ -->
+  <div class="legal-content es-only">
+    <div class="container">
+
+      <div class="legal-section">
+        <h2>3.1 Qué Son las Cookies</h2>
+        <p>Las cookies son pequeños archivos de texto almacenados en tu dispositivo cuando visitas un sitio web. Ayudan al sitio a recordar tus preferencias y cómo interactúas con él.</p>
+      </div>
+
+      <div class="legal-section">
+        <h2>3.2 Cookies que Utilizamos</h2>
+
+        <div class="cookie-table">
+          <div class="cookie-category">
+            <div class="cookie-category-header">
+              <h3>Cookies Esenciales</h3>
+              <span class="cookie-badge always">Siempre activas — no requieren consentimiento</span>
+            </div>
+            <ul class="legal-list">
+              <li><strong>Cookies de sesión:</strong> te mantienen autenticado durante tu visita.</li>
+              <li><strong>Cookies de seguridad:</strong> protección CSRF y prevención de fraude.</li>
+              <li><strong>Cookie de consentimiento:</strong> almacena tus preferencias de cookies (<code>seculo-consent</code>).</li>
+            </ul>
+          </div>
+
+          <div class="cookie-category">
+            <div class="cookie-category-header">
+              <h3>Cookies Funcionales</h3>
+              <span class="cookie-badge consent">Requieren consentimiento</span>
+            </div>
+            <ul class="legal-list">
+              <li><strong>Cookies de Stripe:</strong> establecidas por Stripe durante los flujos de pago para detección de fraude y procesamiento de pagos.</li>
+            </ul>
+          </div>
+
+          <div class="cookie-category">
+            <div class="cookie-category-header">
+              <h3>Cookies de Análisis</h3>
+              <span class="cookie-badge consent">Requieren consentimiento</span>
+            </div>
+            <ul class="legal-list">
+              <li>Se utilizan para entender cómo los visitantes usan el sitio (p. ej. páginas visitadas, tiempo en el sitio). Actualizaremos esta sección cuando se añadan herramientas de análisis específicas.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="legal-section">
+        <h2>3.3 Gestión de Cookies</h2>
+        <p>Puedes gestionar tus preferencias de cookies en cualquier momento a través del banner de consentimiento de cookies de nuestro sitio, o ajustando la configuración de tu navegador. Ten en cuenta que deshabilitar las cookies esenciales puede afectar a la funcionalidad del Servicio.</p>
+        <p>Para más información sobre la gestión de cookies, visita: <a href="https://www.aboutcookies.org" target="_blank" rel="noopener">www.aboutcookies.org</a></p>
+        <div class="cookie-revoke-box">
+          <p>Para cambiar tus preferencias de cookies, borra el almacenamiento local de tu navegador para este sitio o haz clic en el botón de abajo.</p>
+          <button class="btn btn-outline cookie-revoke-btn" onclick="localStorage.removeItem('seculo-consent'); window.location.reload();">
+            Restablecer preferencias de cookies
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
        FOOTER
   ══════════════════════════════════════════ -->
   <footer class="site-footer">
@@ -197,39 +265,41 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <span class="footer-logo">Século Explorer</span>
-          <p class="footer-tagline" data-en="Intelligent property search for the Portuguese market." data-pt="Pesquisa imobiliária inteligente para o mercado português.">Intelligent property search for the Portuguese market.</p>
+          <p class="footer-tagline" data-en="Intelligent property search for the Portuguese market." data-pt="Pesquisa imobiliária inteligente para o mercado português." data-es="Búsqueda inteligente de propiedades para el mercado portugués.">Intelligent property search for the Portuguese market.</p>
         </div>
         <div>
-          <p class="footer-heading" data-en="Navigation" data-pt="Navegação">Navigation</p>
+          <p class="footer-heading" data-en="Navigation" data-pt="Navegação" data-es="Navegación">Navigation</p>
           <ul class="footer-links">
-            <li><a href="index.html" data-en="Home" data-pt="Início">Home</a></li>
-            <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona">How It Works</a></li>
-            <li><a href="index.html#use-cases" data-en="Use Cases" data-pt="Casos de Uso">Use Cases</a></li>
-            <li><a href="contact.html" data-en="Contact" data-pt="Contacto">Contact</a></li>
+            <li><a href="index.html" data-en="Home" data-pt="Início" data-es="Inicio">Home</a></li>
+            <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona" data-es="Cómo Funciona">How It Works</a></li>
+            <li><a href="index.html#use-cases" data-en="Use Cases" data-pt="Casos de Uso" data-es="Casos de Uso">Use Cases</a></li>
+            <li><a href="contact.html" data-en="Contact" data-pt="Contacto" data-es="Contacto">Contact</a></li>
           </ul>
         </div>
         <div>
-          <p class="footer-heading" data-en="Legal" data-pt="Legal">Legal</p>
+          <p class="footer-heading" data-en="Legal" data-pt="Legal" data-es="Legal">Legal</p>
           <ul class="footer-links">
-            <li><a href="privacy-policy.html" data-en="Privacy Policy" data-pt="Política de Privacidade">Privacy Policy</a></li>
-            <li><a href="terms.html" data-en="Terms &amp; Conditions" data-pt="Termos e Condições">Terms &amp; Conditions</a></li>
-            <li><a href="cookie-policy.html" data-en="Cookie Policy" data-pt="Política de Cookies">Cookie Policy</a></li>
-            <li><a href="legal-notice.html" data-en="Legal Notice" data-pt="Aviso Legal">Legal Notice</a></li>
+            <li><a href="privacy-policy.html" data-en="Privacy Policy" data-pt="Política de Privacidade" data-es="Política de Privacidad">Privacy Policy</a></li>
+            <li><a href="terms.html" data-en="Terms &amp; Conditions" data-pt="Termos e Condições" data-es="Términos y Condiciones">Terms &amp; Conditions</a></li>
+            <li><a href="cookie-policy.html" data-en="Cookie Policy" data-pt="Política de Cookies" data-es="Política de Cookies">Cookie Policy</a></li>
+            <li><a href="legal-notice.html" data-en="Legal Notice" data-pt="Aviso Legal" data-es="Aviso Legal">Legal Notice</a></li>
           </ul>
         </div>
         <div class="footer-nav-col">
-          <p class="footer-heading" data-en="Get Started" data-pt="Começar">Get Started</p>
-          <a href="contact.html" class="btn btn-outline" data-en="Request a Demo" data-pt="Pedir Demonstração">Request a Demo</a>
+          <p class="footer-heading" data-en="Get Started" data-pt="Começar" data-es="Empezar">Get Started</p>
+          <a href="contact.html" class="btn btn-outline" data-en="Request a Demo" data-pt="Pedir Demonstração" data-es="Solicitar Demo">Request a Demo</a>
           <a href="mailto:privacy@seculopt.com" class="footer-email">privacy@seculopt.com</a>
         </div>
       </div>
       <hr class="footer-divider" />
       <div class="footer-bottom">
-        <span class="footer-copy" data-en="&copy; 2026 S&eacute;culo Explorer. All rights reserved." data-pt="&copy; 2026 S&eacute;culo Explorer. Todos os direitos reservados.">&copy; 2026 S&eacute;culo Explorer. All rights reserved.</span>
+        <span class="footer-copy" data-en="&copy; 2026 S&eacute;culo Explorer. All rights reserved." data-pt="&copy; 2026 S&eacute;culo Explorer. Todos os direitos reservados." data-es="&copy; 2026 S&eacute;culo Explorer. Todos los derechos reservados.">&copy; 2026 S&eacute;culo Explorer. All rights reserved.</span>
         <div class="footer-lang">
           <button class="lang-btn active" data-lang="en">EN</button>
           <span>|</span>
           <button class="lang-btn" data-lang="pt">PT</button>
+          <span>|</span>
+          <button class="lang-btn" data-lang="es">ES</button>
         </div>
       </div>
     </div>
@@ -250,6 +320,10 @@
   <style>
     html[lang="pt"] .en-only { display: none; }
     html[lang="en"] .pt-only { display: none; }
+    html[lang="es"] .en-only { display: none; }
+    html[lang="es"] .pt-only { display: none; }
+    html[lang="en"] .es-only { display: none; }
+    html[lang="pt"] .es-only { display: none; }
 
     .legal-hero {
       background: var(--color-primary);
