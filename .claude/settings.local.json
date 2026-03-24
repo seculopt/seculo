@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -rn \"Request a Demo\" *.html)",
+      "Bash(python3 -c \":*)"
+    ]
+  }
+}
