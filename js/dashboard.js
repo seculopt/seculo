@@ -95,8 +95,8 @@ function buildCard(prop) {
     </div>
     <div class="prop-footer">
       ${url ? `<a href="${escHtml(url)}" target="_blank" rel="noopener" class="prop-btn">View listing &#8599;</a>` : ''}
-      ${prop.share_id
-        ? `<button class="prop-btn share" data-share="${escHtml(prop.share_id)}">&#128279; Copy link</button>`
+      ${prop.is_public
+        ? `<button class="prop-btn share" data-share="${escHtml(prop.id)}">&#128279; Copy link</button>`
         : ''}
       <button class="prop-btn delete" data-delete="${escHtml(prop.id)}">Delete</button>
     </div>
@@ -106,7 +106,7 @@ function buildCard(prop) {
   const shareBtn = card.querySelector('[data-share]');
   if (shareBtn) {
     shareBtn.addEventListener('click', () => {
-      const shareUrl = `https://seculopt.com/share/${shareBtn.dataset.share}`;
+      const shareUrl = `https://seculopt.com/share.html?id=${shareBtn.dataset.share}`;
       navigator.clipboard.writeText(shareUrl).then(() => showToast('Link copied to clipboard'));
     });
   }
