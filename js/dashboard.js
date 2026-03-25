@@ -24,7 +24,7 @@ tierBadge.style.display = 'inline-block';
 
 // Update engine link — pass tokens in hash for cross-domain session (seculopt.com → seculo-api.vercel.app)
 const engineLink = document.getElementById('engineLink');
-engineLink.href = `${API}/#access_token=${encodeURIComponent(access_token)}&refresh_token=${encodeURIComponent(refresh_token)}&tier=${tier}`;
+engineLink.href = `${API}/?load_saved=1#access_token=${encodeURIComponent(access_token)}&refresh_token=${encodeURIComponent(refresh_token)}&tier=${tier}`;
 
 // ── Load properties ────────────────────────────────────────
 let properties = [];
