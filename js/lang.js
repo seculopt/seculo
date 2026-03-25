@@ -39,5 +39,6 @@
 
   // ── Initialise on page load ──
   const saved = localStorage.getItem('seculo-lang') || 'en';
-  setLang(saved);
+  const validLangs = ['en', 'pt', 'es'];
+  setLang(validLangs.includes(saved) ? saved : 'en');
 })();

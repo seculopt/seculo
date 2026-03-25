@@ -319,12 +319,14 @@
       <div class="nav-user" id="navUser" style="display:none;">
         <span class="nav-user-name" id="navUserName"></span>
         <span>·</span>
-        <button class="nav-signout" id="signOutBtn">Sign out</button>
+        <button class="nav-signout" id="signOutBtn" data-en="Sign out" data-pt="Sair" data-es="Cerrar sesión">Sign out</button>
       </div>
       <div class="lang-toggle">
         <button class="lang-btn active" data-lang="en">EN</button>
         <span>|</span>
         <button class="lang-btn" data-lang="pt">PT</button>
+        <span>|</span>
+        <button class="lang-btn" data-lang="es">ES</button>
       </div>
       <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -340,29 +342,29 @@
       <div class="dash-header">
         <div>
           <h1 class="dash-title">
-            My Properties
+            <span data-en="My Properties" data-pt="As minhas propriedades" data-es="Mis propiedades">My Properties</span>
             <span class="dash-tier" id="tierBadge" style="display:none;"></span>
           </h1>
           <p class="dash-meta" id="dashMeta"></p>
         </div>
         <div class="dash-actions">
-          <button class="btn btn-outline" id="copyAllBtn" style="display:none" onclick="copyAllLinks()">&#128203; Copiar todos os links</button>
-          <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" id="engineLink">Ver no mapa</a>
+          <button class="btn btn-outline" id="copyAllBtn" style="display:none" onclick="copyAllLinks()" data-en="&#128203; Copy all links" data-pt="&#128203; Copiar todos os links" data-es="&#128203; Copiar todos los links">&#128203; Copy all links</button>
+          <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" id="engineLink" data-en="View on map" data-pt="Ver no mapa" data-es="Ver en el mapa">View on map</a>
         </div>
       </div>
 
       <!-- Loading -->
       <div class="dash-loading" id="dashLoading">
         <div class="dash-spinner"></div>
-        <p>Loading your properties…</p>
+        <p data-en="Loading your properties…" data-pt="A carregar as suas propriedades…" data-es="Cargando tus propiedades…">Loading your properties…</p>
       </div>
 
       <!-- Empty state -->
       <div class="dash-empty" id="dashEmpty">
         <div class="dash-empty-icon">&#128278;</div>
-        <h2>No saved properties yet</h2>
-        <p>Use the engine to search for properties in Portugal. When you find one you like, click the bookmark button to save it here.</p>
-        <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary">Start searching</a>
+        <h2 data-en="No saved properties yet" data-pt="Sem propriedades guardadas" data-es="Sin propiedades guardadas">No saved properties yet</h2>
+        <p data-en="Use the engine to search for properties in Portugal. When you find one you like, click the bookmark button to save it here." data-pt="Usa o motor de busca para encontrar imóveis em Portugal. Quando encontrares um que gostes, clica no marcador para o guardar aqui." data-es="Usa el motor de búsqueda para encontrar propiedades en Portugal. Cuando encuentres una que te guste, haz clic en el marcador para guardarla aquí.">Use the engine to search for properties in Portugal. When you find one you like, click the bookmark button to save it here.</p>
+        <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" data-en="Start searching" data-pt="Começar a explorar" data-es="Empezar a explorar">Start searching</a>
       </div>
 
       <!-- Grid -->
