@@ -11,7 +11,7 @@ const message = document.getElementById('register-message');
 
 // If user is already logged in, redirect to dashboard
 supabase.auth.getSession().then(({ data: { session } }) => {
-  if (session) window.location.href = '/dashboard';
+  if (session) window.location.href = 'dashboard.html';
 });
 
 // Read ?action=share&prop=xxx from URL so we can redirect back after register
@@ -19,8 +19,8 @@ const params    = new URLSearchParams(window.location.search);
 const action    = params.get('action');
 const propId    = params.get('prop');
 const returnUrl = (action === 'share' && propId)
-  ? `/dashboard?action=share&prop=${propId}`
-  : '/dashboard';
+  ? `/dashboard.html?action=share&prop=${propId}`
+  : '/dashboard.html';
 
 form.addEventListener('submit', async function (e) {
   e.preventDefault();

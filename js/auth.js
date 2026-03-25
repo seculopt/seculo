@@ -10,7 +10,7 @@ const message = document.getElementById('login-message');
 
 // If user is already logged in, redirect to dashboard
 supabase.auth.getSession().then(({ data: { session } }) => {
-  if (session) window.location.href = '/dashboard';
+  if (session) window.location.href = 'dashboard.html';
 });
 
 form.addEventListener('submit', async function (e) {
@@ -29,7 +29,7 @@ form.addEventListener('submit', async function (e) {
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: 'https://seculopt.com/dashboard',
+      emailRedirectTo: 'https://seculopt.com/dashboard.html',
     },
   });
 
