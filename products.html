@@ -360,6 +360,7 @@
   <script src="js/nav.js"></script>
   <script src="js/lang.js"></script>
   <script src="js/cookies.js"></script>
+  <script src="js/utm.js"></script>
   <script>
     /* ── Checkout flow ── */
     (function () {
@@ -407,7 +408,7 @@
         fetch(API_BASE + '/api/create-checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tier: activeTier, email: email })
+          body: JSON.stringify(Object.assign({ tier: activeTier, email: email }, window.SECULO_UTM || {}))
         })
         .then(function (r) { return r.json(); })
         .then(function (data) {

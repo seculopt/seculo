@@ -36,11 +36,13 @@ form.addEventListener('submit', async function (e) {
   const lang = document.documentElement.lang || 'pt';
   btn.textContent = lang === 'pt' ? 'A criar conta...' : 'Creating account...';
 
+  const utm = (typeof window.SECULO_UTM === 'object') ? window.SECULO_UTM : {};
+
   const { error } = await supabase.auth.signUp({
     email,
     password: crypto.randomUUID(), // random password — user always uses magic link
     options: {
-      data: { full_name: name, tier: 'free' },
+      data: { full_name: name, tier: 'free', ...utm },
       emailRedirectTo: 'https://seculopt.com' + returnUrl,
     },
   });
