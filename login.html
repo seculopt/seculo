@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Log in to Século Explorer — access your saved properties and analyses." />
+  <title>Log In — Século Explorer</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+
+  <style>
+    .auth-page {
+      min-height: calc(100vh - 72px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      background: var(--color-bg);
+    }
+    .auth-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-divider);
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 4px 24px rgba(25,25,39,0.07);
+    }
+    .auth-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--color-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .auth-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .auth-subtitle {
+      color: var(--color-mid);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .auth-field {
+      margin-bottom: 1rem;
+    }
+    .auth-field label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--color-mid);
+      margin-bottom: 0.35rem;
+    }
+    .auth-field input {
+      width: 100%;
+      border: 1px solid var(--color-divider);
+      border-radius: 6px;
+      padding: 0.7rem 0.9rem;
+      font-size: 0.9rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--color-primary);
+      background: var(--color-white);
+      transition: border-color 0.15s;
+    }
+    .auth-field input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+    .auth-btn {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+      color: var(--color-mid);
+      font-size: 0.8rem;
+    }
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--color-divider);
+    }
+    .auth-alt {
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--color-mid);
+    }
+    .auth-alt a {
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+    .auth-alt a:hover { text-decoration: underline; }
+    .auth-message {
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      text-align: center;
+      display: none;
+    }
+    .auth-message--success {
+      background: #f0faf4;
+      border: 1px solid #a8d5b5;
+      color: #27664a;
+      display: block;
+    }
+    .auth-message--error {
+      background: #fdf2f2;
+      border: 1px solid #e8b4b4;
+      color: #c0392b;
+      display: block;
+    }
+    .auth-footer-note {
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--color-divider);
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--color-mid);
+    }
+    .auth-footer-note a { color: var(--color-mid); }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="site-nav" id="site-nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="Século Explorer — Home">
+        <img src="assets/logo-light.svg" alt="Século Explorer" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" data-en="Home" data-pt="Início">Home</a></li>
+        <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona">How It Works</a></li>
+        <li><a href="products.html" data-en="Plans" data-pt="Planos">Plans</a></li>
+        <li><a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-outline" data-en="Try Free" data-pt="Experimenta Grátis">Try Free</a></li>
+      </ul>
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <span>|</span>
+        <button class="lang-btn" data-lang="pt">PT</button>
+      </div>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- AUTH CARD -->
+  <main class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo">SÉCULO</div>
+
+      <div id="formView">
+        <h1 class="auth-title" data-en="Log in" data-pt="Entrar">Log in</h1>
+        <p class="auth-subtitle"
+          data-en="Enter your email. We'll send you a login link — no password needed."
+          data-pt="Introduz o teu email. Enviamos um link de acesso direto — sem password.">
+          Enter your email. We'll send you a login link — no password needed.
+        </p>
+
+        <form id="login-form">
+          <div class="auth-field">
+            <label data-en="Email address" data-pt="Endereço de email">Email address</label>
+            <input type="email" id="email-input" required
+              placeholder="email@example.com"
+              autocomplete="email" />
+          </div>
+          <button type="submit" id="send-btn" class="btn btn-primary auth-btn"
+            data-en="Send login link" data-pt="Enviar link de acesso">
+            Send login link
+          </button>
+        </form>
+
+        <p id="login-message" class="auth-message"></p>
+
+        <div class="auth-divider" data-en="or" data-pt="ou">or</div>
+        <p class="auth-alt">
+          <span data-en="Don't have an account?" data-pt="Ainda não tens conta?">Don't have an account?</span>
+          <a href="register.html" data-en="Register for free" data-pt="Registar grátis">Register for free</a>
+        </p>
+      </div>
+
+      <div class="auth-footer-note">
+        <a href="privacy-policy.html" data-en="Privacy Policy" data-pt="Política de Privacidade">Privacy Policy</a>
+        &nbsp;·&nbsp;
+        <a href="mailto:suporte@seculopt.com">suporte@seculopt.com</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- SCRIPTS -->
+  <script src="js/nav.js"></script>
+  <script src="js/lang.js"></script>
+  <script src="js/cookies.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script type="module" src="js/auth.js"></script>
+
+</body>
+</html>
