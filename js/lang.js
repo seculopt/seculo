@@ -1,44 +1,42 @@
 /* ============================================================
-   SÉCULO EXPLORER — Language Toggle (EN / PT)
+   SÉCULO EXPLORER — Language Toggle (EN / PT / ES)
    ============================================================ */
 
 (function () {
-  // All translatable elements have data-en and data-pt attributes
-  const translatables = document.querySelectorAll('[data-en]');
-  const langBtns      = document.querySelectorAll('.lang-btn');
-  const htmlEl        = document.documentElement;
+  var currentLang = 'en';
+  var validLangs  = ['en', 'pt', 'es'];
+  var htmlEl      = document.documentElement;
 
-  // ── Apply language ──
+  // ── Apply language — re-queries DOM each time to catch dynamic elements ──
   function setLang(lang) {
-    // Update all translatable text nodes
-    translatables.forEach(function (el) {
-      const text = el.dataset[lang];
-      if (text !== undefined) {
-        el.innerHTML = text;
-      }
+    if (!validLangs.includes(lang)) lang = 'en';
+    currentLang = lang;
+
+    document.querySelectorAll('[data-en]').forEach(function (el) {
+      var text = el.dataset[lang];
+      if (text !== undefined) el.innerHTML = text;
     });
 
-    // Update html lang attribute
     htmlEl.setAttribute('lang', lang);
 
-    // Update active state on ALL lang buttons (nav + footer)
-    langBtns.forEach(function (btn) {
+    document.querySelectorAll('.lang-btn').forEach(function (btn) {
       btn.classList.toggle('active', btn.dataset.lang === lang);
     });
 
-    // Persist preference
     localStorage.setItem('seculo-lang', lang);
+    document.dispatchEvent(new CustomEvent('seculo-lang-change', { detail: { lang: lang } }));
   }
 
   // ── Attach click listeners ──
-  langBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      setLang(btn.dataset.lang);
-    });
+  document.querySelectorAll('.lang-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { setLang(btn.dataset.lang); });
   });
 
+  // ── Public API ──
+  window.getCurrentLang  = function () { return currentLang; };
+  window.applyCurrentLang = function () { setLang(currentLang); };
+
   // ── Initialise on page load ──
-  const saved = localStorage.getItem('seculo-lang') || 'en';
-  const validLangs = ['en', 'pt', 'es'];
+  var saved = localStorage.getItem('seculo-lang') || 'en';
   setLang(validLangs.includes(saved) ? saved : 'en');
 })();

@@ -41,6 +41,13 @@ try {
 
 document.getElementById('dashLoading').style.display = 'none';
 
+function renderDashGrid() {
+  const grid = document.getElementById('dashGrid');
+  grid.innerHTML = '';
+  properties.forEach(prop => grid.appendChild(buildCard(prop)));
+  if (window.applyCurrentLang) window.applyCurrentLang();
+}
+
 if (properties.length === 0) {
   document.getElementById('dashEmpty').style.display = 'block';
 } else {
@@ -51,11 +58,53 @@ if (properties.length === 0) {
 
   const grid = document.getElementById('dashGrid');
   grid.style.display = 'grid';
-  properties.forEach(prop => grid.appendChild(buildCard(prop)));
+  renderDashGrid();
 }
+
+// Re-render cards when language changes
+document.addEventListener('seculo-lang-change', function () {
+  if (properties.length > 0) renderDashGrid();
+});
+
+// ── Card translations ───────────────────────────────────────
+const CARD_T = {
+  en: {
+    status: { interested: 'Interested', visited: 'Visited', discarded: 'Discarded', saved: 'Saved' },
+    view: 'View listing \u2197',
+    copy: '\uD83D\uDD17 Copy link',
+    del:  'Delete',
+    expired:    'Link expired',
+    expires_in: (n) => `Link expires in ${n} day${n === 1 ? '' : 's'}`,
+    expires_on: (d) => `Link expires ${d}`,
+    bed: 'bed',
+  },
+  pt: {
+    status: { interested: 'Interessado', visited: 'Visitado', discarded: 'Descartado', saved: 'Guardado' },
+    view: 'Ver anúncio \u2197',
+    copy: '\uD83D\uDD17 Copiar link',
+    del:  'Apagar',
+    expired:    'Link expirado',
+    expires_in: (n) => `Link expira em ${n} dia${n === 1 ? '' : 's'}`,
+    expires_on: (d) => `Link expira ${d}`,
+    bed: 'qto',
+  },
+  es: {
+    status: { interested: 'Interesado', visited: 'Visitado', discarded: 'Descartado', saved: 'Guardado' },
+    view: 'Ver anuncio \u2197',
+    copy: '\uD83D\uDD17 Copiar link',
+    del:  'Eliminar',
+    expired:    'Link expirado',
+    expires_in: (n) => `Link expira en ${n} día${n === 1 ? '' : 's'}`,
+    expires_on: (d) => `Link expira ${d}`,
+    bed: 'hab',
+  },
+};
+
+function getT() { return CARD_T[window.getCurrentLang ? window.getCurrentLang() : 'en'] || CARD_T.en; }
 
 // ── Card builder ───────────────────────────────────────────
 function buildCard(prop) {
+  const t    = getT();
   const d    = prop.property_data || {};
   const img  = d.image || d.img || d.thumbnail || '';
   const title   = d.title || d.address || d.descricao || 'Property';
@@ -63,15 +112,14 @@ function buildCard(prop) {
                 || d.location || d.cidade || '';
   const price  = d.price != null ? formatPrice(d.price) : '—';
   const area   = d.area   != null ? `${d.area} m²` : '';
-  const rooms  = d.rooms  != null ? `${d.rooms} bed` : '';
+  const rooms  = d.rooms  != null ? `${d.rooms} ${t.bed}` : '';
   const portal = d.portal || d.source || '';
   const url    = d.url    || d.link   || '';
 
-  const statusMap = { interested: 'Interested', visited: 'Visited', discarded: 'Discarded', saved: 'Saved' };
-  const statusLabel = statusMap[prop.status] || prop.status || 'Saved';
+  const statusLabel = t.status[prop.status] || prop.status || t.status.saved;
   const statusClass = prop.status || '';
 
-  const expiryText = formatExpiry(prop.expires_at);
+  const expiryText = formatExpiry(prop.expires_at, t);
   const expirySoon = isExpiringSoon(prop.expires_at);
 
   const card = document.createElement('div');
@@ -96,11 +144,11 @@ function buildCard(prop) {
       ${expiryText ? `<div class="prop-expiry${expirySoon ? ' expiring-soon' : ''}">${expiryText}</div>` : ''}
     </div>
     <div class="prop-footer">
-      ${url ? `<a href="${escHtml(url)}" target="_blank" rel="noopener" class="prop-btn">View listing &#8599;</a>` : ''}
+      ${url ? `<a href="${escHtml(url)}" target="_blank" rel="noopener" class="prop-btn">${t.view}</a>` : ''}
       ${prop.is_public
-        ? `<button class="prop-btn share" data-share="${escHtml(prop.id)}">&#128279; Copy link</button>`
+        ? `<button class="prop-btn share" data-share="${escHtml(prop.id)}">${t.copy}</button>`
         : ''}
-      <button class="prop-btn delete" data-delete="${escHtml(prop.id)}">Delete</button>
+      <button class="prop-btn delete" data-delete="${escHtml(prop.id)}">${t.del}</button>
     </div>
   `;
 
@@ -152,14 +200,15 @@ function formatPrice(val) {
   return '€ ' + Number(val).toLocaleString('pt-PT');
 }
 
-function formatExpiry(ts) {
+function formatExpiry(ts, t) {
   if (!ts) return '';
+  if (!t) t = getT();
   const d = new Date(ts);
   const now = new Date();
-  if (d < now) return 'Link expired';
+  if (d < now) return t.expired;
   const diff = Math.ceil((d - now) / 86400000);
-  if (diff <= 7)  return `Link expires in ${diff} day${diff === 1 ? '' : 's'}`;
-  return `Link expires ${d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`;
+  if (diff <= 7) return t.expires_in(diff);
+  return t.expires_on(d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }));
 }
 
 function isExpiringSoon(ts) {
