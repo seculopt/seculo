@@ -47,6 +47,8 @@ if (properties.length === 0) {
   const meta = document.getElementById('dashMeta');
   meta.textContent = `${properties.length} saved propert${properties.length === 1 ? 'y' : 'ies'}`;
 
+  document.getElementById('copyAllBtn').style.display = '';
+
   const grid = document.getElementById('dashGrid');
   grid.style.display = 'grid';
   properties.forEach(prop => grid.appendChild(buildCard(prop)));
@@ -181,3 +183,34 @@ function showToast(msg) {
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2800);
 }
+
+// ── Copy all share links ────────────────────────────────────
+window.copyAllLinks = function() {
+  const lines = properties
+    .filter(p => p.is_public)
+    .map((p, i) => {
+      const d = p.property_data || {};
+      const title    = d.title || d.address || d.descricao || 'Propriedade';
+      const price    = d.price != null ? '€ ' + Number(d.price).toLocaleString('pt-PT') : '';
+      const location = [d.freguesia, d.concelho, d.distrito].filter(Boolean).join(', ')
+                    || d.location || d.cidade || '';
+      const link = `https://seculopt.com/share.html?id=${p.id}`;
+      return [
+        `${i + 1}. ${title}${price ? ' — ' + price : ''}`,
+        location ? `   📍 ${location}` : '',
+        `   🔗 ${link}`,
+      ].filter(Boolean).join('\n');
+    });
+
+  if (!lines.length) { showToast('Nenhuma propriedade para partilhar'); return; }
+
+  const text = `As minhas propriedades no Século Explorador:\n\n${lines.join('\n\n')}\n\nEncontrado em seculopt.com`;
+
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      showToast(`✓ ${lines.length} link${lines.length === 1 ? '' : 's'} copiado${lines.length === 1 ? '' : 's'}!`);
+      const btn = document.getElementById('copyAllBtn');
+      if (btn) { btn.textContent = '✓ Copiado!'; setTimeout(() => { btn.innerHTML = '&#128203; Copiar todos os links'; }, 2500); }
+    })
+    .catch(() => showToast('Erro ao copiar — tenta de novo'));
+};
