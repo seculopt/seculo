@@ -8,7 +8,7 @@ if (!session) {
   window.location.href = 'login.html';
 }
 
-const { access_token, user } = session;
+const { access_token, refresh_token, user } = session;
 const tier   = user?.user_metadata?.tier || 'free';
 const name   = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Explorer';
 
@@ -22,9 +22,9 @@ const tierBadge = document.getElementById('tierBadge');
 tierBadge.textContent = tier;
 tierBadge.style.display = 'inline-block';
 
-// Update engine link with tier
+// Update engine link — pass tokens in hash for cross-domain session (seculopt.com → seculo-api.vercel.app)
 const engineLink = document.getElementById('engineLink');
-engineLink.href = `${API}/?tier=${tier}`;
+engineLink.href = `${API}/#access_token=${encodeURIComponent(access_token)}&refresh_token=${encodeURIComponent(refresh_token)}&tier=${tier}`;
 
 // ── Load properties ────────────────────────────────────────
 let properties = [];
