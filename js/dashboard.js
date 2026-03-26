@@ -116,8 +116,7 @@ function buildCard(prop) {
   const portal = d.portal || d.source || '';
   const url    = d.url    || d.link   || '';
 
-  const statusLabel = t.status[prop.status] || prop.status || t.status.saved;
-  const statusClass = prop.status || '';
+  const statusClass = prop.status || 'saved';
 
   const expiryText = formatExpiry(prop.expires_at, t);
   const expirySoon = isExpiringSoon(prop.expires_at);
@@ -134,7 +133,12 @@ function buildCard(prop) {
     <div class="prop-body">
       <div class="prop-top">
         <span class="prop-portal">${escHtml(portal)}</span>
-        <span class="prop-status ${escHtml(statusClass)}">${escHtml(statusLabel)}</span>
+        <select class="prop-status-select ${escHtml(statusClass)}">
+          <option value="saved"       ${statusClass==='saved'       ? 'selected' : ''}>${escHtml(t.status.saved)}</option>
+          <option value="interested"  ${statusClass==='interested'  ? 'selected' : ''}>${escHtml(t.status.interested)}</option>
+          <option value="visited"     ${statusClass==='visited'     ? 'selected' : ''}>${escHtml(t.status.visited)}</option>
+          <option value="discarded"   ${statusClass==='discarded'   ? 'selected' : ''}>${escHtml(t.status.discarded)}</option>
+        </select>
       </div>
       <div class="prop-title">${escHtml(title)}</div>
       ${location ? `<div class="prop-location">&#128205; ${escHtml(location)}</div>` : ''}
@@ -151,6 +155,30 @@ function buildCard(prop) {
       <button class="prop-btn delete" data-delete="${escHtml(prop.id)}">${t.del}</button>
     </div>
   `;
+
+  // Status selector
+  const statusSel = card.querySelector('.prop-status-select');
+  let _currentStatus = statusClass;
+  statusSel.addEventListener('change', async () => {
+    const newStatus = statusSel.value;
+    statusSel.disabled = true;
+    try {
+      const res = await fetch(`${API}/api/property/${prop.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${access_token}` },
+        body: JSON.stringify({ status: newStatus })
+      });
+      if (!res.ok) throw new Error(`${res.status}`);
+      statusSel.className = `prop-status-select ${newStatus}`;
+      _currentStatus = newStatus;
+      showToast('✓');
+    } catch (e) {
+      statusSel.value = _currentStatus;
+      showToast('Could not update — please try again');
+    } finally {
+      statusSel.disabled = false;
+    }
+  });
 
   // Share button
   const shareBtn = card.querySelector('[data-share]');
