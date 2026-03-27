@@ -9,105 +9,385 @@ if (!session) {
 }
 
 const { access_token, refresh_token, user } = session;
-const tier   = user?.user_metadata?.tier || 'free';
-const name   = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Explorer';
+const tier = user?.user_metadata?.tier || 'free';
+const name = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Explorer';
 
-// Populate nav user chip
 document.getElementById('navUser').style.display = 'flex';
 document.getElementById('navUserName').textContent = name;
 document.getElementById('signOutBtn').addEventListener('click', () => signOut());
 
-// Populate tier badge
 const tierBadge = document.getElementById('tierBadge');
 tierBadge.textContent = tier;
 tierBadge.style.display = 'inline-block';
 
-// Update engine link — pass tokens in hash for cross-domain session (seculopt.com → seculo-api.vercel.app)
+// Update engine link — pass tokens in hash for cross-domain session
 const engineLink = document.getElementById('engineLink');
 engineLink.href = `${API}/?load_saved=1#access_token=${encodeURIComponent(access_token)}&refresh_token=${encodeURIComponent(refresh_token)}&tier=${tier}`;
 
-// ── Load properties ────────────────────────────────────────
+// ── State ──────────────────────────────────────────────────
 let properties = [];
+let folders    = [];
+let activeFolderId = null; // null=All, 'unfiled'=no folder, uuid=folder
+
+// ── Load data ──────────────────────────────────────────────
 try {
-  const res = await fetch(`${API}/api/my-properties`, {
-    headers: { Authorization: `Bearer ${access_token}` }
-  });
-  if (!res.ok) throw new Error(`${res.status}`);
-  const data = await res.json();
-  properties = data.properties || [];
+  const [propsRes, foldsRes] = await Promise.all([
+    fetch(`${API}/api/my-properties`, { headers: { Authorization: `Bearer ${access_token}` } }),
+    fetch(`${API}/api/folders`,       { headers: { Authorization: `Bearer ${access_token}` } }),
+  ]);
+  if (propsRes.ok) { const d = await propsRes.json(); properties = d.properties || []; }
+  if (foldsRes.ok) { const d = await foldsRes.json(); folders = d.folders || []; }
 } catch (e) {
-  console.error('Failed to load properties', e);
+  console.error('Failed to load dashboard data', e);
 }
 
 document.getElementById('dashLoading').style.display = 'none';
+initDashboard();
 
-function renderDashGrid() {
-  const grid = document.getElementById('dashGrid');
-  grid.innerHTML = '';
-  properties.forEach(prop => grid.appendChild(buildCard(prop)));
-  if (window.applyCurrentLang) window.applyCurrentLang();
+// ── Folder sidebar ─────────────────────────────────────────
+function countInFolder(fid) {
+  if (fid === null) return properties.length;
+  if (fid === 'unfiled') return properties.filter(p => !p.folder_id).length;
+  return properties.filter(p => p.folder_id === fid).length;
 }
 
-if (properties.length === 0) {
-  document.getElementById('dashEmpty').style.display = 'block';
-} else {
-  const meta = document.getElementById('dashMeta');
-  meta.textContent = `${properties.length} saved propert${properties.length === 1 ? 'y' : 'ies'}`;
+function renderFolderSidebar() {
+  const sidebar = document.getElementById('foldSidebar');
+  if (properties.length === 0) { sidebar.style.display = 'none'; return; }
+  sidebar.style.display = '';
+  sidebar.innerHTML = '';
 
-  document.getElementById('copyAllBtn').style.display = '';
+  const t = getT();
 
-  const grid = document.getElementById('dashGrid');
-  grid.style.display = 'grid';
+  const title = document.createElement('div');
+  title.className = 'fold-sidebar-title';
+  title.textContent = t.folders.title;
+  sidebar.appendChild(title);
+
+  sidebar.appendChild(makeFoldItem(null, '🗂️', t.folders.all, countInFolder(null)));
+
+  const unfiledCount = countInFolder('unfiled');
+  if (folders.length > 0 || unfiledCount < properties.length) {
+    sidebar.appendChild(makeFoldItem('unfiled', '📋', t.folders.unfiled, unfiledCount));
+  }
+
+  const topFolders = folders.filter(f => !f.parent_id);
+  if (topFolders.length > 0) {
+    const hr = document.createElement('hr');
+    hr.className = 'fold-divider';
+    sidebar.appendChild(hr);
+
+    for (const f of topFolders) {
+      sidebar.appendChild(makeFoldItem(f.id, '📁', f.name, countInFolder(f.id), f));
+      const subs = folders.filter(s => s.parent_id === f.id);
+      for (const s of subs) {
+        sidebar.appendChild(makeFoldItem(s.id, '📄', s.name, countInFolder(s.id), s, true));
+      }
+    }
+  }
+
+  const hr2 = document.createElement('hr');
+  hr2.className = 'fold-divider';
+  sidebar.appendChild(hr2);
+
+  const newBtn = document.createElement('button');
+  newBtn.className = 'fold-new-btn';
+  newBtn.innerHTML = `<span>+</span> <span>${t.folders.newFolder}</span>`;
+  newBtn.addEventListener('click', () => promptCreateFolder());
+  sidebar.appendChild(newBtn);
+}
+
+function makeFoldItem(fid, icon, label, count, folderObj, isSub) {
+  const el = document.createElement('div');
+  el.className = 'fold-item' + (isSub ? ' sub' : '') + (activeFolderId === fid ? ' active' : '');
+
+  const iconEl = document.createElement('span');
+  iconEl.className = 'fold-item-icon';
+  iconEl.textContent = icon;
+
+  const nameEl = document.createElement('span');
+  nameEl.className = 'fold-item-name';
+  nameEl.textContent = label;
+
+  const countEl = document.createElement('span');
+  countEl.className = 'fold-item-count';
+  countEl.textContent = count;
+
+  el.appendChild(iconEl);
+  el.appendChild(nameEl);
+  el.appendChild(countEl);
+
+  if (folderObj) {
+    const kebab = document.createElement('button');
+    kebab.className = 'fold-kebab';
+    kebab.title = 'Options';
+    kebab.innerHTML = '&#8942;';
+    kebab.addEventListener('click', (e) => { e.stopPropagation(); showFolderMenu(folderObj, kebab); });
+    el.appendChild(kebab);
+  }
+
+  el.addEventListener('click', () => setActiveFolder(fid));
+  return el;
+}
+
+function setActiveFolder(fid) {
+  activeFolderId = fid;
+  renderFolderSidebar();
   renderDashGrid();
 }
 
-// Re-render cards when language changes
+function showFolderMenu(folder, anchor) {
+  document.getElementById('_foldMenu')?.remove();
+  const t = getT();
+
+  const menu = document.createElement('div');
+  menu.id = '_foldMenu';
+  menu.style.cssText = 'position:fixed;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9000;min-width:140px;padding:0.4rem 0;font-size:0.84rem;font-family:\'DM Sans\',sans-serif;';
+
+  const rect = anchor.getBoundingClientRect();
+  menu.style.top  = (rect.bottom + 4) + 'px';
+  menu.style.left = Math.max(8, rect.left - 100) + 'px';
+
+  const makeItem = (label, color, onClick) => {
+    const item = document.createElement('div');
+    item.style.cssText = `padding:0.5rem 1rem;cursor:pointer;color:${color || 'inherit'};`;
+    item.textContent = label;
+    item.addEventListener('mouseenter', () => item.style.background = '#f8f5f0');
+    item.addEventListener('mouseleave', () => item.style.background = '');
+    item.addEventListener('click', () => { menu.remove(); onClick(); });
+    return item;
+  };
+
+  menu.appendChild(makeItem(t.folders.rename, null, () => promptRenameFolder(folder)));
+  menu.appendChild(makeItem(t.folders.delete, '#c0392b', () => confirmDeleteFolder(folder)));
+
+  document.body.appendChild(menu);
+  setTimeout(() => document.addEventListener('click', () => menu.remove(), { once: true }), 10);
+}
+
+// ── Folder CRUD ────────────────────────────────────────────
+async function promptCreateFolder(parentId) {
+  const t = getT();
+  const rawName = window.prompt(t.folders.newFolderPrompt, '');
+  if (!rawName || !rawName.trim()) return;
+
+  try {
+    const res = await fetch(`${API}/api/folders`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${access_token}` },
+      body: JSON.stringify({ name: rawName.trim(), parent_id: parentId || null }),
+    });
+    if (!res.ok) throw new Error(`${res.status}`);
+    const folder = await res.json();
+    folders.push(folder);
+    renderFolderSidebar();
+    document.querySelectorAll('.prop-folder-select').forEach(sel => addFolderOption(sel, folder));
+    showToast(`📁 ${folder.name}`);
+  } catch (e) {
+    showToast('Could not create folder');
+  }
+}
+
+async function promptRenameFolder(folder) {
+  const t = getT();
+  const rawName = window.prompt(t.folders.renamePrompt, folder.name);
+  if (!rawName || !rawName.trim() || rawName.trim() === folder.name) return;
+
+  try {
+    const res = await fetch(`${API}/api/folders?id=${folder.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${access_token}` },
+      body: JSON.stringify({ name: rawName.trim() }),
+    });
+    if (!res.ok) throw new Error(`${res.status}`);
+    folder.name = rawName.trim();
+    renderFolderSidebar();
+    document.querySelectorAll(`.prop-folder-select option[value="${folder.id}"]`).forEach(opt => {
+      opt.textContent = '📁 ' + folder.name;
+    });
+    showToast('✓');
+  } catch (e) {
+    showToast('Could not rename folder');
+  }
+}
+
+async function confirmDeleteFolder(folder) {
+  const t = getT();
+  if (!window.confirm(t.folders.deleteConfirm.replace('{name}', folder.name))) return;
+
+  try {
+    const res = await fetch(`${API}/api/folders?id=${folder.id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${access_token}` },
+    });
+    if (!res.ok) throw new Error(`${res.status}`);
+    folders = folders.filter(f => f.id !== folder.id);
+    properties.forEach(p => { if (p.folder_id === folder.id) p.folder_id = null; });
+    if (activeFolderId === folder.id) activeFolderId = null;
+    renderFolderSidebar();
+    renderDashGrid();
+    document.querySelectorAll(`.prop-folder-select option[value="${folder.id}"]`).forEach(opt => opt.remove());
+    showToast('🗑️');
+  } catch (e) {
+    showToast('Could not delete folder');
+  }
+}
+
+// ── Grid ───────────────────────────────────────────────────
+function getFilteredProps() {
+  if (activeFolderId === null) return properties;
+  if (activeFolderId === 'unfiled') return properties.filter(p => !p.folder_id);
+  return properties.filter(p => p.folder_id === activeFolderId);
+}
+
+function initDashboard() {
+  if (properties.length === 0) {
+    document.getElementById('foldSidebar').style.display = 'none';
+    document.getElementById('dashGrid').style.display = 'none';
+    document.getElementById('dashEmpty').style.display = 'block';
+    document.getElementById('dashMeta').textContent = '';
+    document.getElementById('copyAllBtn').style.display = 'none';
+  } else {
+    document.getElementById('copyAllBtn').style.display = '';
+    renderFolderSidebar();
+    renderDashGrid();
+  }
+}
+
+function renderDashGrid() {
+  const grid     = document.getElementById('dashGrid');
+  const empty    = document.getElementById('dashEmpty');
+  const emptyFld = document.getElementById('dashEmptyFolder');
+  const meta     = document.getElementById('dashMeta');
+
+  grid.innerHTML = '';
+  empty.style.display    = 'none';
+  emptyFld.style.display = 'none';
+
+  if (properties.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    meta.textContent = '';
+    return;
+  }
+
+  const filtered = getFilteredProps();
+
+  if (filtered.length === 0) {
+    grid.style.display = 'none';
+    emptyFld.style.display = 'block';
+    meta.textContent = '';
+    if (window.applyCurrentLang) window.applyCurrentLang();
+    return;
+  }
+
+  grid.style.display = 'grid';
+  filtered.forEach(prop => grid.appendChild(buildCard(prop)));
+
+  const t = getT();
+  meta.textContent = `${filtered.length} ${filtered.length === 1 ? t.propSingular : t.propPlural}`;
+
+  if (window.applyCurrentLang) window.applyCurrentLang();
+}
+
+// Re-render when language changes
 document.addEventListener('seculo-lang-change', function () {
-  if (properties.length > 0) renderDashGrid();
+  if (properties.length > 0) { renderFolderSidebar(); renderDashGrid(); }
 });
 
-// ── Card translations ───────────────────────────────────────
+// ── Translations ───────────────────────────────────────────
 const CARD_T = {
   en: {
     status: { interested: 'Interested', visited: 'Visited', discarded: 'Discarded', saved: 'Saved' },
     view: 'View listing \u2197',
     copy: '\uD83D\uDD17 Copy link',
     del:  'Delete',
-    expired:    'Link expired',
-    expires_in: (n) => `Link expires in ${n} day${n === 1 ? '' : 's'}`,
-    expires_on: (d) => `Link expires ${d}`,
+    expired:     'Link expired',
+    expires_in:  (n) => `Link expires in ${n} day${n === 1 ? '' : 's'}`,
+    expires_on:  (d) => `Link expires ${d}`,
     bed: 'bed',
+    propSingular: 'saved property',
+    propPlural:   'saved properties',
+    folderNone:  '📋 No folder',
+    folders: {
+      title:         'Folders',
+      all:           'All',
+      unfiled:       'Unfiled',
+      newFolder:     'New folder',
+      newFolderPrompt: 'Folder name:',
+      renamePrompt:  'New name:',
+      deleteConfirm: 'Delete folder "{name}"? Properties will become unfiled.',
+      rename:        'Rename',
+      delete:        'Delete folder',
+    },
   },
   pt: {
     status: { interested: 'Interessado', visited: 'Visitado', discarded: 'Descartado', saved: 'Guardado' },
     view: 'Ver anúncio \u2197',
     copy: '\uD83D\uDD17 Copiar link',
     del:  'Apagar',
-    expired:    'Link expirado',
-    expires_in: (n) => `Link expira em ${n} dia${n === 1 ? '' : 's'}`,
-    expires_on: (d) => `Link expira ${d}`,
+    expired:     'Link expirado',
+    expires_in:  (n) => `Link expira em ${n} dia${n === 1 ? '' : 's'}`,
+    expires_on:  (d) => `Link expira ${d}`,
     bed: 'qto',
+    propSingular: 'propriedade guardada',
+    propPlural:   'propriedades guardadas',
+    folderNone:  '📋 Sem pasta',
+    folders: {
+      title:         'Pastas',
+      all:           'Todas',
+      unfiled:       'Sem pasta',
+      newFolder:     'Nova pasta',
+      newFolderPrompt: 'Nome da pasta:',
+      renamePrompt:  'Novo nome:',
+      deleteConfirm: 'Eliminar pasta "{name}"? As propriedades ficarão sem pasta.',
+      rename:        'Renomear',
+      delete:        'Eliminar pasta',
+    },
   },
   es: {
     status: { interested: 'Interesado', visited: 'Visitado', discarded: 'Descartado', saved: 'Guardado' },
     view: 'Ver anuncio \u2197',
     copy: '\uD83D\uDD17 Copiar link',
     del:  'Eliminar',
-    expired:    'Link expirado',
-    expires_in: (n) => `Link expira en ${n} día${n === 1 ? '' : 's'}`,
-    expires_on: (d) => `Link expira ${d}`,
+    expired:     'Link expirado',
+    expires_in:  (n) => `Link expira en ${n} día${n === 1 ? '' : 's'}`,
+    expires_on:  (d) => `Link expira ${d}`,
     bed: 'hab',
+    propSingular: 'propiedad guardada',
+    propPlural:   'propiedades guardadas',
+    folderNone:  '📋 Sin carpeta',
+    folders: {
+      title:         'Carpetas',
+      all:           'Todas',
+      unfiled:       'Sin carpeta',
+      newFolder:     'Nueva carpeta',
+      newFolderPrompt: 'Nombre de la carpeta:',
+      renamePrompt:  'Nuevo nombre:',
+      deleteConfirm: 'Eliminar carpeta "{name}"? Las propiedades quedarán sin carpeta.',
+      rename:        'Renombrar',
+      delete:        'Eliminar carpeta',
+    },
   },
 };
 
-function getT() { return CARD_T[window.getCurrentLang ? window.getCurrentLang() : 'en'] || CARD_T.en; }
+function getT() {
+  return CARD_T[window.getCurrentLang ? window.getCurrentLang() : 'en'] || CARD_T.en;
+}
 
 // ── Card builder ───────────────────────────────────────────
+function addFolderOption(sel, folder) {
+  const opt = document.createElement('option');
+  opt.value = folder.id;
+  opt.textContent = '📁 ' + folder.name;
+  sel.appendChild(opt);
+}
+
 function buildCard(prop) {
   const t    = getT();
   const d    = prop.property_data || {};
   const img  = d.image || d.img || d.thumbnail || '';
-  const title   = d.title || d.address || d.descricao || 'Property';
+  const title    = d.title || d.address || d.descricao || 'Property';
   const location = [d.freguesia, d.concelho, d.distrito].filter(Boolean).join(', ')
                 || d.location || d.cidade || '';
   const price  = d.price != null ? formatPrice(d.price) : '—';
@@ -115,11 +395,9 @@ function buildCard(prop) {
   const rooms  = d.rooms  != null ? `${d.rooms} ${t.bed}` : '';
   const portal = d.portal || d.source || '';
   const url    = d.url    || d.link   || '';
-
   const statusClass = prop.status || 'saved';
-
-  const expiryText = formatExpiry(prop.expires_at, t);
-  const expirySoon = isExpiringSoon(prop.expires_at);
+  const expiryText  = formatExpiry(prop.expires_at, t);
+  const expirySoon  = isExpiringSoon(prop.expires_at);
 
   const card = document.createElement('div');
   card.className = 'prop-card';
@@ -153,6 +431,9 @@ function buildCard(prop) {
         ? `<button class="prop-btn share" data-share="${escHtml(prop.id)}">${t.copy}</button>`
         : ''}
       <button class="prop-btn delete" data-delete="${escHtml(prop.id)}">${t.del}</button>
+      ${folders.length > 0
+        ? `<div class="prop-folder-wrap"><select class="prop-folder-select${prop.folder_id ? ' has-folder' : ''}" data-prop-id="${escHtml(prop.id)}"></select></div>`
+        : ''}
     </div>
   `;
 
@@ -166,11 +447,12 @@ function buildCard(prop) {
       const res = await fetch(`${API}/api/property/${prop.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${access_token}` },
-        body: JSON.stringify({ status: newStatus })
+        body: JSON.stringify({ status: newStatus }),
       });
       if (!res.ok) throw new Error(`${res.status}`);
       statusSel.className = `prop-status-select ${newStatus}`;
       _currentStatus = newStatus;
+      prop.status = newStatus;
       showToast('✓');
     } catch (e) {
       statusSel.value = _currentStatus;
@@ -184,14 +466,48 @@ function buildCard(prop) {
   const shareBtn = card.querySelector('[data-share]');
   if (shareBtn) {
     shareBtn.addEventListener('click', () => {
-      const shareUrl = `https://seculopt.com/share.html?id=${shareBtn.dataset.share}`;
-      navigator.clipboard.writeText(shareUrl).then(() => showToast('Link copied to clipboard'));
+      navigator.clipboard.writeText(`https://seculopt.com/share.html?id=${shareBtn.dataset.share}`)
+        .then(() => showToast('Link copied to clipboard'));
     });
   }
 
   // Delete button
-  const deleteBtn = card.querySelector('[data-delete]');
-  deleteBtn.addEventListener('click', () => deleteProperty(prop.id, card));
+  card.querySelector('[data-delete]').addEventListener('click', () => deleteProperty(prop.id, card));
+
+  // Folder select
+  const folderSel = card.querySelector('.prop-folder-select');
+  if (folderSel) {
+    const noneOpt = document.createElement('option');
+    noneOpt.value = '';
+    noneOpt.textContent = t.folderNone;
+    folderSel.appendChild(noneOpt);
+    folders.forEach(f => addFolderOption(folderSel, f));
+    folderSel.value = prop.folder_id || '';
+
+    let _currentFolder = prop.folder_id || '';
+    folderSel.addEventListener('change', async () => {
+      const newFolderId = folderSel.value || null;
+      folderSel.disabled = true;
+      try {
+        const res = await fetch(`${API}/api/property/${prop.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${access_token}` },
+          body: JSON.stringify({ folder_id: newFolderId }),
+        });
+        if (!res.ok) throw new Error(`${res.status}`);
+        prop.folder_id = newFolderId;
+        _currentFolder = folderSel.value;
+        folderSel.className = 'prop-folder-select' + (newFolderId ? ' has-folder' : '');
+        renderFolderSidebar();
+        showToast('✓');
+      } catch (e) {
+        folderSel.value = _currentFolder;
+        showToast('Could not move — please try again');
+      } finally {
+        folderSel.disabled = false;
+      }
+    });
+  }
 
   return card;
 }
@@ -202,20 +518,16 @@ async function deleteProperty(id, cardEl) {
   try {
     const res = await fetch(`${API}/api/property/${id}`, {
       method: 'DELETE',
-      headers: { Authorization: `Bearer ${access_token}` }
+      headers: { Authorization: `Bearer ${access_token}` },
     });
     if (!res.ok) throw new Error(`${res.status}`);
     cardEl.style.transition = 'opacity 0.3s';
     cardEl.style.opacity = '0';
     setTimeout(() => {
       cardEl.remove();
-      const remaining = document.querySelectorAll('.prop-card').length;
-      document.getElementById('dashMeta').textContent =
-        `${remaining} saved propert${remaining === 1 ? 'y' : 'ies'}`;
-      if (remaining === 0) {
-        document.getElementById('dashGrid').style.display = 'none';
-        document.getElementById('dashEmpty').style.display = 'block';
-      }
+      properties = properties.filter(p => p.id !== id);
+      renderFolderSidebar();
+      renderDashGrid();
     }, 300);
   } catch (e) {
     showToast('Could not delete — please try again');
@@ -241,9 +553,7 @@ function formatExpiry(ts, t) {
 
 function isExpiringSoon(ts) {
   if (!ts) return false;
-  const d = new Date(ts);
-  const now = new Date();
-  return (d - now) < 7 * 86400000;
+  return (new Date(ts) - new Date()) < 7 * 86400000;
 }
 
 function escHtml(str) {
@@ -263,7 +573,8 @@ function showToast(msg) {
 
 // ── Copy all share links ────────────────────────────────────
 window.copyAllLinks = function() {
-  const lines = properties
+  const source = activeFolderId ? getFilteredProps() : properties;
+  const lines = source
     .filter(p => p.is_public)
     .map((p, i) => {
       const d = p.property_data || {};
@@ -282,7 +593,6 @@ window.copyAllLinks = function() {
   if (!lines.length) { showToast('Nenhuma propriedade para partilhar'); return; }
 
   const text = `As minhas propriedades no Século Explorador:\n\n${lines.join('\n\n')}\n\nEncontrado em seculopt.com`;
-
   navigator.clipboard.writeText(text)
     .then(() => {
       showToast(`✓ ${lines.length} link${lines.length === 1 ? '' : 's'} copiado${lines.length === 1 ? '' : 's'}!`);
