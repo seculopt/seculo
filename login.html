@@ -173,9 +173,9 @@
       <div id="formView">
         <h1 class="auth-title" data-en="Log in" data-pt="Entrar">Log in</h1>
         <p class="auth-subtitle"
-          data-en="Enter your email. We'll send you a login link — no password needed."
-          data-pt="Introduz o teu email. Enviamos um link de acesso direto — sem password.">
-          Enter your email. We'll send you a login link — no password needed.
+          data-en="Enter your email and password, or leave the password empty to receive a login link."
+          data-pt="Introduz o teu email e password, ou deixa a password em branco para receber um link de acesso.">
+          Enter your email and password, or leave the password empty to receive a login link.
         </p>
 
         <form id="login-form">
@@ -185,9 +185,21 @@
               placeholder="email@example.com"
               autocomplete="email" />
           </div>
+          <div class="auth-field">
+            <label data-en="Password (optional)" data-pt="Password (opcional)">Password (optional)</label>
+            <div style="position:relative">
+              <input type="password" id="password-input"
+                placeholder="••••••••"
+                autocomplete="current-password"
+                style="width:100%;padding-right:2.8rem" />
+              <button type="button" id="toggle-pw"
+                style="position:absolute;right:0.6rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--color-mid);font-size:0.85rem;padding:0.2rem"
+                aria-label="Show/hide password">👁</button>
+            </div>
+          </div>
           <button type="submit" id="send-btn" class="btn btn-primary auth-btn"
-            data-en="Send login link" data-pt="Enviar link de acesso">
-            Send login link
+            data-en="Log in" data-pt="Entrar">
+            Log in
           </button>
         </form>
 
