@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" font-family="system-ui,-apple-system,sans-serif">
+  <!-- Background -->
+  <rect width="900" height="560" fill="#F4F3F0"/>
+
+  <!-- Top nav -->
+  <rect width="900" height="50" fill="#1A1A2E"/>
+  <text x="20" y="31" fill="#C8A96E" font-size="15" font-weight="700" font-family="Georgia,serif">Século</text>
+  <text x="76" y="31" fill="rgba(255,255,255,.55)" font-size="12">Explorer</text>
+  <text x="380" y="31" fill="rgba(255,255,255,.45)" font-size="11">Dashboard</text>
+  <rect x="700" y="13" width="100" height="26" rx="5" fill="#C8A96E"/>
+  <text x="750" y="29" fill="#1A1A2E" font-size="10" font-weight="700" text-anchor="middle">↓ Exportar CSV</text>
+  <rect x="810" y="13" width="76" height="26" rx="5" fill="rgba(255,255,255,.08)"/>
+  <text x="848" y="29" fill="rgba(255,255,255,.55)" font-size="10" text-anchor="middle">+ Pesquisa</text>
+
+  <!-- Tab bar -->
+  <rect x="0" y="50" width="900" height="44" fill="#FFFFFF" stroke="#E8E4DB" stroke-width="1"/>
+  <text x="30" y="76" fill="#1A1A2E" font-size="12" font-weight="700">📂 Pesquisas</text>
+  <rect x="0" y="90" width="130" height="3" fill="#C8A96E"/>
+  <text x="180" y="76" fill="#5C5750" font-size="12">🔖 Imóveis Guardados</text>
+  <!-- Count badge -->
+  <rect x="280" y="63" width="24" height="16" rx="8" fill="rgba(200,169,110,.2)"/>
+  <text x="292" y="74" fill="#C8A96E" font-size="9" font-weight="700" text-anchor="middle">8</text>
+
+  <!-- Left folder panel -->
+  <rect x="0" y="94" width="200" height="466" fill="#FFFFFF" stroke="#E8E4DB" stroke-width="1"/>
+  <text x="16" y="118" fill="rgba(200,169,110,.7)" font-size="8.5" letter-spacing="1.2" font-weight="600">PASTAS</text>
+
+  <!-- Folder rows -->
+  <rect x="8" y="124" width="184" height="32" rx="5" fill="rgba(200,169,110,.1)" stroke="rgba(200,169,110,.3)" stroke-width="1"/>
+  <text x="22" y="143" fill="#1A1A2E" font-size="11" font-weight="600">📁  Todas (8)</text>
+
+  <rect x="8" y="162" width="184" height="32" rx="5" fill="transparent"/>
+  <text x="22" y="181" fill="#5C5750" font-size="11">📁  Cascais</text>
+  <text x="172" y="181" fill="rgba(91,87,80,.45)" font-size="10" text-anchor="end">3</text>
+
+  <rect x="8" y="200" width="184" height="32" rx="5" fill="transparent"/>
+  <text x="22" y="219" fill="#5C5750" font-size="11">📁  Lisboa Centro</text>
+  <text x="172" y="219" fill="rgba(91,87,80,.45)" font-size="10" text-anchor="end">3</text>
+
+  <rect x="8" y="238" width="184" height="32" rx="5" fill="transparent"/>
+  <text x="22" y="257" fill="#5C5750" font-size="11">📁  Sintra</text>
+  <text x="172" y="257" fill="rgba(91,87,80,.45)" font-size="10" text-anchor="end">2</text>
+
+  <text x="16" y="296" fill="rgba(200,169,110,.7)" font-size="8.5" letter-spacing="1.2" font-weight="600">PESQUISAS RECENTES</text>
+  <rect x="8" y="302" width="184" height="30" rx="5" fill="transparent"/>
+  <text x="22" y="320" fill="#5C5750" font-size="10">🔍  Cascais · T2-T3 · Compra</text>
+  <text x="22" y="331" fill="rgba(91,87,80,.4)" font-size="8.5">hoje</text>
+  <rect x="8" y="336" width="184" height="30" rx="5" fill="transparent"/>
+  <text x="22" y="354" fill="#5C5750" font-size="10">🔍  Lisboa · Apartamento · &lt;€500k</text>
+  <text x="22" y="365" fill="rgba(91,87,80,.4)" font-size="8.5">ontem</text>
+  <rect x="8" y="370" width="184" height="30" rx="5" fill="transparent"/>
+  <text x="22" y="388" fill="#5C5750" font-size="10">🔍  Sintra · Moradia · 3+ quartos</text>
+  <text x="22" y="399" fill="rgba(91,87,80,.4)" font-size="8.5">3 dias atrás</text>
+
+  <!-- Main content area -->
+  <!-- Property row 1 -->
+  <rect x="210" y="104" width="680" height="96" rx="8" fill="#FFFFFF" stroke="#E8E4DB" stroke-width="1"/>
+  <!-- Image placeholder -->
+  <rect x="220" y="114" width="80" height="76" rx="5" fill="#D8D4CC"/>
+  <!-- Content -->
+  <text x="316" y="130" fill="#1A1A2E" font-size="13" font-weight="700">€ 380,000</text>
+  <text x="316" y="147" fill="#5C5750" font-size="10">Apartamento T2 · 89 m² · Cascais, Lisboa</text>
+  <text x="316" y="162" fill="rgba(91,87,80,.55)" font-size="9">ImóVirtual · guardado hoje</text>
+  <!-- Status badge -->
+  <rect x="316" y="172" width="82" height="18" rx="9" fill="rgba(200,169,110,.18)" stroke="rgba(200,169,110,.5)" stroke-width="1"/>
+  <text x="357" y="184" fill="#C8A96E" font-size="9" font-weight="600" text-anchor="middle">⭐ Interessado</text>
+  <!-- Score + folder -->
+  <text x="740" y="130" fill="#C8A96E" font-size="12" font-weight="700" text-anchor="end">Score 87</text>
+  <text x="740" y="148" fill="rgba(91,87,80,.5)" font-size="9" text-anchor="end">📁 Cascais</text>
+  <rect x="752" y="118" width="128" height="28" rx="5" fill="#F4F3F0" stroke="#E8E4DB" stroke-width="1"/>
+  <text x="816" y="136" fill="#5C5750" font-size="10" text-anchor="middle">Ver no motor →</text>
+
+  <!-- Property row 2 -->
+  <rect x="210" y="210" width="680" height="96" rx="8" fill="#FFFFFF" stroke="#E8E4DB" stroke-width="1"/>
+  <rect x="220" y="220" width="80" height="76" rx="5" fill="#C8C0B0"/>
+  <text x="316" y="236" fill="#1A1A2E" font-size="13" font-weight="700">€ 520,000</text>
+  <text x="316" y="253" fill="#5C5750" font-size="10">Moradia T3 · 124 m² · Estoril, Lisboa</text>
+  <text x="316" y="268" fill="rgba(91,87,80,.55)" font-size="9">Idealista · guardado ontem</text>
+  <rect x="316" y="278" width="70" height="18" rx="9" fill="rgba(80,130,200,.15)" stroke="rgba(80,130,200,.4)" stroke-width="1"/>
+  <text x="351" y="290" fill="rgba(80,130,200,.9)" font-size="9" font-weight="600" text-anchor="middle">👁 Visitado</text>
+  <text x="740" y="236" fill="#C8A96E" font-size="12" font-weight="700" text-anchor="end">Score 79</text>
+  <text x="740" y="254" fill="rgba(91,87,80,.5)" font-size="9" text-anchor="end">📁 Cascais</text>
+  <rect x="752" y="224" width="128" height="28" rx="5" fill="#F4F3F0" stroke="#E8E4DB" stroke-width="1"/>
+  <text x="816" y="242" fill="#5C5750" font-size="10" text-anchor="middle">Ver no motor →</text>
+
+  <!-- Property row 3 -->
+  <rect x="210" y="316" width="680" height="96" rx="8" fill="#FFFFFF" stroke="#E8E4DB" stroke-width="1"/>
+  <rect x="220" y="326" width="80" height="76" rx="5" fill="#B8B4A8"/>
+  <text x="316" y="342" fill="#1A1A2E" font-size="13" font-weight="700">€ 295,000</text>
+  <text x="316" y="359" fill="#5C5750" font-size="10">Apartamento T2 · 75 m² · Oeiras, Lisboa</text>
+  <text x="316" y="374" fill="rgba(91,87,80,.55)" font-size="9">Supercasa · guardado há 2 dias</text>
+  <rect x="316" y="384" width="72" height="18" rx="9" fill="rgba(200,80,60,.1)" stroke="rgba(200,80,60,.35)" stroke-width="1"/>
+  <text x="352" y="396" fill="rgba(200,80,60,.8)" font-size="9" font-weight="600" text-anchor="middle">✕ Descartado</text>
+  <text x="740" y="342" fill="#C8A96E" font-size="12" font-weight="700" text-anchor="end">Score 74</text>
+  <text x="740" y="360" fill="rgba(91,87,80,.5)" font-size="9" text-anchor="end">📁 Lisboa Centro</text>
+
+  <!-- Property row 4 (partial) -->
+  <rect x="210" y="422" width="680" height="96" rx="8" fill="#FFFFFF" stroke="#E8E4DB" stroke-width="1"/>
+  <rect x="220" y="432" width="80" height="76" rx="5" fill="#D0CCBF"/>
+  <text x="316" y="448" fill="#1A1A2E" font-size="13" font-weight="700">€ 615,000</text>
+  <text x="316" y="465" fill="#5C5750" font-size="10">Moradia T4 · 158 m² · Sintra, Lisboa</text>
+  <text x="316" y="480" fill="rgba(91,87,80,.55)" font-size="9">LuxuryEstate · guardado há 2 dias</text>
+  <rect x="316" y="490" width="82" height="18" rx="9" fill="rgba(200,169,110,.18)" stroke="rgba(200,169,110,.5)" stroke-width="1"/>
+  <text x="357" y="502" fill="#C8A96E" font-size="9" font-weight="600" text-anchor="middle">⭐ Interessado</text>
+  <text x="740" y="448" fill="#C8A96E" font-size="12" font-weight="700" text-anchor="end">Score 71</text>
+  <text x="740" y="466" fill="rgba(91,87,80,.5)" font-size="9" text-anchor="end">📁 Sintra</text>
+</svg>

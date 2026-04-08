@@ -34,8 +34,14 @@
 }
 
 .nav-logo img {
-  height: 36px;
+  height: 44px;
   width: auto;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.nav-logo:hover img {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 8px rgba(200, 169, 110, 0.5));
 }
 
 .nav-logo-text {
