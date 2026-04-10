@@ -1,7 +1,6 @@
 // auth.js — login.html logic
-// Supports two modes:
-//   1. Email + password → signInWithPassword() (for testers / returning users with password)
-//   2. Email only       → signInWithOtp()      (magic link, default for new users)
+// Single flow: email + password → signInWithPassword()
+// Also handles auth callback from email confirmation links (onAuthStateChange)
 
 import { supabase } from './supabase-client.js';
 
@@ -12,8 +11,16 @@ const togglePw   = document.getElementById('toggle-pw');
 const btn        = document.getElementById('send-btn');
 const message    = document.getElementById('login-message');
 
-// If user is already logged in, redirect to dashboard
-supabase.auth.getSession().then(({ data: { session } }) => {
+// Handle auth callback tokens in URL hash (from email confirmation / magic link)
+// Supabase SDK v2 automatically parses the hash and fires SIGNED_IN when confirmed
+supabase.auth.onAuthStateChange(function (event, session) {
+  if (session && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
+    window.location.href = 'dashboard.html';
+  }
+});
+
+// If user is already logged in, redirect to dashboard immediately
+supabase.auth.getSession().then(function ({ data: { session } }) {
   if (session) window.location.href = 'dashboard.html';
 });
 
@@ -31,57 +38,52 @@ form.addEventListener('submit', async function (e) {
 
   const email    = emailInput.value.trim();
   const password = pwInput ? pwInput.value : '';
+  const lang     = document.documentElement.lang || 'pt';
+
   if (!email) return;
 
-  const lang = document.documentElement.lang || 'pt';
-
-  btn.disabled = true;
-  message.textContent = '';
-  message.className = '';
-
-  const loadingText = lang === 'pt' ? 'A entrar...' : 'Signing in...';
-  btn.textContent = loadingText;
-
-  let error = null;
-
-  if (password) {
-    // Mode 1: email + password
-    const { data, error: pwError } = await supabase.auth.signInWithPassword({ email, password });
-    if (pwError) {
-      error = pwError;
-    } else if (data.session) {
-      window.location.href = 'dashboard.html';
-      return;
-    }
-  } else {
-    // Mode 2: magic link (OTP)
-    const { error: otpError } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: 'https://seculopt.com/dashboard.html' },
-    });
-    error = otpError;
-  }
-
-  if (error) {
-    btn.disabled = false;
-    btn.textContent = lang === 'pt' ? 'Entrar' : 'Log in';
-    // Provide a clear error for wrong password without exposing security details
-    const isCredentialError = error.message && (
-      error.message.toLowerCase().includes('invalid') ||
-      error.message.toLowerCase().includes('credentials') ||
-      error.message.toLowerCase().includes('password')
-    );
-    message.textContent = isCredentialError
-      ? (lang === 'pt' ? 'Email ou password incorretos.' : 'Invalid email or password.')
-      : (lang === 'pt' ? 'Ocorreu um erro. Por favor tenta de novo.' : 'Something went wrong. Please try again.');
+  // Require password — no magic link from this form
+  if (!password) {
+    message.textContent = lang === 'pt'
+      ? 'Por favor introduz a tua password.'
+      : 'Please enter your password.';
     message.className = 'auth-message auth-message--error';
     return;
   }
 
-  // Magic link success (no error, no session yet — email sent)
-  form.style.display = 'none';
-  message.textContent = lang === 'pt'
-    ? 'Link enviado! Verifica o teu email.'
-    : 'Link sent! Check your inbox.';
-  message.className = 'auth-message auth-message--success';
+  btn.disabled = true;
+  message.textContent = '';
+  message.className = '';
+  btn.textContent = lang === 'pt' ? 'A entrar...' : 'Signing in...';
+
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    btn.disabled = false;
+    btn.textContent = lang === 'pt' ? 'Entrar' : 'Log in';
+
+    const msg = error.message ? error.message.toLowerCase() : '';
+    const isCredentialError = msg.includes('invalid') || msg.includes('credentials') || msg.includes('password');
+    const isNotConfirmed    = msg.includes('confirm') || msg.includes('not confirmed') || msg.includes('email');
+
+    if (isNotConfirmed && !isCredentialError) {
+      message.textContent = lang === 'pt'
+        ? 'Confirma o teu email antes de entrar. Verifica a tua caixa de entrada e clica no link de confirmação.'
+        : 'Please confirm your email before logging in. Check your inbox and click the confirmation link.';
+    } else if (isCredentialError) {
+      message.textContent = lang === 'pt'
+        ? 'Email ou password incorretos.'
+        : 'Invalid email or password.';
+    } else {
+      message.textContent = lang === 'pt'
+        ? 'Ocorreu um erro. Por favor tenta de novo.'
+        : 'Something went wrong. Please try again.';
+    }
+    message.className = 'auth-message auth-message--error';
+    return;
+  }
+
+  if (data.session) {
+    window.location.href = 'dashboard.html';
+  }
 });
