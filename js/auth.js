@@ -11,17 +11,24 @@ const togglePw   = document.getElementById('toggle-pw');
 const btn        = document.getElementById('send-btn');
 const message    = document.getElementById('login-message');
 
-// Handle auth callback tokens in URL hash (from email confirmation / magic link)
-// Supabase SDK v2 automatically parses the hash and fires SIGNED_IN when confirmed
+// Handle auth callback: if Supabase redirected here with ?code= (email confirmation),
+// exchange the code for a session and go to dashboard immediately.
+(async function () {
+  const _urlCode = new URLSearchParams(window.location.search).get('code');
+  if (_urlCode) {
+    const { data } = await supabase.auth.exchangeCodeForSession(_urlCode);
+    if (data?.session) { window.location.href = 'dashboard.html'; return; }
+  }
+  // Also handle hash-based tokens (older Supabase flow)
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) window.location.href = 'dashboard.html';
+})();
+
+// Catch any subsequent SIGNED_IN event (e.g. magic link via onAuthStateChange)
 supabase.auth.onAuthStateChange(function (event, session) {
   if (session && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
     window.location.href = 'dashboard.html';
   }
-});
-
-// If user is already logged in, redirect to dashboard immediately
-supabase.auth.getSession().then(function ({ data: { session } }) {
-  if (session) window.location.href = 'dashboard.html';
 });
 
 // Show/hide password toggle

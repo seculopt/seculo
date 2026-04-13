@@ -1,8 +1,16 @@
-import { getSession, signOut } from './supabase-client.js';
+import { supabase, getSession, signOut } from './supabase-client.js';
 
 const API = 'https://seculo-api.vercel.app';
 
 // ── Bootstrap ──────────────────────────────────────────────
+// Handle email confirmation callback: Supabase redirects here with ?code=xxx
+// Must exchange the code BEFORE checking the session, otherwise we'd redirect
+// to login immediately and lose the auth code.
+const _urlCode = new URLSearchParams(window.location.search).get('code');
+if (_urlCode) {
+  await supabase.auth.exchangeCodeForSession(_urlCode);
+}
+
 const session = await getSession();
 if (!session) {
   window.location.href = 'login.html';
