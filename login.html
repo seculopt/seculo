@@ -152,7 +152,7 @@
         <li><a href="index.html" data-en="Home" data-pt="Início">Home</a></li>
         <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona">How It Works</a></li>
         <li><a href="products.html" data-en="Plans" data-pt="Planos">Plans</a></li>
-        <li><a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-outline" data-en="Try Free" data-pt="Experimenta Grátis">Try Free</a></li>
+        <li><a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-outline" data-en="Try for free" data-pt="Experimenta Grátis">Try for free</a></li>
       </ul>
       <div class="lang-toggle">
         <button class="lang-btn active" data-lang="en">EN</button>
@@ -204,6 +204,13 @@
         </form>
 
         <p id="login-message" class="auth-message"></p>
+
+        <div id="resend-wrap" style="display:none;text-align:center;margin-top:0.75rem">
+          <button type="button" id="resend-btn"
+            style="background:none;border:none;color:var(--color-accent);font-size:0.83rem;cursor:pointer;text-decoration:underline;padding:0;"
+            data-en="Resend confirmation email" data-pt="Reenviar email de confirmação">Resend confirmation email</button>
+          <p id="resend-message" style="font-size:0.78rem;margin-top:0.4rem;color:var(--color-mid);display:none;"></p>
+        </div>
 
         <p class="auth-alt" style="margin-top:0.5rem">
           <a href="forgot-password.html" data-en="Forgot your password?" data-pt="Esqueceste a password?">Forgot your password?</a>

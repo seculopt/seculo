@@ -15,6 +15,29 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/nav.css" />
   <link rel="stylesheet" href="css/animations.css" />
+
+  <style>
+    ul.plan-description {
+      list-style: none;
+      margin: 0 0 0.75rem;
+      padding: 0;
+      font-size: 0.82rem;
+      color: var(--color-mid);
+      line-height: 1.6;
+    }
+    ul.plan-description li {
+      padding-left: 1.2em;
+      position: relative;
+      margin-bottom: 0.3rem;
+    }
+    ul.plan-description li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: var(--color-accent, #C8A96E);
+    }
+    #checkout-email-confirm::placeholder { color: #aaa; }
+  </style>
 </head>
 <body>
 
@@ -100,11 +123,11 @@
             </div>
             <span class="plan-period" data-en="No card required" data-pt="Sem cartão necessário" data-es="Sin tarjeta requerida">No card required</span>
           </div>
-          <p class="plan-description"
-            data-en="Find your perfect property. Access 70–80% of all active listings from every market portal in a single search. Select and export your shortlist to Excel for seamless comparison and sharing."
-            data-pt="Encontre o imóvel perfeito. Aceda a 70–80% de todos os anúncios ativos em todos os portais do mercado numa única pesquisa. Selecione e exporte a sua lista para Excel para uma comparação e partilha fáceis."
-            data-es="Encuentra tu propiedad perfecta. Accede al 70–80% de todos los anuncios activos de todos los portales del mercado en una sola búsqueda. Selecciona y exporta tu lista a Excel para una comparación y compartición sencillas.">Find your perfect property. Access 70–80% of all active listings from every market portal in a single search. Select and export your shortlist to Excel for seamless comparison and sharing.</p>
-          <span class="plan-read-more" role="button" tabindex="0" data-en="See more" data-pt="Ver mais" data-es="Ver más">See more</span>
+          <ul class="plan-description">
+            <li data-en="Access &lt;strong&gt;70–80%&lt;/strong&gt; of all active listings across every market portal in a single search" data-pt="Aceda a &lt;strong&gt;70–80%&lt;/strong&gt; de todos os anúncios ativos de todos os portais numa única pesquisa" data-es="Accede al &lt;strong&gt;70–80%&lt;/strong&gt; de todos los anuncios activos de todos los portales en una sola búsqueda">Access <strong>70–80%</strong> of all active listings across every market portal in a single search</li>
+            <li data-en="No sign-up required — start searching immediately" data-pt="Sem registo necessário — comece a pesquisar imediatamente" data-es="Sin registro requerido — empieza a buscar de inmediato">No sign-up required — start searching immediately</li>
+            <li data-en="Select and export your shortlist to &lt;em&gt;Excel&lt;/em&gt; for easy comparison and sharing" data-pt="Selecione e exporte a sua lista para &lt;em&gt;Excel&lt;/em&gt; para comparação e partilha fáceis" data-es="Selecciona y exporta tu lista a &lt;em&gt;Excel&lt;/em&gt; para comparación y compartición sencillas">Select and export your shortlist to <em>Excel</em> for easy comparison and sharing</li>
+          </ul>
 
           <!-- Product screenshots carousel — add slides when assets/products/gift-from-seculo/ is populated -->
           <div class="plan-media" data-carousel hidden>
@@ -129,11 +152,12 @@
             </div>
             <span class="plan-period" data-en="one-time" data-pt="pagamento único" data-es="pago único">one-time</span>
           </div>
-          <p class="plan-description"
-            data-en="Find your ideal home in minutes, not weeks. Access a curated shortlist of currently available properties that truly match your lifestyle and priorities — not just your budget. Drawn from approximately 85–92% of all public listings, already deduplicated and ranked for you. Effortlessly export your personalised shortlist and criteria to Excel for easy sharing and confident decision-making."
-            data-pt="Encontre a casa ideal em minutos, não em semanas. Aceda a uma lista selecionada de imóveis disponíveis que correspondem verdadeiramente ao seu estilo de vida e prioridades — não apenas ao seu orçamento. Baseada em aproximadamente 85–92% de todos os anúncios públicos, já sem duplicados e classificada para si. Exporte facilmente a sua lista personalizada e critérios para Excel para uma partilha fácil e uma tomada de decisão confiante."
-            data-es="Encuentra tu hogar ideal en minutos, no en semanas. Accede a una lista curada de propiedades disponibles que realmente se ajustan a tu estilo de vida y prioridades — no solo a tu presupuesto. Basada en aproximadamente el 85–92% de todos los anuncios públicos, ya desduplicada y ordenada para ti. Exporta fácilmente tu lista personalizada y criterios a Excel para compartir con facilidad y tomar decisiones con confianza.">Find your ideal home in minutes, not weeks. Access a curated shortlist of currently available properties that truly match your lifestyle and priorities — not just your budget. Drawn from approximately 85–92% of all public listings, already deduplicated and ranked for you. Effortlessly export your personalised shortlist and criteria to Excel for easy sharing and confident decision-making.</p>
-          <span class="plan-read-more" role="button" tabindex="0" data-en="See more" data-pt="Ver mais" data-es="Ver más">See more</span>
+          <ul class="plan-description">
+            <li data-en="Find your ideal home in &lt;em&gt;minutes, not weeks&lt;/em&gt;" data-pt="Encontre a casa ideal em &lt;em&gt;minutos, não em semanas&lt;/em&gt;" data-es="Encuentra tu hogar ideal en &lt;em&gt;minutos, no en semanas&lt;/em&gt;">Find your ideal home in <em>minutes, not weeks</em></li>
+            <li data-en="&lt;strong&gt;~85–92%&lt;/strong&gt; of all public listings, already deduplicated and ranked for you" data-pt="&lt;strong&gt;~85–92%&lt;/strong&gt; dos anúncios públicos, já sem duplicados e classificados para si" data-es="&lt;strong&gt;~85–92%&lt;/strong&gt; de todos los anuncios públicos, ya desduplicados y ordenados para ti"><strong>~85–92%</strong> of all public listings, already deduplicated and ranked for you</li>
+            <li data-en="Matched to your &lt;strong&gt;lifestyle and priorities&lt;/strong&gt; — not just your budget" data-pt="Correspondente ao seu &lt;strong&gt;estilo de vida e prioridades&lt;/strong&gt; — não apenas ao orçamento" data-es="Adaptado a tu &lt;strong&gt;estilo de vida y prioridades&lt;/strong&gt; — no solo a tu presupuesto">Matched to your <strong>lifestyle and priorities</strong> — not just your budget</li>
+            <li data-en="Export your personalised shortlist and criteria to &lt;em&gt;Excel&lt;/em&gt; for easy sharing" data-pt="Exporte a sua lista personalizada para &lt;em&gt;Excel&lt;/em&gt; para partilha e decisão fáceis" data-es="Exporta tu lista personalizada a &lt;em&gt;Excel&lt;/em&gt; para compartir con facilidad y decidir con confianza">Export your personalised shortlist and criteria to <em>Excel</em> for easy sharing</li>
+          </ul>
 
           <!-- Product screenshots carousel — add slides when assets/products/home-match/ is populated -->
           <div class="plan-media" data-carousel hidden>
@@ -159,11 +183,13 @@
             </div>
             <span class="plan-period" data-en="one-time" data-pt="pagamento único" data-es="pago único">one-time</span>
           </div>
-          <p class="plan-description"
-            data-en="Find homes that truly fit your life — not just your budget. Instantly receive a curated shortlist of properties that match your real daily-life needs, whether you want to search within specific lifestyle conditions (like walking distance to parks, beaches, schools, or work) or discover available properties starting from locations you provide to the platform. We will cover approximately 85–92% of all public listings, already deduplicated and ranked by what matters most to you. Effortlessly compare your best-matched options and export your shortlist and criteria to Excel for easy sharing and confident decision-making."
-            data-pt="Encontre casas que se adaptam verdadeiramente à sua vida — não apenas ao seu orçamento. Receba instantaneamente uma lista selecionada de imóveis que correspondem às suas necessidades reais do dia a dia, quer queira pesquisar dentro de condições de estilo de vida específicas (como distância a pé de parques, praias, escolas ou trabalho) ou descobrir imóveis disponíveis a partir de localizações que fornece à plataforma. Cobrimos aproximadamente 85–92% de todos os anúncios públicos, já sem duplicados e classificados pelo que mais importa para si. Compare facilmente as suas melhores opções e exporte a sua lista e critérios para Excel para uma partilha fácil e uma tomada de decisão confiante."
-            data-es="Encuentra hogares que realmente se adaptan a tu vida — no solo a tu presupuesto. Recibe al instante una lista curada de propiedades que se ajustan a tus necesidades reales del día a día, ya sea buscando dentro de condiciones de estilo de vida específicas (como distancia a pie a parques, playas, colegios o el trabajo) o descubriendo propiedades disponibles a partir de ubicaciones que proporcionas a la plataforma. Cubriremos aproximadamente el 85–92% de todos los anuncios públicos, ya desduplicados y ordenados por lo que más importa para ti. Compara fácilmente tus mejores opciones y exporta tu lista y criterios a Excel para compartir con facilidad y decidir con confianza.">Find homes that truly fit your life — not just your budget. Instantly receive a curated shortlist of properties that match your real daily-life needs, whether you want to search within specific lifestyle conditions (like walking distance to parks, beaches, schools, or work) or discover available properties starting from locations you provide to the platform. We will cover approximately 85–92% of all public listings, already deduplicated and ranked by what matters most to you. Effortlessly compare your best-matched options and export your shortlist and criteria to Excel for easy sharing and confident decision-making.</p>
-          <span class="plan-read-more" role="button" tabindex="0" data-en="See more" data-pt="Ver mais" data-es="Ver más">See more</span>
+          <ul class="plan-description">
+            <li data-en="Find homes that truly fit your life — &lt;strong&gt;not just your budget&lt;/strong&gt;" data-pt="Encontre casas que &lt;strong&gt;verdadeiramente se adaptam à sua vida&lt;/strong&gt; — não apenas ao orçamento" data-es="Encuentra hogares que &lt;strong&gt;realmente se adaptan a tu vida&lt;/strong&gt; — no solo al presupuesto">Find homes that truly fit your life — <strong>not just your budget</strong></li>
+            <li data-en="Search within specific &lt;em&gt;lifestyle conditions&lt;/em&gt;: walking distance to parks, beaches, schools, or work" data-pt="Pesquise por &lt;em&gt;condições de estilo de vida&lt;/em&gt;: distância a pé de parques, praias, escolas ou trabalho" data-es="Busca dentro de &lt;em&gt;condiciones de estilo de vida&lt;/em&gt; específicas: a pie de parques, playas, colegios o trabajo">Search within specific <em>lifestyle conditions</em>: walking distance to parks, beaches, schools, or work</li>
+            <li data-en="Discover properties starting from &lt;strong&gt;locations you provide&lt;/strong&gt;" data-pt="Descubra imóveis a partir de &lt;strong&gt;localizações que fornece&lt;/strong&gt;" data-es="Descubre propiedades a partir de &lt;strong&gt;ubicaciones que tú proporcionas&lt;/strong&gt;">Discover properties starting from <strong>locations you provide</strong></li>
+            <li data-en="&lt;strong&gt;~85–92%&lt;/strong&gt; of all public listings, deduplicated and ranked by what matters most to you" data-pt="&lt;strong&gt;~85–92%&lt;/strong&gt; dos anúncios públicos, sem duplicados e classificados pelo que importa" data-es="&lt;strong&gt;~85–92%&lt;/strong&gt; de los anuncios públicos, desduplicados y ordenados por lo que importa"><strong>~85–92%</strong> of all public listings, deduplicated and ranked by what matters most to you</li>
+            <li data-en="Export to &lt;em&gt;Excel&lt;/em&gt; for easy sharing and confident decision-making" data-pt="Exporte para &lt;em&gt;Excel&lt;/em&gt; para partilha fácil e decisões confiantes" data-es="Exporta a &lt;em&gt;Excel&lt;/em&gt; para compartir con facilidad y decidir con confianza">Export to <em>Excel</em> for easy sharing and confident decision-making</li>
+          </ul>
 
           <!-- Product screenshots carousel — add slides when assets/products/lifestyle-match/ is populated -->
           <div class="plan-media" data-carousel hidden>
@@ -188,11 +214,13 @@
             </div>
             <span class="plan-period" data-en="one-time" data-pt="pagamento único" data-es="pago único">one-time</span>
           </div>
-          <p class="plan-description"
-            data-en="Launch your business in the right location from day one. Instantly access a curated shortlist of currently available properties that fit your business concept — whether it's a restaurant, hotel, clinic, or retail space — based on accessibility, surrounding demand, comparative and operational fit. Covering approximately 88–95% of all public listings, already deduplicated and ranked by what matters most to your business. Effortlessly compare your best-matched options and export your shortlist and criteria to Excel for easy sharing and confident decision-making."
-            data-pt="Lance o seu negócio na localização certa desde o primeiro dia. Aceda instantaneamente a uma lista selecionada de imóveis disponíveis que se adequam ao seu conceito de negócio — seja um restaurante, hotel, clínica ou espaço de retalho — com base na acessibilidade, procura envolvente, adequação comparativa e operacional. Cobrindo aproximadamente 88–95% de todos os anúncios públicos, já sem duplicados e classificados pelo que mais importa para o seu negócio. Compare facilmente as suas melhores opções e exporte a sua lista e critérios para Excel para uma partilha fácil e uma tomada de decisão confiante."
-            data-es="Lanza tu negocio en la ubicación correcta desde el primer día. Accede al instante a una lista curada de propiedades disponibles que se adaptan a tu concepto de negocio — ya sea un restaurante, hotel, clínica o local comercial — basada en accesibilidad, demanda del entorno y adecuación comparativa y operacional. Cubriendo aproximadamente el 88–95% de todos los anuncios públicos, ya desduplicados y ordenados por lo que más importa a tu negocio. Compara fácilmente tus mejores opciones y exporta tu lista y criterios a Excel para compartir con facilidad y decidir con confianza.">Launch your business in the right location from day one. Instantly access a curated shortlist of currently available properties that fit your business concept — whether it's a restaurant, hotel, clinic, or retail space — based on accessibility, surrounding demand, comparative and operational fit. Covering approximately 88–95% of all public listings, already deduplicated and ranked by what matters most to your business. Effortlessly compare your best-matched options and export your shortlist and criteria to Excel for easy sharing and confident decision-making.</p>
-          <span class="plan-read-more" role="button" tabindex="0" data-en="See more" data-pt="Ver mais" data-es="Ver más">See more</span>
+          <ul class="plan-description">
+            <li data-en="Launch your business in the &lt;strong&gt;right location&lt;/strong&gt; from day one" data-pt="Lance o seu negócio na &lt;strong&gt;localização certa&lt;/strong&gt; desde o primeiro dia" data-es="Lanza tu negocio en la &lt;strong&gt;ubicación correcta&lt;/strong&gt; desde el primer día">Launch your business in the <strong>right location</strong> from day one</li>
+            <li data-en="Curated for your concept: &lt;em&gt;restaurants, hotels, clinics, retail spaces&lt;/em&gt;" data-pt="Selecionada para o seu conceito: &lt;em&gt;restaurantes, hotéis, clínicas, retalho&lt;/em&gt;" data-es="Curada para tu concepto: &lt;em&gt;restaurante, hotel, clínica, local comercial&lt;/em&gt;">Curated for your concept: <em>restaurants, hotels, clinics, retail spaces</em></li>
+            <li data-en="Ranked by &lt;strong&gt;accessibility, surrounding demand&lt;/strong&gt;, and operational fit" data-pt="Classificada por &lt;strong&gt;acessibilidade e procura envolvente&lt;/strong&gt;" data-es="Ordenada por &lt;strong&gt;accesibilidad y demanda del entorno&lt;/strong&gt;">Ranked by <strong>accessibility, surrounding demand</strong>, and operational fit</li>
+            <li data-en="&lt;strong&gt;~88–95%&lt;/strong&gt; of all public listings, deduplicated and ranked" data-pt="&lt;strong&gt;~88–95%&lt;/strong&gt; dos anúncios públicos, sem duplicados e classificados" data-es="&lt;strong&gt;~88–95%&lt;/strong&gt; de los anuncios públicos, desduplicados y ordenados"><strong>~88–95%</strong> of all public listings, deduplicated and ranked</li>
+            <li data-en="Export your shortlist and criteria to &lt;em&gt;Excel&lt;/em&gt; for easy sharing" data-pt="Exporte para &lt;em&gt;Excel&lt;/em&gt; para partilha e tomada de decisão" data-es="Exporta a &lt;em&gt;Excel&lt;/em&gt; para compartir y decidir con confianza">Export your shortlist and criteria to <em>Excel</em> for easy sharing</li>
+          </ul>
 
           <!-- Product screenshots carousel — add slides when assets/products/business-match/ is populated -->
           <div class="plan-media" data-carousel hidden>
@@ -217,11 +245,13 @@
             </div>
             <span class="plan-period" data-en="one-time" data-pt="pagamento único" data-es="pago único">one-time</span>
           </div>
-          <p class="plan-description"
-            data-en="Includes everything in Seculo Business Match, plus: search from multiple locations at the same time, improved geographic analysis, and comparative market analysis. Perfect for finding the best properties for your business concept with deeper insights and broader reach."
-            data-pt="Inclui tudo o que está no Seculo Business Match, mais: pesquisa em múltiplas localizações ao mesmo tempo, análise geográfica melhorada e análise comparativa de mercado. Perfeito para encontrar os melhores imóveis para o seu conceito de negócio com insights mais profundos e maior alcance."
-            data-es="Incluye todo lo de Seculo Business Match, más: búsqueda desde múltiples ubicaciones al mismo tiempo, análisis geográfico mejorado y análisis comparativo de mercado. Perfecto para encontrar las mejores propiedades para tu concepto de negocio con mayor profundidad y alcance.">Includes everything in Seculo Business Match, plus: search from multiple locations at the same time, improved geographic analysis, and comparative market analysis. Perfect for finding the best properties for your business concept with deeper insights and broader reach.</p>
-          <span class="plan-read-more" role="button" tabindex="0" data-en="See more" data-pt="Ver mais" data-es="Ver más">See more</span>
+          <ul class="plan-description">
+            <li data-en="Everything in &lt;em&gt;Business Match&lt;/em&gt;, plus:" data-pt="Tudo o que está no &lt;em&gt;Business Match&lt;/em&gt;, mais:" data-es="Todo lo de &lt;em&gt;Business Match&lt;/em&gt;, más:">Everything in <em>Business Match</em>, plus:</li>
+            <li data-en="Search from &lt;strong&gt;multiple locations&lt;/strong&gt; simultaneously" data-pt="Pesquisa em &lt;strong&gt;múltiplas localizações&lt;/strong&gt; em simultâneo" data-es="Búsqueda desde &lt;strong&gt;múltiples ubicaciones&lt;/strong&gt; simultáneamente">Search from <strong>multiple locations</strong> simultaneously</li>
+            <li data-en="&lt;em&gt;Improved geographic analysis&lt;/em&gt;" data-pt="&lt;em&gt;Análise geográfica melhorada&lt;/em&gt;" data-es="&lt;em&gt;Análisis geográfico mejorado&lt;/em&gt;"><em>Improved geographic analysis</em></li>
+            <li data-en="&lt;em&gt;Comparative market analysis&lt;/em&gt;" data-pt="&lt;em&gt;Análise comparativa de mercado&lt;/em&gt;" data-es="&lt;em&gt;Análisis comparativo de mercado&lt;/em&gt;"><em>Comparative market analysis</em></li>
+            <li data-en="Deeper insights and broader market reach" data-pt="Insights mais profundos e maior alcance de mercado" data-es="Mayor profundidad y alcance de mercado">Deeper insights and broader market reach</li>
+          </ul>
 
           <!-- Product screenshots carousel — add slides when assets/products/investment-match/ is populated -->
           <div class="plan-media" data-carousel hidden>
@@ -271,11 +301,13 @@
             </div>
             <span class="plan-period" data-en="per month" data-pt="por mês" data-es="al mes">per month</span>
           </div>
-          <p class="plan-description"
-            data-en="Everything that is included in Seculo Investment Match but continuously. With a near to complete view of the market, generate multiple curated matches, explore across approximately 92–95% of publicly available listings, and export full datasets to Excel with deeper comparison variables. Choose whether to deduplicate listings or view all options offered in different portals, adjust your strategies according to your needs."
-            data-pt="Tudo o que está incluído no Seculo Investment Match, mas de forma contínua. Com uma visão quase completa do mercado, gere múltiplas correspondências selecionadas, explore aproximadamente 92–95% dos anúncios públicos disponíveis e exporte conjuntos de dados completos para Excel com variáveis de comparação mais detalhadas. Escolha se pretende eliminar duplicados ou ver todas as opções oferecidas em diferentes portais, ajuste as suas estratégias de acordo com as suas necessidades."
-            data-es="Todo lo incluido en Seculo Investment Match pero de forma continua. Con una visión casi completa del mercado, genera múltiples coincidencias curadas, explora aproximadamente el 92–95% de los anuncios públicos disponibles y exporta conjuntos de datos completos a Excel con variables de comparación más detalladas. Elige si desduplicar anuncios o ver todas las opciones ofrecidas en distintos portales, ajusta tus estrategias según tus necesidades.">Everything that is included in Seculo Investment Match but continuously. With a near to complete view of the market, generate multiple curated matches, explore across approximately 92–95% of publicly available listings, and export full datasets to Excel with deeper comparison variables. Choose whether to deduplicate listings or view all options offered in different portals, adjust your strategies according to your needs.</p>
-          <span class="plan-read-more" role="button" tabindex="0" data-en="See more" data-pt="Ver mais" data-es="Ver más">See more</span>
+          <ul class="plan-description">
+            <li data-en="Everything in &lt;em&gt;Investment Match&lt;/em&gt;, continuously updated" data-pt="Tudo o que está no &lt;em&gt;Investment Match&lt;/em&gt;, atualizado continuamente" data-es="Todo lo de &lt;em&gt;Investment Match&lt;/em&gt;, actualizado continuamente">Everything in <em>Investment Match</em>, continuously updated</li>
+            <li data-en="&lt;strong&gt;~92–95%&lt;/strong&gt; of publicly available listings — near-complete market view" data-pt="&lt;strong&gt;~92–95%&lt;/strong&gt; dos anúncios públicos — visão quase completa do mercado" data-es="&lt;strong&gt;~92–95%&lt;/strong&gt; de los anuncios disponibles — visión casi completa del mercado"><strong>~92–95%</strong> of publicly available listings — near-complete market view</li>
+            <li data-en="Generate &lt;strong&gt;multiple curated matches&lt;/strong&gt; — export full datasets to &lt;em&gt;Excel&lt;/em&gt;" data-pt="Gere &lt;strong&gt;múltiplas correspondências&lt;/strong&gt; — exporte conjuntos de dados completos para &lt;em&gt;Excel&lt;/em&gt;" data-es="Genera &lt;strong&gt;múltiples coincidencias curadas&lt;/strong&gt; — exporta datasets completos a &lt;em&gt;Excel&lt;/em&gt;">Generate <strong>multiple curated matches</strong> — export full datasets to <em>Excel</em></li>
+            <li data-en="Choose to &lt;em&gt;deduplicate&lt;/em&gt; or view all portal options side by side" data-pt="Escolha &lt;em&gt;eliminar duplicados&lt;/em&gt; ou ver todas as opções de diferentes portais" data-es="Elige &lt;em&gt;desduplicar&lt;/em&gt; o ver todas las opciones de distintos portales">Choose to <em>deduplicate</em> or view all portal options side by side</li>
+            <li data-en="Deeper comparison variables and flexible strategy control" data-pt="Variáveis de comparação mais detalhadas e controlo flexível de estratégia" data-es="Variables de comparación más detalladas y control flexible de estrategia">Deeper comparison variables and flexible strategy control</li>
+          </ul>
 
           <!-- Product screenshots carousel — add slides when assets/products/professional/ is populated -->
           <div class="plan-media" data-carousel hidden>
@@ -300,11 +332,13 @@
             </div>
             <span class="plan-period" data-en="per month" data-pt="por mês" data-es="al mes">per month</span>
           </div>
-          <p class="plan-description"
-            data-en="Close your deals sooner by delivering your clients the best-matched options instantly. Generate client-ready property shortlists based on how your clients truly want to live or invest, not just what they ask for. Access all the features of the Seculo Professional engine, plus see each property as a single opportunity with full visibility of all agencies listing it. Present ranked recommendations with clear, data-driven reasoning — ready to export and share with your own branding, so you can win more clients and secure agreements faster."
-            data-pt="Feche os seus negócios mais rapidamente ao entregar aos seus clientes as melhores opções instantaneamente. Gere listas de imóveis prontas para clientes com base na forma como os seus clientes realmente querem viver ou investir, não apenas no que pedem. Aceda a todas as funcionalidades do motor Seculo Professional, mais veja cada imóvel como uma única oportunidade com total visibilidade de todas as agências que o anunciam. Apresente recomendações classificadas com raciocínio claro e baseado em dados — prontas para exportar e partilhar com a sua própria marca, para que possa conquistar mais clientes e fechar acordos mais rapidamente."
-            data-es="Cierra tus acuerdos antes entregando a tus clientes las mejores opciones al instante. Genera listas de propiedades listas para el cliente basadas en cómo tus clientes realmente quieren vivir o invertir, no solo en lo que piden. Accede a todas las funcionalidades del motor Seculo Professional, además de ver cada propiedad como una única oportunidad con visibilidad total de todas las agencias que la anuncian. Presenta recomendaciones ordenadas con razonamiento claro y basado en datos — listas para exportar y compartir con tu propia marca, para que puedas ganar más clientes y cerrar acuerdos más rápido.">Close your deals sooner by delivering your clients the best-matched options instantly. Generate client-ready property shortlists based on how your clients truly want to live or invest, not just what they ask for. Access all the features of the Seculo Professional engine, plus see each property as a single opportunity with full visibility of all agencies listing it. Present ranked recommendations with clear, data-driven reasoning — ready to export and share with your own branding, so you can win more clients and secure agreements faster.</p>
-          <span class="plan-read-more" role="button" tabindex="0" data-en="See more" data-pt="Ver mais" data-es="Ver más">See more</span>
+          <ul class="plan-description">
+            <li data-en="Deliver clients the &lt;strong&gt;best-matched options&lt;/strong&gt; instantly — close deals faster" data-pt="Entregue aos clientes as &lt;strong&gt;melhores opções&lt;/strong&gt; instantaneamente — feche negócios mais rápido" data-es="Entrega a tus clientes las &lt;strong&gt;mejores opciones&lt;/strong&gt; al instante — cierra acuerdos antes">Deliver clients the <strong>best-matched options</strong> instantly — close deals faster</li>
+            <li data-en="Generate &lt;em&gt;client-ready&lt;/em&gt; shortlists based on how clients truly want to live or invest" data-pt="Gere listas &lt;em&gt;prontas para o cliente&lt;/em&gt; com base no que realmente querem" data-es="Genera listas &lt;em&gt;listas para el cliente&lt;/em&gt; basadas en cómo realmente quieren vivir o invertir">Generate <em>client-ready</em> shortlists based on how clients truly want to live or invest</li>
+            <li data-en="Full &lt;em&gt;Professional&lt;/em&gt; engine — plus see each property as a &lt;strong&gt;single opportunity&lt;/strong&gt; across all agencies" data-pt="Motor &lt;em&gt;Professional&lt;/em&gt; completo — mais cada imóvel como &lt;strong&gt;oportunidade única&lt;/strong&gt; em todas as agências" data-es="Motor &lt;em&gt;Professional&lt;/em&gt; completo — más cada propiedad como &lt;strong&gt;oportunidad única&lt;/strong&gt; en todas las agencias">Full <em>Professional</em> engine — plus see each property as a <strong>single opportunity</strong> across all agencies</li>
+            <li data-en="Present ranked recommendations with &lt;strong&gt;data-driven reasoning&lt;/strong&gt;" data-pt="Apresente recomendações com &lt;strong&gt;raciocínio baseado em dados&lt;/strong&gt;" data-es="Presenta recomendaciones con &lt;strong&gt;razonamiento basado en datos&lt;/strong&gt;">Present ranked recommendations with <strong>data-driven reasoning</strong></li>
+            <li data-en="Export and share with &lt;em&gt;your own branding&lt;/em&gt;" data-pt="Exporte e partilhe com &lt;em&gt;a sua própria marca&lt;/em&gt;" data-es="Exporta y comparte con &lt;em&gt;tu propia marca&lt;/em&gt;">Export and share with <em>your own branding</em></li>
+          </ul>
 
           <!-- Product screenshots carousel — add slides when assets/products/agency/ is populated -->
           <div class="plan-media" data-carousel hidden>
@@ -329,11 +363,13 @@
             </div>
             <span class="plan-period" data-en="per month" data-pt="por mês" data-es="al mes">per month</span>
           </div>
-          <p class="plan-description"
-            data-en="Transform your investment strategy into a continuous, data-driven deal flow. Define your target returns, capital allocation, preferred markets, and operational constraints — and receive a live stream of currently available properties that precisely match your evolving strategy as the market shifts. Continuously evaluate and compare opportunities with advanced scenario modeling, instant geographic and comparative market analysis, and decision-ready outputs tailored to your investment criteria. Iterate, validate, and execute with confidence — accelerating your ability to seize the right opportunities, optimise your portfolio, and stay ahead in a dynamic market."
-            data-pt="Transforme a sua estratégia de investimento num fluxo de negócios contínuo e baseado em dados. Defina os seus retornos-alvo, alocação de capital, mercados preferidos e restrições operacionais — e receba um fluxo em tempo real de imóveis disponíveis que correspondem precisamente à sua estratégia em evolução à medida que o mercado muda. Avalie e compare continuamente oportunidades com modelação avançada de cenários, análise geográfica e comparativa de mercado instantânea, e outputs prontos para decisão adaptados aos seus critérios de investimento. Itere, valide e execute com confiança — acelerando a sua capacidade de aproveitar as oportunidades certas, otimizar a sua carteira e manter-se à frente num mercado dinâmico."
-            data-es="Transforma tu estrategia de inversión en un flujo de operaciones continuo y basado en datos. Define tus retornos objetivo, asignación de capital, mercados preferidos y restricciones operacionales — y recibe un flujo en vivo de propiedades disponibles que coinciden precisamente con tu estrategia en evolución a medida que el mercado cambia. Evalúa y compara oportunidades continuamente con modelado avanzado de escenarios, análisis geográfico y de mercado comparativo instantáneo, y resultados listos para decisión adaptados a tus criterios de inversión. Itera, valida y ejecuta con confianza — acelerando tu capacidad de aprovechar las oportunidades correctas, optimizar tu cartera y mantenerte por delante en un mercado dinámico.">Transform your investment strategy into a continuous, data-driven deal flow. Define your target returns, capital allocation, preferred markets, and operational constraints — and receive a live stream of currently available properties that precisely match your evolving strategy as the market shifts. Continuously evaluate and compare opportunities with advanced scenario modeling, instant geographic and comparative market analysis, and decision-ready outputs tailored to your investment criteria. Iterate, validate, and execute with confidence — accelerating your ability to seize the right opportunities, optimise your portfolio, and stay ahead in a dynamic market.</p>
-          <span class="plan-read-more" role="button" tabindex="0" data-en="See more" data-pt="Ver mais" data-es="Ver más">See more</span>
+          <ul class="plan-description">
+            <li data-en="&lt;strong&gt;Continuous deal flow&lt;/strong&gt; matched to your evolving investment strategy" data-pt="&lt;strong&gt;Fluxo de negócios contínuo&lt;/strong&gt; adaptado à sua estratégia em evolução" data-es="&lt;strong&gt;Flujo de operaciones continuo&lt;/strong&gt; adaptado a tu estrategia en evolución"><strong>Continuous deal flow</strong> matched to your evolving investment strategy</li>
+            <li data-en="Define target returns, capital allocation, preferred markets, and operational constraints" data-pt="Defina retornos-alvo, alocação de capital, mercados preferidos e restrições operacionais" data-es="Define retornos objetivo, asignación de capital, mercados preferidos y restricciones operacionales">Define target returns, capital allocation, preferred markets, and operational constraints</li>
+            <li data-en="&lt;em&gt;Advanced scenario modeling&lt;/em&gt; and instant geographic &amp; comparative market analysis" data-pt="&lt;em&gt;Modelação avançada de cenários&lt;/em&gt; e análise geográfica e comparativa instantânea" data-es="&lt;em&gt;Modelado avanzado de escenarios&lt;/em&gt; y análisis geográfico y comparativo instantáneo"><em>Advanced scenario modeling</em> and instant geographic &amp; comparative market analysis</li>
+            <li data-en="Decision-ready outputs tailored to &lt;strong&gt;your investment criteria&lt;/strong&gt;" data-pt="Outputs prontos para decisão adaptados aos &lt;strong&gt;seus critérios de investimento&lt;/strong&gt;" data-es="Resultados listos para decisión adaptados a &lt;strong&gt;tus criterios de inversión&lt;/strong&gt;">Decision-ready outputs tailored to <strong>your investment criteria</strong></li>
+            <li data-en="Iterate, validate, and execute — &lt;em&gt;stay ahead in a dynamic market&lt;/em&gt;" data-pt="Itere, valide e execute — &lt;em&gt;mantenha-se à frente num mercado dinâmico&lt;/em&gt;" data-es="Itera, valida y ejecuta — &lt;em&gt;mantente por delante en un mercado dinámico&lt;/em&gt;">Iterate, validate, and execute — <em>stay ahead in a dynamic market</em></li>
+          </ul>
 
           <!-- Product screenshots carousel -->
           <div class="plan-media" data-carousel>
@@ -436,10 +472,13 @@
   <div id="checkout-overlay" style="display:none;position:fixed;inset:0;background:rgba(25,25,39,0.82);z-index:1000;align-items:center;justify-content:center;">
     <div style="background:var(--color-bg);border-radius:4px;padding:40px 36px;max-width:420px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,0.4);">
       <h3 style="font-family:var(--font-display);margin-bottom:8px;" id="checkout-modal-title">Enter your email to continue</h3>
-      <p style="color:var(--color-mid);font-size:0.9rem;margin-bottom:24px;" id="checkout-modal-sub">Your access link will be sent here after payment.</p>
+      <p style="color:var(--color-mid);font-size:0.9rem;margin-bottom:24px;" id="checkout-modal-sub">We will send your access link to this address after payment.</p>
       <input type="email" id="checkout-email"
-        style="width:100%;padding:12px 14px;border:1.5px solid var(--color-divider);border-radius:4px;font-family:var(--font-body);font-size:0.95rem;background:#fff;margin-bottom:12px;box-sizing:border-box;"
+        style="width:100%;padding:12px 14px;border:1.5px solid var(--color-divider);border-radius:4px;font-family:var(--font-body);font-size:0.95rem;background:#fff;margin-bottom:8px;box-sizing:border-box;"
         placeholder="email@example.com" autocomplete="email" />
+      <input type="email" id="checkout-email-confirm"
+        style="width:100%;padding:12px 14px;border:1.5px solid var(--color-divider);border-radius:4px;font-family:var(--font-body);font-size:0.95rem;background:#fff;margin-bottom:12px;box-sizing:border-box;"
+        placeholder="Confirm email address" autocomplete="email" />
       <p id="checkout-error" style="display:none;color:#c0392b;font-size:0.82rem;margin-bottom:10px;"></p>
       <button id="checkout-confirm" disabled
         style="width:100%;padding:13px;background:var(--color-primary);color:#fff;border:none;border-radius:4px;font-family:var(--font-body);font-weight:600;font-size:0.95rem;cursor:pointer;margin-bottom:10px;"
@@ -464,27 +503,35 @@
       var API_BASE = 'https://seculo-api.vercel.app';
       var overlay  = document.getElementById('checkout-overlay');
       var emailEl  = document.getElementById('checkout-email');
+      var emailConfirmEl = document.getElementById('checkout-email-confirm');
       var confirmBtn = document.getElementById('checkout-confirm');
       var cancelBtn  = document.getElementById('checkout-cancel');
       var errorEl  = document.getElementById('checkout-error');
       var activeTier = null;
+
+      function validateEmails() {
+        var valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim());
+        var match = emailEl.value.trim() === emailConfirmEl.value.trim();
+        confirmBtn.disabled = !(valid && match);
+      }
 
       // Show modal on paid plan CTA click
       document.querySelectorAll('button.plan-cta[data-tier]').forEach(function (btn) {
         btn.addEventListener('click', function () {
           activeTier = btn.dataset.tier;
           emailEl.value = '';
+          emailConfirmEl.value = '';
           errorEl.style.display = 'none';
           confirmBtn.disabled = true;
+          confirmBtn.textContent = document.documentElement.lang === 'pt' ? 'Continuar para pagamento' : 'Continue to payment';
           overlay.style.display = 'flex';
           setTimeout(function () { emailEl.focus(); }, 100);
         });
       });
 
-      // Validate email
-      emailEl.addEventListener('input', function () {
-        confirmBtn.disabled = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value.trim());
-      });
+      // Validate emails on input
+      emailEl.addEventListener('input', validateEmails);
+      emailConfirmEl.addEventListener('input', validateEmails);
 
       // Cancel
       cancelBtn.addEventListener('click', function () {
@@ -494,10 +541,27 @@
         if (e.target === overlay) overlay.style.display = 'none';
       });
 
+      // Bug 5: reset button when page is restored from bfcache (after Stripe redirect)
+      window.addEventListener('pageshow', function (e) {
+        if (e.persisted) {
+          var lang = document.documentElement.lang || 'en';
+          overlay.style.display = 'none';
+          confirmBtn.disabled = true;
+          confirmBtn.textContent = lang === 'pt' ? 'Continuar para pagamento' : 'Continue to payment';
+          errorEl.style.display = 'none';
+        }
+      });
+
       // Confirm → call API → redirect Stripe
       confirmBtn.addEventListener('click', function () {
         var email = emailEl.value.trim();
+        var emailConfirm = emailConfirmEl.value.trim();
         var lang  = document.documentElement.lang || 'en';
+        if (email !== emailConfirm) {
+          errorEl.textContent = lang === 'pt' ? 'Os emails não coincidem.' : 'Emails do not match.';
+          errorEl.style.display = 'block';
+          return;
+        }
         confirmBtn.disabled = true;
         confirmBtn.textContent = lang === 'pt' ? 'A processar...' : 'Processing...';
         errorEl.style.display = 'none';

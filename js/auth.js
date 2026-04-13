@@ -4,12 +4,15 @@
 
 import { supabase } from './supabase-client.js';
 
-const form       = document.getElementById('login-form');
-const emailInput = document.getElementById('email-input');
-const pwInput    = document.getElementById('password-input');
-const togglePw   = document.getElementById('toggle-pw');
-const btn        = document.getElementById('send-btn');
-const message    = document.getElementById('login-message');
+const form        = document.getElementById('login-form');
+const emailInput  = document.getElementById('email-input');
+const pwInput     = document.getElementById('password-input');
+const togglePw    = document.getElementById('toggle-pw');
+const btn         = document.getElementById('send-btn');
+const message     = document.getElementById('login-message');
+const resendWrap  = document.getElementById('resend-wrap');
+const resendBtn   = document.getElementById('resend-btn');
+const resendMsg   = document.getElementById('resend-message');
 
 // Handle auth callback: if Supabase redirected here with ?code= (email confirmation),
 // exchange the code for a session and go to dashboard immediately.
@@ -77,6 +80,7 @@ form.addEventListener('submit', async function (e) {
       message.textContent = lang === 'pt'
         ? 'Confirma o teu email antes de entrar. Verifica a tua caixa de entrada e clica no link de confirmação.'
         : 'Please confirm your email before logging in. Check your inbox and click the confirmation link.';
+      if (resendWrap) resendWrap.style.display = 'block';
     } else if (isCredentialError) {
       message.textContent = lang === 'pt'
         ? 'Email ou password incorretos.'
@@ -94,3 +98,26 @@ form.addEventListener('submit', async function (e) {
     window.location.href = 'dashboard.html';
   }
 });
+
+// Resend confirmation email
+if (resendBtn) {
+  resendBtn.addEventListener('click', async function () {
+    const email = emailInput.value.trim();
+    const lang  = document.documentElement.lang || 'pt';
+    if (!email) {
+      if (resendMsg) { resendMsg.textContent = lang === 'pt' ? 'Introduz o teu email acima.' : 'Enter your email above.'; resendMsg.style.display = 'block'; }
+      return;
+    }
+    resendBtn.disabled = true;
+    resendBtn.textContent = lang === 'pt' ? 'A enviar...' : 'Sending...';
+    const { error } = await supabase.auth.resend({ type: 'signup', email });
+    resendBtn.disabled = false;
+    resendBtn.textContent = lang === 'pt' ? 'Reenviar email de confirmação' : 'Resend confirmation email';
+    if (resendMsg) {
+      resendMsg.style.display = 'block';
+      resendMsg.textContent = error
+        ? (lang === 'pt' ? 'Erro ao reenviar. Tenta de novo.' : 'Error resending. Please try again.')
+        : (lang === 'pt' ? 'Email reenviado! Verifica a tua caixa de entrada.' : 'Email sent! Check your inbox.');
+    }
+  });
+}
