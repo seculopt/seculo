@@ -242,11 +242,37 @@
       </div>
       <div class="acct-row">
         <span class="acct-label" data-en="Plan" data-pt="Plano" data-es="Plan">Plan</span>
-        <span class="acct-value"><span class="tier-badge" id="acctTier">—</span></span>
+        <span class="acct-value">
+          <span class="tier-badge" id="acctTier">—</span>
+          &nbsp;<a href="products.html" id="upgradeLink" style="font-size:0.78rem;color:var(--color-accent);text-decoration:none;"
+            data-en="Upgrade" data-pt="Upgrade" data-es="Mejorar">Upgrade</a>
+        </span>
       </div>
       <div class="acct-row">
         <span class="acct-label" data-en="Member since" data-pt="Membro desde" data-es="Miembro desde">Member since</span>
         <span class="acct-value" id="acctSince">—</span>
+      </div>
+      <div class="acct-row">
+        <span class="acct-label" data-en="Billing" data-pt="Faturação" data-es="Facturación">Billing</span>
+        <span class="acct-value">
+          <span id="acctBilling" style="font-size:0.85rem;color:var(--color-mid);"
+            data-en="Managed securely via Stripe" data-pt="Gerido de forma segura via Stripe" data-es="Gestionado de forma segura via Stripe">
+            Managed securely via Stripe
+          </span>
+        </span>
+      </div>
+
+      <!-- Recent searches -->
+      <h2 class="acct-section" data-en="Recent Searches" data-pt="Pesquisas Recentes" data-es="Búsquedas Recientes">Recent Searches</h2>
+      <div style="background:var(--color-bg,#f8f7f4);border-radius:8px;padding:1.1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+        <p style="font-size:0.85rem;color:var(--color-mid);margin:0;"
+          data-en="Your saved properties and searches are available in your Dashboard."
+          data-pt="As tuas propriedades guardadas e pesquisas estão disponíveis no teu Dashboard."
+          data-es="Tus propiedades guardadas y búsquedas están disponibles en tu Dashboard.">
+          Your saved properties and searches are available in your Dashboard.
+        </p>
+        <a href="dashboard.html" class="btn btn-outline" style="white-space:nowrap;font-size:0.82rem;padding:0.5rem 1rem;"
+          data-en="Go to Dashboard" data-pt="Ir ao Dashboard" data-es="Ir al Dashboard">Go to Dashboard</a>
       </div>
 
       <!-- Change password -->
@@ -315,6 +341,15 @@
     document.getElementById('acctEmail').textContent = user.email || '—';
     document.getElementById('acctTier').textContent  = tier;
     document.getElementById('acctSince').textContent = since;
+
+    // Hide "Upgrade" link for paid plans
+    if (tier !== 'free') {
+      const ul = document.getElementById('upgradeLink');
+      if (ul) ul.style.display = 'none';
+    }
+
+    // Apply i18n to static data-* nodes if lang.js exposes _applyLang
+    if (window._applyLang) window._applyLang();
 
     // ── Show/hide password toggles ──────────────────────────
     document.querySelectorAll('.pw-toggle').forEach(btn => {
