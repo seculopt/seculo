@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Manage your Século Explorer account — email, plan, and password." />
+  <title>My Account — Século Explorer</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+
+  <style>
+    .auth-page {
+      min-height: calc(100vh - 72px);
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 3rem 1rem;
+      background: var(--color-bg);
+    }
+    .auth-card {
+      background: var(--color-white);
+      border: 1px solid var(--color-divider);
+      border-radius: 12px;
+      padding: 2.5rem 2rem;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 4px 24px rgba(25,25,39,0.07);
+    }
+    .auth-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--color-primary);
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .auth-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    .auth-subtitle {
+      color: var(--color-mid);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    /* Info row: label + value */
+    .acct-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--color-divider);
+      gap: 1rem;
+    }
+    .acct-row:last-of-type { border-bottom: none; }
+    .acct-label {
+      font-size: 0.8rem;
+      color: var(--color-mid);
+      white-space: nowrap;
+    }
+    .acct-value {
+      font-size: 0.92rem;
+      color: var(--color-primary);
+      font-weight: 500;
+      text-align: right;
+      word-break: break-all;
+    }
+    .tier-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      background: var(--color-accent, #c4a35a);
+      color: #fff;
+    }
+    /* Section header */
+    .acct-section {
+      margin: 2rem 0 0.75rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+    /* Form fields */
+    .auth-field {
+      margin-bottom: 1rem;
+    }
+    .auth-field label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--color-mid);
+      margin-bottom: 0.35rem;
+    }
+    .auth-field input {
+      width: 100%;
+      border: 1px solid var(--color-divider);
+      border-radius: 6px;
+      padding: 0.7rem 0.9rem;
+      font-size: 0.9rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--color-primary);
+      background: var(--color-white);
+      transition: border-color 0.15s;
+      box-sizing: border-box;
+    }
+    .auth-field input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+    }
+    .pw-wrap {
+      position: relative;
+    }
+    .pw-wrap input { padding-right: 2.8rem; }
+    .pw-toggle {
+      position: absolute;
+      right: 0.6rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--color-mid);
+      font-size: 0.85rem;
+      padding: 0.2rem;
+    }
+    .auth-btn {
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+    .auth-message {
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      text-align: center;
+      display: none;
+    }
+    .auth-message--success {
+      background: #f0faf4;
+      border: 1px solid #a8d5b5;
+      color: #27664a;
+      display: block;
+    }
+    .auth-message--error {
+      background: #fdf2f2;
+      border: 1px solid #e8b4b4;
+      color: #c0392b;
+      display: block;
+    }
+    .auth-footer-note {
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--color-divider);
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--color-mid);
+    }
+    .auth-footer-note a { color: var(--color-mid); }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.82rem;
+      color: var(--color-mid);
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+    }
+    .back-link:hover { color: var(--color-accent); }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav class="site-nav" id="site-nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo" aria-label="Século Explorer — Home">
+        <img src="assets/logo-light.svg" alt="Século Explorer" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" data-en="Home" data-pt="Início" data-es="Inicio">Home</a></li>
+        <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona" data-es="Cómo Funciona">How It Works</a></li>
+        <li><a href="products.html" data-en="Plans" data-pt="Planos" data-es="Planes">Plans</a></li>
+        <li>
+          <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-outline" data-en="Open Engine" data-pt="Abrir Motor" data-es="Abrir Motor">Open Engine</a>
+        </li>
+      </ul>
+      <div class="nav-user" id="navUser" style="display:none;">
+        <span class="nav-user-name" id="navUserName"></span>
+        <span>·</span>
+        <a href="dashboard.html" class="nav-signout" data-en="Dashboard" data-pt="Dashboard" data-es="Dashboard">Dashboard</a>
+        <span>·</span>
+        <button class="nav-signout" id="signOutBtn" data-en="Sign out" data-pt="Sair" data-es="Cerrar sesión">Sign out</button>
+      </div>
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <span>|</span>
+        <button class="lang-btn" data-lang="pt">PT</button>
+        <span>|</span>
+        <button class="lang-btn" data-lang="es">ES</button>
+      </div>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ACCOUNT PAGE -->
+  <main class="auth-page">
+    <div class="auth-card">
+      <div class="auth-logo">SÉCULO</div>
+
+      <a href="dashboard.html" class="back-link">&#8592; <span data-en="Back to Dashboard" data-pt="Voltar ao Dashboard" data-es="Volver al Dashboard">Back to Dashboard</span></a>
+
+      <h1 class="auth-title" data-en="My Account" data-pt="Minha conta" data-es="Mi cuenta">My Account</h1>
+      <p class="auth-subtitle"
+        data-en="Your account details and settings."
+        data-pt="Os detalhes e configurações da tua conta."
+        data-es="Los detalles y configuración de tu cuenta.">
+        Your account details and settings.
+      </p>
+
+      <!-- Account info -->
+      <div class="acct-row">
+        <span class="acct-label" data-en="Email" data-pt="Email" data-es="Email">Email</span>
+        <span class="acct-value" id="acctEmail">—</span>
+      </div>
+      <div class="acct-row">
+        <span class="acct-label" data-en="Plan" data-pt="Plano" data-es="Plan">Plan</span>
+        <span class="acct-value"><span class="tier-badge" id="acctTier">—</span></span>
+      </div>
+      <div class="acct-row">
+        <span class="acct-label" data-en="Member since" data-pt="Membro desde" data-es="Miembro desde">Member since</span>
+        <span class="acct-value" id="acctSince">—</span>
+      </div>
+
+      <!-- Change password -->
+      <h2 class="acct-section" data-en="Change Password" data-pt="Alterar Password" data-es="Cambiar Contraseña">Change Password</h2>
+
+      <form id="pw-form">
+        <div class="auth-field">
+          <label data-en="New password" data-pt="Nova password" data-es="Nueva contraseña">New password</label>
+          <div class="pw-wrap">
+            <input type="password" id="pw-new" required minlength="8"
+              placeholder="••••••••"
+              autocomplete="new-password" />
+            <button type="button" class="pw-toggle" data-toggle="pw-new" aria-label="Show/hide">👁</button>
+          </div>
+        </div>
+        <div class="auth-field">
+          <label data-en="Confirm new password" data-pt="Confirmar nova password" data-es="Confirmar contraseña">Confirm new password</label>
+          <div class="pw-wrap">
+            <input type="password" id="pw-confirm" required minlength="8"
+              placeholder="••••••••"
+              autocomplete="new-password" />
+            <button type="button" class="pw-toggle" data-toggle="pw-confirm" aria-label="Show/hide">👁</button>
+          </div>
+        </div>
+        <button type="submit" id="pw-btn" class="btn btn-primary auth-btn"
+          data-en="Update password" data-pt="Atualizar password" data-es="Actualizar contraseña">
+          Update password
+        </button>
+      </form>
+
+      <p id="pw-message" class="auth-message"></p>
+
+      <div class="auth-footer-note">
+        <a href="privacy-policy.html" data-en="Privacy Policy" data-pt="Política de Privacidade" data-es="Política de Privacidad">Privacy Policy</a>
+        &nbsp;·&nbsp;
+        <a href="mailto:suporte@seculopt.com">suporte@seculopt.com</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- SCRIPTS -->
+  <script src="js/nav.js"></script>
+  <script src="js/lang.js"></script>
+  <script src="js/cookies.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script type="module">
+    import { supabase, getSession, signOut } from './js/supabase-client.js';
+
+    // ── Auth guard ──────────────────────────────────────────
+    const session = await getSession();
+    if (!session) {
+      window.location.href = 'login.html';
+    }
+
+    const { user } = session;
+    const tier  = user?.user_metadata?.tier || 'free';
+    const name  = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Explorer';
+    const since = user?.created_at ? new Date(user.created_at).toLocaleDateString(undefined, { year:'numeric', month:'long', day:'numeric' }) : '—';
+
+    // ── Populate nav ────────────────────────────────────────
+    document.getElementById('navUser').style.display = 'flex';
+    document.getElementById('navUserName').textContent = name;
+    document.getElementById('signOutBtn').addEventListener('click', () => signOut());
+
+    // ── Populate account info ───────────────────────────────
+    document.getElementById('acctEmail').textContent = user.email || '—';
+    document.getElementById('acctTier').textContent  = tier;
+    document.getElementById('acctSince').textContent = since;
+
+    // ── Show/hide password toggles ──────────────────────────
+    document.querySelectorAll('.pw-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = document.getElementById(btn.dataset.toggle);
+        input.type = input.type === 'password' ? 'text' : 'password';
+      });
+    });
+
+    // ── Change password ─────────────────────────────────────
+    const pwForm = document.getElementById('pw-form');
+    const pwMsg  = document.getElementById('pw-message');
+    const pwBtn  = document.getElementById('pw-btn');
+
+    pwForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const newPw     = document.getElementById('pw-new').value;
+      const confirmPw = document.getElementById('pw-confirm').value;
+
+      pwMsg.className = 'auth-message';
+      pwMsg.textContent = '';
+
+      if (newPw !== confirmPw) {
+        pwMsg.className = 'auth-message auth-message--error';
+        pwMsg.setAttribute('data-en', 'Passwords do not match.');
+        pwMsg.setAttribute('data-pt', 'As passwords não coincidem.');
+        pwMsg.setAttribute('data-es', 'Las contraseñas no coinciden.');
+        pwMsg.textContent = 'Passwords do not match.';
+        if (window._applyLang) window._applyLang();
+        return;
+      }
+
+      pwBtn.disabled = true;
+      const origText = pwBtn.textContent;
+      pwBtn.textContent = '...';
+
+      const { error } = await supabase.auth.updateUser({ password: newPw });
+
+      pwBtn.disabled = false;
+      pwBtn.textContent = origText;
+
+      if (error) {
+        pwMsg.className = 'auth-message auth-message--error';
+        pwMsg.textContent = error.message;
+      } else {
+        pwMsg.className = 'auth-message auth-message--success';
+        pwMsg.setAttribute('data-en', 'Password updated successfully.');
+        pwMsg.setAttribute('data-pt', 'Password atualizada com sucesso.');
+        pwMsg.setAttribute('data-es', 'Contraseña actualizada correctamente.');
+        pwMsg.textContent = 'Password updated successfully.';
+        if (window._applyLang) window._applyLang();
+        pwForm.reset();
+      }
+    });
+  </script>
+
+</body>
+</html>

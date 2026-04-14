@@ -30,7 +30,15 @@ tierBadge.style.display = 'inline-block';
 
 // Update engine link — pass tokens in hash for cross-domain session
 const engineLink = document.getElementById('engineLink');
-engineLink.href = `${API}/?load_saved=1#access_token=${encodeURIComponent(access_token)}&refresh_token=${encodeURIComponent(refresh_token)}&tier=${tier}`;
+const _tokenHash = `#access_token=${encodeURIComponent(access_token)}&refresh_token=${encodeURIComponent(refresh_token)}&tier=${tier}`;
+engineLink.href = `${API}/?load_saved=1${_tokenHash}`;
+
+// Bug fix: update ALL other engine links with tokens (cross-domain SSO)
+// Without this, the nav "Open Engine" and "Start searching" links have no auth → user sees "Create Account"
+document.querySelectorAll('a[href*="seculo-api.vercel.app"]').forEach(link => {
+  if (link.id === 'engineLink') return; // already handled with ?load_saved=1
+  link.href = `${API}/${_tokenHash}`;
+});
 
 // ── State ──────────────────────────────────────────────────
 let properties = [];
