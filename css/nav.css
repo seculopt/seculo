@@ -92,6 +92,36 @@
   color: var(--color-primary);
 }
 
+/* ── Nav user chip (authenticated state) ── */
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.nav-user-name {
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.nav-signout {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: inherit;
+  padding: 0;
+}
+
+.nav-signout:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
 /* ── Language Toggle ── */
 .lang-toggle {
   display: flex;

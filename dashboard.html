@@ -324,13 +324,13 @@
     #dashToast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* ── Nav user chip ── */
-    .nav-user { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: var(--color-mid); }
-    .nav-user-name { font-weight: 500; color: var(--color-primary); }
+    .nav-user { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: rgba(255,255,255,0.65); }
+    .nav-user-name { font-weight: 500; color: #ffffff; }
     .nav-signout {
-      font-size: 0.78rem; color: var(--color-mid); text-decoration: none;
+      font-size: 0.78rem; color: rgba(255,255,255,0.65); text-decoration: none;
       cursor: pointer; background: none; border: none; font-family: inherit; padding: 0;
     }
-    .nav-signout:hover { color: var(--color-primary); text-decoration: underline; }
+    .nav-signout:hover { color: var(--color-accent); text-decoration: underline; }
 
     /* ── Mobile sidebar: horizontal scrollable strip ── */
     @media (max-width: 768px) {
@@ -437,10 +437,10 @@
 
           <!-- Empty: no properties at all -->
           <div class="dash-empty" id="dashEmpty">
-            <div class="dash-empty-icon">&#128278;</div>
-            <h2 data-en="No saved properties yet" data-pt="Sem propriedades guardadas" data-es="Sin propiedades guardadas">No saved properties yet</h2>
-            <p data-en="Use the engine to search for properties in Portugal. When you find one you like, click the bookmark button to save it here." data-pt="Usa o motor de busca para encontrar imóveis em Portugal. Quando encontrares um que gostes, clica no marcador para o guardar aqui." data-es="Usa el motor de búsqueda para encontrar propiedades en Portugal. Cuando encuentres una que te guste, haz clic en el marcador para guardarla aquí.">Use the engine to search for properties in Portugal. When you find one you like, click the bookmark button to save it here.</p>
-            <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" data-en="Start searching" data-pt="Começar a explorar" data-es="Empezar a explorar">Start searching</a>
+            <div class="dash-empty-icon">&#128269;</div>
+            <h2 data-en="It looks like you haven't saved anything yet!" data-pt="Parece que ainda não guardaste nada!" data-es="¡Parece que todavía no has guardado nada!">It looks like you haven't saved anything yet!</h2>
+            <p data-en="Go back to the map, explore properties across Portugal, and click the bookmark icon on any listing to save it here." data-pt="Volta ao mapa, explora imóveis em Portugal e clica no marcador em qualquer anúncio para o guardar aqui." data-es="Vuelve al mapa, explora propiedades en Portugal y haz clic en el marcador en cualquier anuncio para guardarlo aquí.">Go back to the map, explore properties across Portugal, and click the bookmark icon on any listing to save it here.</p>
+            <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" id="emptySearchBtn" data-en="Go back to searching" data-pt="Voltar a explorar" data-es="Volver a explorar">Go back to searching</a>
           </div>
 
           <!-- Empty: folder has no properties -->

@@ -56,10 +56,17 @@
         <li>
           <a href="products.html" class="btn btn-outline" data-en="Start Finding" data-pt="Começar a Encontrar" data-es="Empezar a Encontrar">Start Finding</a>
         </li>
-        <li class="nav-login">
+        <li class="nav-login" id="navLoginBtn">
           <a href="login.html" class="btn btn-outline btn-sm" data-en="Log in" data-pt="Entrar" data-es="Entrar">Log in</a>
         </li>
       </ul>
+      <div class="nav-user" id="navUser" style="display:none;">
+        <span class="nav-user-name" id="navUserName"></span>
+        <span>·</span>
+        <a href="dashboard.html" class="nav-signout" data-en="Dashboard" data-pt="Dashboard" data-es="Dashboard">Dashboard</a>
+        <span>·</span>
+        <button class="nav-signout" id="signOutBtn" data-en="Sign out" data-pt="Sair" data-es="Cerrar sesión">Sign out</button>
+      </div>
       <div class="lang-toggle">
         <button class="lang-btn active" data-lang="en">EN</button>
         <span>|</span>
@@ -1091,6 +1098,23 @@
 
   <!-- Crisp chat -->
   <script>window.$crisp=[];window.CRISP_WEBSITE_ID="ffe7c145-54f8-4fb4-83be-2eba61d6f20d";(function(){var s=document.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;document.getElementsByTagName("head")[0].appendChild(s);})();</script>
+
+  <!-- Auth nav detection -->
+  <script type="module">
+    import { getSession, signOut } from './js/supabase-client.js';
+    try {
+      const session = await getSession();
+      if (session) {
+        const user = session.user;
+        const name = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Explorer';
+        document.getElementById('navUser').style.display = 'flex';
+        document.getElementById('navUserName').textContent = name;
+        const loginBtn = document.getElementById('navLoginBtn');
+        if (loginBtn) loginBtn.style.display = 'none';
+        document.getElementById('signOutBtn').addEventListener('click', () => signOut());
+      }
+    } catch (e) { /* non-fatal — page is public */ }
+  </script>
 
 </body>
 </html>
