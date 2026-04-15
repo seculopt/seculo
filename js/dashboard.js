@@ -46,18 +46,34 @@ let folders    = [];
 let activeFolderId = null; // null=All, 'unfiled'=no folder, uuid=folder
 
 // ── Load data ──────────────────────────────────────────────
+let _loadError = false;
 try {
   const [propsRes, foldsRes] = await Promise.all([
     fetch(`${API}/api/my-properties`, { headers: { Authorization: `Bearer ${access_token}` } }),
     fetch(`${API}/api/folders`,       { headers: { Authorization: `Bearer ${access_token}` } }),
   ]);
-  if (propsRes.ok) { const d = await propsRes.json(); properties = d.properties || []; }
+  if (propsRes.ok) {
+    const d = await propsRes.json();
+    properties = d.properties || [];
+  } else {
+    console.error('my-properties API error:', propsRes.status);
+    _loadError = true;
+  }
   if (foldsRes.ok) { const d = await foldsRes.json(); folders = d.folders || []; }
 } catch (e) {
   console.error('Failed to load dashboard data', e);
+  _loadError = true;
 }
 
 document.getElementById('dashLoading').style.display = 'none';
+if (_loadError && properties.length === 0) {
+  // Show a visible error so the user knows it's a network/auth issue, not empty list
+  const errEl = document.createElement('div');
+  errEl.style.cssText = 'text-align:center;padding:3rem 1rem;color:#c0392b;';
+  errEl.innerHTML = '<p style="font-size:1rem;font-weight:500;">⚠️ Could not load your saved properties.</p><p style="font-size:0.85rem;margin-top:0.5rem;color:#888;">Please refresh the page or <a href="login.html" style="color:inherit;">log in again</a>.</p>';
+  document.getElementById('dashMain') && document.getElementById('dashMain').prepend(errEl) ||
+  document.querySelector('.dash-main') && document.querySelector('.dash-main').prepend(errEl);
+}
 initDashboard();
 
 // ── Folder sidebar ─────────────────────────────────────────
