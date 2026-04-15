@@ -298,7 +298,12 @@ function renderDashGrid() {
   }
 
   grid.style.display = 'grid';
-  filtered.forEach(prop => grid.appendChild(buildCard(prop)));
+  try {
+    filtered.forEach(prop => grid.appendChild(buildCard(prop)));
+  } catch(e) {
+    console.error('Dashboard card render error:', e);
+    showToast('Error loading cards — check console');
+  }
 
   const t = getT();
   meta.textContent = `${filtered.length} ${filtered.length === 1 ? t.propSingular : t.propPlural}`;
