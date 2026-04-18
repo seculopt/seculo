@@ -45,6 +45,86 @@ let properties = [];
 let folders    = [];
 let activeFolderId = null; // null=All, 'unfiled'=no folder, uuid=folder
 
+// ── Translations ───────────────────────────────────────────
+const CARD_T = {
+  en: {
+    status: { interested: 'Interested', visited: 'Visited', discarded: 'Discarded', saved: 'Saved' },
+    view: 'View listing \u2197',
+    copy: '\uD83D\uDD17 Copy link',
+    del:  'Delete',
+    expired:     'Link expired',
+    expires_in:  (n) => `Link expires in ${n} day${n === 1 ? '' : 's'}`,
+    expires_on:  (d) => `Link expires ${d}`,
+    bed: 'bed',
+    propSingular: 'saved property',
+    propPlural:   'saved properties',
+    folderNone:  '📋 No folder',
+    folders: {
+      title:         'Folders',
+      all:           'All',
+      unfiled:       'Unfiled',
+      newFolder:     'New folder',
+      newFolderPrompt: 'Folder name:',
+      renamePrompt:  'New name:',
+      deleteConfirm: 'Delete folder "{name}"? Properties will become unfiled.',
+      rename:        'Rename',
+      delete:        'Delete folder',
+    },
+  },
+  pt: {
+    status: { interested: 'Interessado', visited: 'Visitado', discarded: 'Descartado', saved: 'Guardado' },
+    view: 'Ver anúncio \u2197',
+    copy: '\uD83D\uDD17 Copiar link',
+    del:  'Apagar',
+    expired:     'Link expirado',
+    expires_in:  (n) => `Link expira em ${n} dia${n === 1 ? '' : 's'}`,
+    expires_on:  (d) => `Link expira ${d}`,
+    bed: 'qto',
+    propSingular: 'propriedade guardada',
+    propPlural:   'propriedades guardadas',
+    folderNone:  '📋 Sem pasta',
+    folders: {
+      title:         'Pastas',
+      all:           'Todas',
+      unfiled:       'Sem pasta',
+      newFolder:     'Nova pasta',
+      newFolderPrompt: 'Nome da pasta:',
+      renamePrompt:  'Novo nome:',
+      deleteConfirm: 'Eliminar pasta "{name}"? As propriedades ficarão sem pasta.',
+      rename:        'Renomear',
+      delete:        'Eliminar pasta',
+    },
+  },
+  es: {
+    status: { interested: 'Interesado', visited: 'Visited', discarded: 'Descartado', saved: 'Guardado' },
+    view: 'Ver anuncio \u2197',
+    copy: '\uD83D\uDD17 Copiar link',
+    del:  'Eliminar',
+    expired:     'Link expirado',
+    expires_in:  (n) => `Link expira en ${n} día${n === 1 ? '' : 's'}`,
+    expires_on:  (d) => `Link expira ${d}`,
+    bed: 'hab',
+    propSingular: 'propiedad guardada',
+    propPlural:   'propiedades guardadas',
+    folderNone:  '📋 Sin carpeta',
+    folders: {
+      title:         'Carpetas',
+      all:           'Todas',
+      unfiled:       'Sin carpeta',
+      newFolder:     'Nueva carpeta',
+      newFolderPrompt: 'Nombre de la carpeta:',
+      renamePrompt:  'Nuevo nombre:',
+      deleteConfirm: 'Eliminar carpeta "{name}"? Las propiedades quedarán sin carpeta.',
+      rename:        'Renombrar',
+      delete:        'Eliminar carpeta',
+    },
+  },
+};
+
+function getT() {
+  return CARD_T[window.getCurrentLang ? window.getCurrentLang() : 'en'] || CARD_T.en;
+}
+
 // ── Load data ──────────────────────────────────────────────
 let _loadError = false;
 try {
@@ -332,85 +412,6 @@ document.addEventListener('seculo-lang-change', function () {
   if (properties.length > 0) { renderFolderSidebar(); renderDashGrid(); }
 });
 
-// ── Translations ───────────────────────────────────────────
-const CARD_T = {
-  en: {
-    status: { interested: 'Interested', visited: 'Visited', discarded: 'Discarded', saved: 'Saved' },
-    view: 'View listing \u2197',
-    copy: '\uD83D\uDD17 Copy link',
-    del:  'Delete',
-    expired:     'Link expired',
-    expires_in:  (n) => `Link expires in ${n} day${n === 1 ? '' : 's'}`,
-    expires_on:  (d) => `Link expires ${d}`,
-    bed: 'bed',
-    propSingular: 'saved property',
-    propPlural:   'saved properties',
-    folderNone:  '📋 No folder',
-    folders: {
-      title:         'Folders',
-      all:           'All',
-      unfiled:       'Unfiled',
-      newFolder:     'New folder',
-      newFolderPrompt: 'Folder name:',
-      renamePrompt:  'New name:',
-      deleteConfirm: 'Delete folder "{name}"? Properties will become unfiled.',
-      rename:        'Rename',
-      delete:        'Delete folder',
-    },
-  },
-  pt: {
-    status: { interested: 'Interessado', visited: 'Visitado', discarded: 'Descartado', saved: 'Guardado' },
-    view: 'Ver anúncio \u2197',
-    copy: '\uD83D\uDD17 Copiar link',
-    del:  'Apagar',
-    expired:     'Link expirado',
-    expires_in:  (n) => `Link expira em ${n} dia${n === 1 ? '' : 's'}`,
-    expires_on:  (d) => `Link expira ${d}`,
-    bed: 'qto',
-    propSingular: 'propriedade guardada',
-    propPlural:   'propriedades guardadas',
-    folderNone:  '📋 Sem pasta',
-    folders: {
-      title:         'Pastas',
-      all:           'Todas',
-      unfiled:       'Sem pasta',
-      newFolder:     'Nova pasta',
-      newFolderPrompt: 'Nome da pasta:',
-      renamePrompt:  'Novo nome:',
-      deleteConfirm: 'Eliminar pasta "{name}"? As propriedades ficarão sem pasta.',
-      rename:        'Renomear',
-      delete:        'Eliminar pasta',
-    },
-  },
-  es: {
-    status: { interested: 'Interesado', visited: 'Visitado', discarded: 'Descartado', saved: 'Guardado' },
-    view: 'Ver anuncio \u2197',
-    copy: '\uD83D\uDD17 Copiar link',
-    del:  'Eliminar',
-    expired:     'Link expirado',
-    expires_in:  (n) => `Link expira en ${n} día${n === 1 ? '' : 's'}`,
-    expires_on:  (d) => `Link expira ${d}`,
-    bed: 'hab',
-    propSingular: 'propiedad guardada',
-    propPlural:   'propiedades guardadas',
-    folderNone:  '📋 Sin carpeta',
-    folders: {
-      title:         'Carpetas',
-      all:           'Todas',
-      unfiled:       'Sin carpeta',
-      newFolder:     'Nueva carpeta',
-      newFolderPrompt: 'Nombre de la carpeta:',
-      renamePrompt:  'Nuevo nombre:',
-      deleteConfirm: 'Eliminar carpeta "{name}"? Las propiedades quedarán sin carpeta.',
-      rename:        'Renombrar',
-      delete:        'Eliminar carpeta',
-    },
-  },
-};
-
-function getT() {
-  return CARD_T[window.getCurrentLang ? window.getCurrentLang() : 'en'] || CARD_T.en;
-}
 
 // ── Card builder ───────────────────────────────────────────
 function addFolderOption(sel, folder) {
