@@ -7,11 +7,8 @@
   var validLangs  = ['en', 'pt', 'es'];
   var htmlEl      = document.documentElement;
 
-  // ── Apply language — re-queries DOM each time to catch dynamic elements ──
-  function setLang(lang) {
-    if (!validLangs.includes(lang)) lang = 'en';
-    currentLang = lang;
-
+  // ── Apply translations to DOM (no event fired) ──
+  function applyTranslations(lang) {
     document.querySelectorAll('[data-en]').forEach(function (el) {
       var text = el.dataset[lang];
       if (text !== undefined) el.innerHTML = text;
@@ -22,8 +19,14 @@
     document.querySelectorAll('.lang-btn').forEach(function (btn) {
       btn.classList.toggle('active', btn.dataset.lang === lang);
     });
+  }
 
+  // ── Apply language + fire event (only for user-triggered changes) ──
+  function setLang(lang) {
+    if (!validLangs.includes(lang)) lang = 'en';
+    currentLang = lang;
     localStorage.setItem('seculo-lang', lang);
+    applyTranslations(lang);
     document.dispatchEvent(new CustomEvent('seculo-lang-change', { detail: { lang: lang } }));
   }
 
@@ -34,7 +37,9 @@
 
   // ── Public API ──
   window.getCurrentLang  = function () { return currentLang; };
-  window.applyCurrentLang = function () { setLang(currentLang); };
+  // applyCurrentLang re-applies translations to newly rendered DOM WITHOUT firing the event
+  // (avoids infinite loop: renderDashGrid → applyCurrentLang → event → renderDashGrid)
+  window.applyCurrentLang = function () { applyTranslations(currentLang); };
 
   // ── Initialise on page load ──
   var saved = localStorage.getItem('seculo-lang') || 'en';
