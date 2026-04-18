@@ -8,7 +8,9 @@ const form    = document.getElementById('register-form');
 const nameIn  = document.getElementById('name-input');
 const emailIn = document.getElementById('email-input');
 const pwIn    = document.getElementById('password-input');
+const confirmPwIn = document.getElementById('confirm-pw-input');
 const togglePw = document.getElementById('toggle-pw');
+const toggleConfirmPw = document.getElementById('toggle-confirm-pw');
 const btn     = document.getElementById('register-btn');
 const message = document.getElementById('register-message');
 
@@ -25,12 +27,19 @@ const returnUrl = (action === 'share' && propId)
   ? `/dashboard.html?action=share&prop=${propId}`
   : '/dashboard.html';
 
-// Show/hide password toggle
+// Show/hide password toggles
 if (togglePw) {
   togglePw.addEventListener('click', function () {
     const isHidden = pwIn.type === 'password';
     pwIn.type = isHidden ? 'text' : 'password';
     togglePw.textContent = isHidden ? '🙈' : '👁';
+  });
+}
+if (toggleConfirmPw) {
+  toggleConfirmPw.addEventListener('click', function () {
+    const isHidden = confirmPwIn.type === 'password';
+    confirmPwIn.type = isHidden ? 'text' : 'password';
+    toggleConfirmPw.textContent = isHidden ? '🙈' : '👁';
   });
 }
 
@@ -40,6 +49,7 @@ form.addEventListener('submit', async function (e) {
   const name     = nameIn.value.trim();
   const email    = emailIn.value.trim();
   const password = pwIn.value;
+  const confirmPw = confirmPwIn ? confirmPwIn.value : password;
   const lang     = document.documentElement.lang || 'pt';
 
   if (!name || !email || !password) return;
@@ -48,6 +58,14 @@ form.addEventListener('submit', async function (e) {
     message.textContent = lang === 'pt'
       ? 'A password deve ter pelo menos 8 caracteres.'
       : 'Password must be at least 8 characters.';
+    message.className = 'auth-message auth-message--error';
+    return;
+  }
+
+  if (password !== confirmPw) {
+    message.textContent = lang === 'pt'
+      ? 'As passwords não coincidem.'
+      : 'Passwords do not match.';
     message.className = 'auth-message auth-message--error';
     return;
   }
