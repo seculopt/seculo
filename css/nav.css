@@ -230,7 +230,8 @@
 
   .nav-links .btn {
     width: 100%;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-left: 0;
   }
 
   .lang-toggle {
