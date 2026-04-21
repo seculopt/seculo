@@ -228,12 +228,22 @@
           </ul>
           <button class="plan-read-more" data-en="See more" data-pt="Ver mais" data-es="Ver más">See more</button>
 
-          <!-- Product screenshots carousel — add slides when assets/products/lifestyle-match/ is populated -->
-          <div class="plan-media" data-carousel hidden>
-            <div class="plan-media-track"></div>
+          <!-- Product screenshots carousel — Lifestyle Match -->
+          <div class="plan-media" data-carousel>
+            <div class="plan-media-track">
+              <img src="assets/products/lifestyle-match/search-results.png"
+                   alt="Lifestyle Match — Search results"
+                   class="plan-media-slide" loading="lazy" />
+              <img src="assets/products/lifestyle-match/gis-analysis.png"
+                   alt="Lifestyle Match — GIS time & distance analysis"
+                   class="plan-media-slide" loading="lazy" />
+            </div>
             <button class="plan-media-arrow plan-media-arrow--prev" aria-label="Previous screenshot">&#8249;</button>
             <button class="plan-media-arrow plan-media-arrow--next" aria-label="Next screenshot">&#8250;</button>
-            <div class="plan-media-dots"></div>
+            <div class="plan-media-dots">
+              <span class="plan-media-dot is-active"></span>
+              <span class="plan-media-dot"></span>
+            </div>
           </div>
 
           <button class="btn btn-primary plan-cta" data-tier="lifestyle_match"
