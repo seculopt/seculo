@@ -950,17 +950,39 @@ window.confirmReport = function() {
     }),
   };
 
-  // Download as JSON
-  const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = `seculo_report_${new Date().toISOString().slice(0,10)}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  // Show loading state
+  const confirmBtn = document.getElementById('reportConfirmBtn');
+  if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.textContent = '⏳ Generating PDF…'; }
 
-  closeReportModal();
-  showToast('✓ Report config downloaded — open with the PDF generator');
+  try {
+    const res = await fetch(`${API}/api/generate-report`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${access_token}` },
+      body: JSON.stringify(config),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+      throw new Error(err.error || `HTTP ${res.status}`);
+    }
+
+    // Trigger PDF download
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = `seculo-report-${new Date().toISOString().slice(0,10)}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    closeReportModal();
+    showToast('✓ Report generated — check your downloads folder');
+
+  } catch (err) {
+    if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = '📄 Generate Report'; }
+    showToast(`Error generating report: ${err.message}`);
+    console.error('[report] error:', err);
+  }
 };
