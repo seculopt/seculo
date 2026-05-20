@@ -361,6 +361,7 @@ function initDashboard() {
     document.getElementById('copyAllBtn').style.display = 'none';
   } else {
     document.getElementById('copyAllBtn').style.display = '';
+    updateReportBtn();
     renderFolderSidebar();
     renderDashGrid();
   }
@@ -469,6 +470,7 @@ function buildCard(prop) {
         ? `<button class="prop-btn share" data-share="${escHtml(prop.id)}">${t.copy}</button>`
         : ''}
       <button class="prop-btn delete" data-delete="${escHtml(prop.id)}">${t.del}</button>
+      <button class="prop-btn report-sel" data-report="${escHtml(prop.id)}">&#128196; Report</button>
       ${folders.length > 0
         ? `<div class="prop-folder-wrap"><select class="prop-folder-select${prop.folder_id ? ' has-folder' : ''}" data-prop-id="${escHtml(prop.id)}"></select></div>`
         : ''}
@@ -511,6 +513,21 @@ function buildCard(prop) {
 
   // Delete button
   card.querySelector('[data-delete]').addEventListener('click', () => deleteProperty(prop.id, card));
+
+  // Report selection button
+  const reportBtn = card.querySelector('[data-report]');
+  if (reportBtn) {
+    reportBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleReportSelect(prop.id, card, reportBtn);
+    });
+    // Reflect existing selection state
+    if (selectedForReport.has(prop.id)) {
+      card.classList.add('in-report');
+      reportBtn.classList.add('active');
+      reportBtn.textContent = '✓ In Report';
+    }
+  }
 
   // Folder select
   const folderSel = card.querySelector('.prop-folder-select');
@@ -638,4 +655,312 @@ window.copyAllLinks = function() {
       if (btn) { btn.textContent = '✓ Copiado!'; setTimeout(() => { btn.innerHTML = '&#128203; Copiar todos os links'; }, 2500); }
     })
     .catch(() => showToast('Erro ao copiar — tenta de novo'));
+};
+
+// ══════════════════════════════════════════════════════════════
+// REPORT GENERATION — Address Confirmation Flow
+// ══════════════════════════════════════════════════════════════
+
+const selectedForReport = new Set();
+const _reportMaps = {};          // Leaflet map instances keyed by prop.id
+const _reportMarkers = {};       // Leaflet markers keyed by prop.id
+const _reportGeoData = {};       // Confirmed coordinates keyed by prop.id
+const _debounceTimers = {};      // Geocoding debounce timers
+
+function updateReportBtn() {
+  const btn   = document.getElementById('reportBtn');
+  const badge = document.getElementById('reportBadge');
+  if (!btn) return;
+  const count = selectedForReport.size;
+  badge.textContent = count;
+  btn.style.display = count > 0 ? 'flex' : 'none';
+}
+
+function toggleReportSelect(propId, cardEl, btnEl) {
+  if (selectedForReport.has(propId)) {
+    selectedForReport.delete(propId);
+    cardEl.classList.remove('in-report');
+    btnEl.textContent = '📄 Report';
+    btnEl.classList.remove('active');
+  } else {
+    if (selectedForReport.size >= 5) {
+      showToast('Maximum 5 properties per report');
+      return;
+    }
+    selectedForReport.add(propId);
+    cardEl.classList.add('in-report');
+    btnEl.textContent = '✓ In Report';
+    btnEl.classList.add('active');
+  }
+  updateReportBtn();
+}
+
+// ── Nominatim geocode ───────────────────────────────────────
+async function geocodeForReport(address, concelho) {
+  if (!address || address.trim().length < 5) return null;
+  const q = [address.trim(), concelho || '', 'Portugal'].filter(Boolean).join(', ');
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=pt&q=${encodeURIComponent(q)}`,
+      { headers: { 'Accept-Language': 'pt', 'User-Agent': 'seculopt.com/1.0' } }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || !data[0]) return null;
+    return {
+      lat: parseFloat(data[0].lat),
+      lng: parseFloat(data[0].lon),
+      display: data[0].display_name,
+      type:    data[0].type,        // building/house/road/suburb/city
+    };
+  } catch { return null; }
+}
+
+function geoConfidence(type) {
+  if (!type) return 'red';
+  if (['house','building','apartments','residential'].includes(type)) return 'green';
+  if (['road','street','pedestrian','path','cycleway'].includes(type)) return 'yellow';
+  return 'red';
+}
+
+function geoLabel(type, color) {
+  if (color === 'green')  return 'Building-level ✓';
+  if (color === 'yellow') return 'Street-level';
+  return 'Approximate';
+}
+
+// ── Update mini-map pin ─────────────────────────────────────
+function updateMiniMap(propId, lat, lng) {
+  const map    = _reportMaps[propId];
+  const marker = _reportMarkers[propId];
+  if (!map || !marker) return;
+  marker.setLatLng([lat, lng]);
+  map.setView([lat, lng], 14, { animate: true });
+}
+
+// ── Modal open ─────────────────────────────────────────────
+window.openReportModal = function() {
+  if (selectedForReport.size === 0) { showToast('Select at least one property first'); return; }
+
+  const selectedProps = properties.filter(p => selectedForReport.has(p.id));
+
+  const overlay = document.createElement('div');
+  overlay.className = 'report-overlay';
+  overlay.id = 'reportOverlay';
+
+  overlay.innerHTML = `
+    <div class="report-modal">
+      <div class="report-modal-head">
+        <div>
+          <h2>&#128205; Confirm Property Locations</h2>
+          <p>Exact addresses improve the accuracy of isochrones and POI analysis in the report.
+             Pre-filled from portal data — correct any that are imprecise before generating.</p>
+        </div>
+        <button class="report-modal-close" onclick="closeReportModal()">&#10005;</button>
+      </div>
+      <div class="report-modal-body" id="reportModalBody"></div>
+      <div class="report-modal-foot">
+        <div class="report-modal-foot-note">
+          &#9888; Coordinates are approximate when based only on portal data.
+          Confirm exact address to improve isochrone precision.
+        </div>
+        <button class="btn-report-cancel" onclick="closeReportModal()">Cancel</button>
+        <button class="btn-report-confirm" id="reportConfirmBtn" onclick="confirmReport()">
+          &#128196; Download Config
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeReportModal(); });
+
+  const body = document.getElementById('reportModalBody');
+
+  selectedProps.forEach((prop, idx) => {
+    const d         = prop.property_data || {};
+    const img       = d.image || d.img || d.thumbnail || '';
+    const title     = d.title || d.address || 'Property';
+    const portal    = d.portal || d.source || '';
+    const price     = d.price != null ? '€ ' + Number(d.price).toLocaleString('pt-PT') : '';
+    const knownAddr = [d.address, d.localidade, d.concelho].filter(Boolean).join(', ')
+                   || d.location || '';
+    const concelho  = d.concelho || '';
+    const mapId     = `rmap-${prop.id.replace(/-/g, '')}`;
+
+    const row = document.createElement('div');
+    row.className = 'rconf-row';
+    row.dataset.propId = prop.id;
+    row.innerHTML = `
+      <div class="rconf-num">${String(idx + 1).padStart(2, '0')}</div>
+      ${img
+        ? `<img class="rconf-thumb" src="${escHtml(img)}" alt="" onerror="this.style.display='none'">`
+        : `<div class="rconf-thumb-placeholder">&#127968;</div>`
+      }
+      <div class="rconf-body">
+        <div class="rconf-title">${escHtml(title)}</div>
+        <div class="rconf-meta">${escHtml([portal, price].filter(Boolean).join(' · '))}</div>
+        ${knownAddr
+          ? `<div class="rconf-known"><span class="rconf-label">Portal data</span>${escHtml(knownAddr)}</div>`
+          : ''}
+        <div>
+          <span class="rconf-label">Exact address for geocoding</span>
+          <div class="rconf-input-wrap">
+            <input class="rconf-addr-input" type="text"
+              placeholder="Street, number, city, Portugal"
+              value="${escHtml(knownAddr)}"
+              data-prop-id="${escHtml(prop.id)}"
+              data-concelho="${escHtml(concelho)}" />
+            <div class="rconf-geo-status" id="geoStatus-${escHtml(prop.id)}">
+              <div class="rconf-geo-dot red" id="geoDot-${escHtml(prop.id)}"></div>
+              <span id="geoText-${escHtml(prop.id)}">Not geocoded</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rconf-map" id="${mapId}"></div>
+    `;
+
+    body.appendChild(row);
+
+    // Wire up address input with debounced geocoding
+    const input = row.querySelector('.rconf-addr-input');
+    input.addEventListener('input', () => {
+      clearTimeout(_debounceTimers[prop.id]);
+      const dotEl  = document.getElementById(`geoDot-${prop.id}`);
+      const textEl = document.getElementById(`geoText-${prop.id}`);
+      if (dotEl)  dotEl.className  = 'rconf-geo-dot yellow';
+      if (textEl) textEl.textContent = 'Geocoding…';
+
+      _debounceTimers[prop.id] = setTimeout(async () => {
+        const result = await geocodeForReport(input.value, input.dataset.concelho);
+        if (result) {
+          _reportGeoData[prop.id] = result;
+          updateMiniMap(prop.id, result.lat, result.lng);
+          const color = geoConfidence(result.type);
+          if (dotEl)  dotEl.className  = `rconf-geo-dot ${color}`;
+          if (textEl) textEl.textContent = geoLabel(result.type, color);
+        } else {
+          delete _reportGeoData[prop.id];
+          if (dotEl)  dotEl.className  = 'rconf-geo-dot red';
+          if (textEl) textEl.textContent = 'Not found';
+        }
+      }, 600);
+    });
+
+    // Pre-geocode the known address
+    setTimeout(async () => {
+      const result = await geocodeForReport(knownAddr, concelho);
+      const dotEl  = document.getElementById(`geoDot-${prop.id}`);
+      const textEl = document.getElementById(`geoText-${prop.id}`);
+      if (result) {
+        _reportGeoData[prop.id] = result;
+        const color = geoConfidence(result.type);
+        if (dotEl)  dotEl.className  = `rconf-geo-dot ${color}`;
+        if (textEl) textEl.textContent = geoLabel(result.type, color);
+        // Init map with geocoded position
+        initMiniMap(prop.id, mapId, result.lat, result.lng);
+      } else {
+        // Init map at approximate position using lat/lng from property_data if available
+        const fallLat = d.lat || 38.72;
+        const fallLng = d.lng || (-9.45);
+        if (dotEl)  { dotEl.className = 'rconf-geo-dot red'; }
+        if (textEl) { textEl.textContent = 'Approximate (confirm address)'; }
+        initMiniMap(prop.id, mapId, fallLat, fallLng);
+      }
+    }, 100 + idx * 300); // stagger requests to respect Nominatim rate limit
+  });
+};
+
+function initMiniMap(propId, containerId, lat, lng) {
+  const container = document.getElementById(containerId);
+  if (!container || !window.L) return;
+  const map = window.L.map(container, {
+    center: [lat, lng],
+    zoom: 14,
+    zoomControl: false,
+    attributionControl: false,
+    dragging: false,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+  });
+  window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+  }).addTo(map);
+  const marker = window.L.circleMarker([lat, lng], {
+    radius: 7,
+    fillColor: '#b8a882',
+    color: '#6b5a3a',
+    weight: 2,
+    fillOpacity: 1,
+  }).addTo(map);
+  _reportMaps[propId]    = map;
+  _reportMarkers[propId] = marker;
+}
+
+window.closeReportModal = function() {
+  const overlay = document.getElementById('reportOverlay');
+  if (overlay) overlay.remove();
+  // Clean up map instances
+  Object.keys(_reportMaps).forEach(id => {
+    try { _reportMaps[id].remove(); } catch {}
+    delete _reportMaps[id];
+    delete _reportMarkers[id];
+  });
+};
+
+// ── Confirm → download config JSON ─────────────────────────
+window.confirmReport = function() {
+  const selectedProps = properties.filter(p => selectedForReport.has(p.id));
+  const modal = document.getElementById('reportOverlay');
+  const inputs = modal ? modal.querySelectorAll('.rconf-addr-input') : [];
+
+  const config = {
+    generated_at: new Date().toISOString(),
+    agent: { tier },
+    properties: selectedProps.map((prop, idx) => {
+      const d    = prop.property_data || {};
+      const input = modal
+        ? modal.querySelector(`.rconf-addr-input[data-prop-id="${prop.id}"]`)
+        : null;
+      const confirmedAddress = input ? input.value : (d.address || '');
+      const geoResult = _reportGeoData[prop.id];
+
+      return {
+        id:               prop.id,
+        idx:              idx + 1,
+        title:            d.title     || d.address || 'Property',
+        portal:           d.portal    || d.source  || '',
+        url:              d.url       || d.link    || '',
+        price:            d.price     || 0,
+        area_built:       d.area      || d.areaCons || 0,
+        area_total:       d.areaTerr  || 0,
+        bedrooms:         d.rooms     || d.quartos || 0,
+        image:            d.image     || d.img     || '',
+        address_portal:   d.address   || '',
+        address_confirmed: confirmedAddress,
+        lat:  geoResult ? geoResult.lat : (d.lat || 0),
+        lng:  geoResult ? geoResult.lng : (d.lng || 0),
+        geo_source:  geoResult ? 'nominatim-confirmed' : 'portal-approximate',
+        geo_type:    geoResult ? geoResult.type : 'unknown',
+        concelho:    d.concelho   || '',
+        distrito:    d.distrito   || '',
+        freguesia:   d.localidade || d.freguesia || '',
+      };
+    }),
+  };
+
+  // Download as JSON
+  const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `seculo_report_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  closeReportModal();
+  showToast('✓ Report config downloaded — open with the PDF generator');
 };

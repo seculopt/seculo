@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/nav.css" />
   <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
     /* ── Page shell ── */
@@ -426,6 +427,7 @@
         </div>
         <div class="dash-actions">
           <button class="btn btn-outline" id="copyAllBtn" style="display:none" onclick="copyAllLinks()" data-en="&#128203; Copy all links" data-pt="&#128203; Copiar todos os links" data-es="&#128203; Copiar todos los links">&#128203; Copy all links</button>
+          <button class="btn btn-report" id="reportBtn" style="display:none" onclick="openReportModal()">&#128196; Generate Report <span id="reportBadge" class="report-badge">0</span></button>
           <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" id="engineLink" data-en="View on map" data-pt="Ver no mapa" data-es="Ver en el mapa">View on map</a>
         </div>
       </div>
@@ -471,11 +473,284 @@
 
   <div id="dashToast"></div>
 
+  <!-- REPORT MODAL STYLES -->
+  <style>
+    /* ── Report button ── */
+    .btn-report {
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      padding: 0.45rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: opacity 0.15s;
+    }
+    .btn-report:hover { opacity: 0.87; }
+    .report-badge {
+      background: var(--color-accent);
+      color: var(--color-primary);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.1rem 0.45rem;
+      border-radius: 10px;
+      min-width: 1.2rem;
+      text-align: center;
+    }
+
+    /* ── Card report button ── */
+    .prop-btn.report-sel {
+      background: var(--color-primary);
+      color: #fff;
+      border-color: var(--color-primary);
+    }
+    .prop-card.in-report {
+      outline: 2px solid var(--color-primary);
+      outline-offset: -2px;
+    }
+    .prop-card.in-report .report-sel::before { content: '✓ '; }
+
+    /* ── Modal overlay ── */
+    .report-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(25,25,39,0.65);
+      z-index: 9000;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem 1rem;
+      overflow-y: auto;
+    }
+    .report-modal {
+      background: #fff;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 920px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+    .report-modal-head {
+      padding: 1.5rem 1.75rem 1.25rem;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .report-modal-head h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--color-primary);
+      margin: 0 0 0.3rem;
+    }
+    .report-modal-head p {
+      font-size: 0.83rem;
+      color: var(--color-mid);
+      margin: 0;
+      line-height: 1.5;
+    }
+    .report-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      color: var(--color-mid);
+      cursor: pointer;
+      line-height: 1;
+      padding: 0.2rem;
+      flex-shrink: 0;
+    }
+    .report-modal-close:hover { color: var(--color-primary); }
+    .report-modal-body {
+      padding: 1.25rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      overflow-y: auto;
+      max-height: 65vh;
+    }
+
+    /* ── Confirmation row per property ── */
+    .rconf-row {
+      border: 1px solid #e8e4dc;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      gap: 0;
+    }
+    .rconf-num {
+      background: var(--color-primary);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      padding: 0.75rem 0.5rem;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .rconf-thumb {
+      width: 90px;
+      height: auto;
+      object-fit: cover;
+      flex-shrink: 0;
+      border-right: 1px solid #e8e4dc;
+    }
+    .rconf-thumb-placeholder {
+      width: 90px;
+      background: #f0ede8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      border-right: 1px solid #e8e4dc;
+    }
+    .rconf-body {
+      flex: 1;
+      padding: 0.9rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      min-width: 0;
+    }
+    .rconf-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rconf-meta { font-size: 0.78rem; color: var(--color-mid); }
+    .rconf-known {
+      font-size: 0.78rem;
+      color: var(--color-mid);
+      background: #f8f6f2;
+      padding: 0.3rem 0.5rem;
+      border-radius: 5px;
+      border-left: 3px solid #e8e4dc;
+    }
+    .rconf-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-mid);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+    .rconf-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .rconf-addr-input {
+      flex: 1;
+      padding: 0.45rem 0.65rem;
+      border: 1.5px solid #ddd;
+      border-radius: 7px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.83rem;
+      color: var(--color-primary);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .rconf-addr-input:focus { border-color: var(--color-accent); }
+    .rconf-geo-status {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.73rem;
+      color: var(--color-mid);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .rconf-geo-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .rconf-geo-dot.red    { background: #e74c3c; }
+    .rconf-geo-dot.yellow { background: #f39c12; }
+    .rconf-geo-dot.green  { background: #27ae60; }
+
+    /* Mini-map in confirmation */
+    .rconf-map {
+      width: 200px;
+      height: 150px;
+      flex-shrink: 0;
+      border-left: 1px solid #e8e4dc;
+      position: relative;
+      overflow: hidden;
+      background: #e8e4dc;
+    }
+    .rconf-map-inner {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── Modal footer ── */
+    .report-modal-foot {
+      padding: 1rem 1.75rem;
+      border-top: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background: #fafaf8;
+    }
+    .report-modal-foot-note {
+      font-size: 0.75rem;
+      color: var(--color-mid);
+      flex: 1;
+    }
+    .btn-report-cancel {
+      background: none;
+      border: 1px solid #ddd;
+      color: var(--color-mid);
+      padding: 0.5rem 1.1rem;
+      border-radius: 7px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-report-cancel:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .btn-report-confirm {
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      padding: 0.55rem 1.3rem;
+      border-radius: 7px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: opacity 0.15s;
+    }
+    .btn-report-confirm:hover:not(:disabled) { opacity: 0.88; }
+    .btn-report-confirm:disabled { opacity: 0.45; cursor: not-allowed; }
+  </style>
+
   <!-- SCRIPTS -->
   <script src="js/nav.js"></script>
   <script src="js/lang.js"></script>
   <script src="js/cookies.js"></script>
   <script type="module" src="js/dashboard.js"></script>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <!-- Crisp chat -->
   <script>window.$crisp=[];window.CRISP_WEBSITE_ID="ffe7c145-54f8-4fb4-83be-2eba61d6f20d";(function(){var s=document.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;document.getElementsByTagName("head")[0].appendChild(s);})();</script>
