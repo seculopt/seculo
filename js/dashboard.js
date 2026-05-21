@@ -879,7 +879,10 @@ window.openReportModal = function() {
       }, 600);
     });
 
-    // Pre-geocode the known address
+    // Pre-geocode the known address — disable Generate button while pending
+    const confirmBtn2 = document.getElementById('reportConfirmBtn');
+    if (confirmBtn2) { confirmBtn2.disabled = true; confirmBtn2.textContent = '⏳ Geocoding…'; }
+
     setTimeout(async () => {
       const result = await geocodeForReport(knownAddr, concelho);
       const dotEl  = document.getElementById(`geoDot-${prop.id}`);
@@ -889,17 +892,20 @@ window.openReportModal = function() {
         const color = geoConfidence(result.type);
         if (dotEl)  dotEl.className  = `rconf-geo-dot ${color}`;
         if (textEl) textEl.textContent = geoLabel(result.type, color);
-        // Init map with geocoded position
         initMiniMap(prop.id, mapId, result.lat, result.lng);
       } else {
-        // Init map at approximate position using lat/lng from property_data if available
         const fallLat = d.lat || 38.72;
         const fallLng = d.lng || (-9.45);
         if (dotEl)  { dotEl.className = 'rconf-geo-dot red'; }
         if (textEl) { textEl.textContent = 'Approximate (confirm address)'; }
         initMiniMap(prop.id, mapId, fallLat, fallLng);
       }
-    }, 100 + idx * 300); // stagger requests to respect Nominatim rate limit
+      // Re-enable Generate button after the LAST property finishes geocoding
+      if (idx === selectedProps.length - 1) {
+        const btn = document.getElementById('reportConfirmBtn');
+        if (btn) { btn.disabled = false; btn.textContent = '📄 Generate Report'; }
+      }
+    }, 100 + idx * 300); // stagger to respect Nominatim rate limit
   });
 };
 
@@ -949,13 +955,19 @@ window.confirmReport = async function() {
   const config = {
     generated_at: new Date().toISOString(),
     agent: { tier },
-    properties: selectedProps.map((prop, idx) => {
+    properties: await Promise.all(selectedProps.map(async (prop, idx) => {
       const d    = prop.property_data || {};
       const input = modal
         ? modal.querySelector(`.rconf-addr-input[data-prop-id="${prop.id}"]`)
         : null;
       const confirmedAddress = input ? input.value : (d.address || '');
-      const geoResult = _reportGeoData[prop.id];
+
+      // Use pre-geocoded result; if missing and no portal GPS, geocode now
+      let geoResult = _reportGeoData[prop.id];
+      if (!geoResult && !(d.lat || d.lng) && confirmedAddress) {
+        geoResult = await geocodeForReport(confirmedAddress, d.concelho || '');
+        if (geoResult) _reportGeoData[prop.id] = geoResult;
+      }
 
       return {
         id:               prop.id,
@@ -978,7 +990,7 @@ window.confirmReport = async function() {
         distrito:    d.distrito   || '',
         freguesia:   d.localidade || d.freguesia || '',
       };
-    }),
+    })),
   };
 
   // Show loading state + progress bar
