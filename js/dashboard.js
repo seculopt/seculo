@@ -920,7 +920,7 @@ window.closeReportModal = function() {
 };
 
 // ── Confirm → download config JSON ─────────────────────────
-window.confirmReport = function() {
+window.confirmReport = async function() {
   const selectedProps = properties.filter(p => selectedForReport.has(p.id));
   const modal = document.getElementById('reportOverlay');
   const inputs = modal ? modal.querySelectorAll('.rconf-addr-input') : [];
