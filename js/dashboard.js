@@ -775,6 +775,30 @@ window.openReportModal = function() {
 
   const selectedProps = properties.filter(p => selectedForReport.has(p.id));
 
+  // Instruction text in all 3 languages
+  const INSTR = {
+    en: { title: '📍 Verify property addresses',
+          body:  'Each property needs a confirmed address to place the isochrone and walkability analysis correctly on the map. The address has been pre-filled from the portal — review each one and correct it if needed. The map on the right updates automatically.',
+          label: '✏️ Address (edit if incorrect)',
+          ph:    'Street, number, city — Portugal',
+          orig:  'Portal data:',
+          cancel:'Cancel', generate:'📄 Generate Report' },
+    pt: { title: '📍 Verifique os endereços dos imóveis',
+          body:  'Cada imóvel precisa de um endereço confirmado para colocar a isócrona e a análise de walkability corretamente no mapa. O endereço foi pré-preenchido com os dados do portal — reveja cada um e corrija se necessário. O mapa à direita atualiza automaticamente.',
+          label: '✏️ Endereço (edite se necessário)',
+          ph:    'Rua, número, cidade — Portugal',
+          orig:  'Dados do portal:',
+          cancel:'Cancelar', generate:'📄 Gerar Relatório' },
+    es: { title: '📍 Verifica las direcciones de las propiedades',
+          body:  'Cada propiedad necesita una dirección confirmada para colocar correctamente la isócrona y el análisis de walkabilidad en el mapa. La dirección se ha pre-rellenado con los datos del portal — revisa cada una y corrígela si es necesario. El mapa de la derecha se actualiza automáticamente.',
+          label: '✏️ Dirección (edita si es incorrecta)',
+          ph:    'Calle, número, ciudad — Portugal',
+          orig:  'Datos del portal:',
+          cancel:'Cancelar', generate:'📄 Generar Informe' },
+  };
+  const lang = (window.getCurrentLang ? window.getCurrentLang() : 'en') || 'en';
+  const I = INSTR[lang] || INSTR.en;
+
   const overlay = document.createElement('div');
   overlay.className = 'report-overlay';
   overlay.id = 'reportOverlay';
@@ -783,21 +807,21 @@ window.openReportModal = function() {
     <div class="report-modal">
       <div class="report-modal-head">
         <div>
-          <h2>&#128205; Confirm Property Locations</h2>
-          <p>Exact addresses improve the accuracy of isochrones and POI analysis in the report.
-             Pre-filled from portal data — correct any that are imprecise before generating.</p>
+          <h2>${escHtml(I.title)}</h2>
+          <p>${escHtml(I.body)}</p>
         </div>
         <button class="report-modal-close" onclick="closeReportModal()">&#10005;</button>
       </div>
       <div class="report-modal-body" id="reportModalBody"></div>
       <div class="report-modal-foot">
         <div class="report-modal-foot-note">
-          &#9888; Coordinates are approximate when based only on portal data.
-          Confirm exact address to improve isochrone precision.
+          &#9679; <span style="color:#27ae60;font-weight:600">Green</span> = address found precisely &nbsp;|&nbsp;
+          &#9679; <span style="color:#f39c12;font-weight:600">Yellow</span> = street level &nbsp;|&nbsp;
+          &#9679; <span style="color:#e74c3c;font-weight:600">Red</span> = not found — please correct
         </div>
-        <button class="btn-report-cancel" onclick="closeReportModal()">Cancel</button>
+        <button class="btn-report-cancel" onclick="closeReportModal()">${escHtml(I.cancel)}</button>
         <button class="btn-report-confirm" id="reportConfirmBtn" onclick="confirmReport()">
-          &#128196; Download Config
+          &#128196; ${escHtml(I.generate.replace('📄 ',''))}
         </button>
       </div>
     </div>
@@ -813,7 +837,6 @@ window.openReportModal = function() {
     const img       = d.image || d.img || d.thumbnail || '';
     const title     = d.title || d.address || 'Property';
     const portal    = d.portal || d.source || '';
-    const price     = d.price != null ? '€ ' + Number(d.price).toLocaleString('pt-PT') : '';
     const knownAddr = [d.address, d.localidade, d.concelho].filter(Boolean).join(', ')
                    || d.location || '';
     const concelho  = d.concelho || '';
@@ -823,33 +846,34 @@ window.openReportModal = function() {
     row.className = 'rconf-row';
     row.dataset.propId = prop.id;
     row.innerHTML = `
-      <div class="rconf-num">${String(idx + 1).padStart(2, '0')}</div>
-      ${img
-        ? `<img class="rconf-thumb" src="${escHtml(img)}" alt="" onerror="this.style.display='none'">`
-        : `<div class="rconf-thumb-placeholder">&#127968;</div>`
-      }
-      <div class="rconf-body">
-        <div class="rconf-title">${escHtml(title)}</div>
-        <div class="rconf-meta">${escHtml([portal, price].filter(Boolean).join(' · '))}</div>
-        ${knownAddr
-          ? `<div class="rconf-known"><span class="rconf-label">Portal data</span>${escHtml(knownAddr)}</div>`
-          : ''}
-        <div>
-          <span class="rconf-label">Exact address for geocoding</span>
+      <div class="rconf-row-top">
+        <div class="rconf-num">${String(idx + 1).padStart(2, '0')}</div>
+        ${img
+          ? `<img class="rconf-thumb" src="${escHtml(img)}" alt="" onerror="this.style.display='none'">`
+          : `<div class="rconf-thumb-placeholder">&#127968;</div>`
+        }
+        <div class="rconf-body">
+          <div class="rconf-title">${escHtml(title)}</div>
+          ${knownAddr ? `<div class="rconf-known">&#128274; ${escHtml(I.orig)} ${escHtml(knownAddr)}</div>` : ''}
+        </div>
+      </div>
+      <div class="rconf-addr-section">
+        <div class="rconf-addr-main">
+          <span class="rconf-label">${escHtml(I.label)}</span>
           <div class="rconf-input-wrap">
             <input class="rconf-addr-input" type="text"
-              placeholder="Street, number, city, Portugal"
+              placeholder="${escHtml(I.ph)}"
               value="${escHtml(knownAddr)}"
               data-prop-id="${escHtml(prop.id)}"
               data-concelho="${escHtml(concelho)}" />
-            <div class="rconf-geo-status" id="geoStatus-${escHtml(prop.id)}">
-              <div class="rconf-geo-dot red" id="geoDot-${escHtml(prop.id)}"></div>
-              <span id="geoText-${escHtml(prop.id)}">Not geocoded</span>
-            </div>
+          </div>
+          <div class="rconf-geo-status" id="geoStatus-${escHtml(prop.id)}">
+            <div class="rconf-geo-dot red" id="geoDot-${escHtml(prop.id)}"></div>
+            <span id="geoText-${escHtml(prop.id)}">—</span>
           </div>
         </div>
+        <div class="rconf-map" id="${mapId}"></div>
       </div>
-      <div class="rconf-map" id="${mapId}"></div>
     `;
 
     body.appendChild(row);
