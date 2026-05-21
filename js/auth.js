@@ -20,11 +20,13 @@ const resendMsg   = document.getElementById('resend-message');
   const _urlCode = new URLSearchParams(window.location.search).get('code');
   if (_urlCode) {
     const { data } = await supabase.auth.exchangeCodeForSession(_urlCode);
-    if (data?.session) { window.location.href = 'dashboard.html'; return; }
+    if (data?.session?.user) { window.location.href = 'dashboard.html'; return; }
   }
-  // Also handle hash-based tokens (older Supabase flow)
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session) window.location.href = 'dashboard.html';
+  // Redirect already-authenticated users to dashboard.
+  // Use getUser() (network check) instead of getSession() (localStorage-only) to avoid
+  // redirecting on stale/partial sessions that would cause a login↔dashboard loop.
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) window.location.href = 'dashboard.html';
 })();
 
 // Catch any subsequent SIGNED_IN event (e.g. magic link via onAuthStateChange)
@@ -66,12 +68,23 @@ form.addEventListener('submit', async function (e) {
   message.className = '';
   btn.textContent = lang === 'pt' ? 'A entrar...' : 'Signing in...';
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-  if (error) {
+  let data, error;
+  try {
+    ({ data, error } = await supabase.auth.signInWithPassword({ email, password }));
+  } catch (networkErr) {
     btn.disabled = false;
     btn.textContent = lang === 'pt' ? 'Entrar' : 'Log in';
+    message.textContent = lang === 'pt'
+      ? 'Erro de ligação. Verifica a tua internet e tenta de novo.'
+      : 'Connection error. Check your internet and try again.';
+    message.className = 'auth-message auth-message--error';
+    return;
+  }
 
+  btn.disabled = false;
+  btn.textContent = lang === 'pt' ? 'Entrar' : 'Log in';
+
+  if (error) {
     const msg = error.message ? error.message.toLowerCase() : '';
     const isCredentialError = msg.includes('invalid') || msg.includes('credentials') || msg.includes('password');
     const isNotConfirmed    = msg.includes('confirm') || msg.includes('not confirmed') || msg.includes('email');
@@ -86,17 +99,22 @@ form.addEventListener('submit', async function (e) {
         ? 'Email ou password incorretos.'
         : 'Invalid email or password.';
     } else {
-      message.textContent = lang === 'pt'
-        ? 'Ocorreu um erro. Por favor tenta de novo.'
-        : 'Something went wrong. Please try again.';
+      message.textContent = (lang === 'pt' ? 'Ocorreu um erro: ' : 'Error: ') + (error.message || 'unknown');
     }
     message.className = 'auth-message auth-message--error';
     return;
   }
 
-  if (data.session) {
+  if (data?.session) {
     window.location.href = 'dashboard.html';
+    return;
   }
+
+  // Supabase returned no session and no error — show a visible message instead of silently freezing.
+  message.textContent = lang === 'pt'
+    ? 'Não foi possível iniciar sessão. Tenta de novo.'
+    : 'Could not sign in. Please try again.';
+  message.className = 'auth-message auth-message--error';
 });
 
 // Resend confirmation email

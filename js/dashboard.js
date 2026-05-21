@@ -13,6 +13,9 @@ if (_urlCode) {
 
 const session = await getSession();
 if (!session) {
+  // Clear any stale auth data before redirecting — prevents login↔dashboard redirect loop
+  // caused by partial/expired session data remaining in localStorage.
+  await supabase.auth.signOut();
   window.location.href = 'login.html';
 }
 
