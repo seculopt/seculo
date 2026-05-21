@@ -46,6 +46,14 @@ let properties = [];
 let folders    = [];
 let activeFolderId = null; // null=All, 'unfiled'=no folder, uuid=folder
 
+// Report state — declared here (top-level) so initDashboard() can access them
+// before the function definitions below reach the temporal dead zone
+const selectedForReport = new Set();
+const _reportMaps     = {};
+const _reportMarkers  = {};
+const _reportGeoData  = {};
+const _debounceTimers = {};
+
 // ── Translations ───────────────────────────────────────────
 const CARD_T = {
   en: {
@@ -684,11 +692,7 @@ window.copyAllLinks = function() {
 // REPORT GENERATION — Address Confirmation Flow
 // ══════════════════════════════════════════════════════════════
 
-const selectedForReport = new Set();
-const _reportMaps = {};          // Leaflet map instances keyed by prop.id
-const _reportMarkers = {};       // Leaflet markers keyed by prop.id
-const _reportGeoData = {};       // Confirmed coordinates keyed by prop.id
-const _debounceTimers = {};      // Geocoding debounce timers
+// selectedForReport + report state consts moved to top-level state section (line ~44) to avoid temporal dead zone
 
 function updateReportBtn() {
   const btn   = document.getElementById('reportBtn');
