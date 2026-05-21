@@ -981,9 +981,70 @@ window.confirmReport = async function() {
     }),
   };
 
-  // Show loading state
+  // Show loading state + progress bar
   const confirmBtn = document.getElementById('reportConfirmBtn');
   if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.textContent = '⏳ Generating PDF…'; }
+
+  // Progress bar — injected into modal footer
+  const STAGES = [
+    { pct:  5, t:  0, msg: 'Connecting to report server…' },
+    { pct: 18, t:  8, msg: 'Fetching isochrones…' },
+    { pct: 35, t: 20, msg: 'Generating maps…' },
+    { pct: 55, t: 38, msg: 'Building slides…' },
+    { pct: 72, t: 54, msg: 'Rendering PDF…' },
+    { pct: 88, t: 70, msg: 'Finalizing…' },
+  ];
+  const TOTAL_SECS = 85; // expected generation time
+
+  const _foot = document.querySelector('.report-modal-foot');
+  const _prog = document.createElement('div');
+  _prog.style.cssText = 'width:100%;margin-top:10px;';
+  _prog.innerHTML = `
+    <div id="_rp_bar_wrap" style="background:#eee;border-radius:6px;height:8px;overflow:hidden;margin-bottom:6px;">
+      <div id="_rp_bar" style="background:#C9A26D;height:8px;width:0%;border-radius:6px;transition:width 0.8s ease;"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <span id="_rp_msg" style="font-size:0.75rem;color:#888;">Starting…</span>
+      <span id="_rp_pct" style="font-size:0.75rem;font-weight:600;color:#C9A26D;font-family:monospace;">0%</span>
+    </div>`;
+  if (_foot) _foot.appendChild(_prog);
+
+  const _bar = document.getElementById('_rp_bar');
+  const _msg = document.getElementById('_rp_msg');
+  const _pct = document.getElementById('_rp_pct');
+
+  const _startTs = Date.now();
+  const _timer = setInterval(() => {
+    const elapsed = (Date.now() - _startTs) / 1000;
+    // Find current stage
+    let stage = STAGES[0];
+    for (const s of STAGES) { if (elapsed >= s.t) stage = s; }
+    // Interpolate within stage to next stage
+    const stageIdx = STAGES.indexOf(stage);
+    const next = STAGES[stageIdx + 1];
+    let pct = stage.pct;
+    if (next) {
+      const segLen = next.t - stage.t;
+      const segPct = next.pct - stage.pct;
+      pct = stage.pct + (Math.min(elapsed - stage.t, segLen) / segLen) * segPct;
+    } else {
+      // Past last stage — creep slowly toward 95%
+      pct = Math.min(95, stage.pct + (elapsed - stage.t) * 0.15);
+    }
+    // Estimate seconds remaining
+    const remaining = Math.max(0, Math.round(TOTAL_SECS - elapsed));
+    const remStr = remaining > 0 ? ` — ~${remaining}s left` : '';
+    if (_bar) _bar.style.width = pct.toFixed(1) + '%';
+    if (_msg) _msg.textContent = stage.msg + remStr;
+    if (_pct) _pct.textContent = Math.round(pct) + '%';
+  }, 800);
+
+  const _finishProgress = (success) => {
+    clearInterval(_timer);
+    if (_bar) { _bar.style.width = '100%'; _bar.style.background = success ? '#5a9660' : '#c05030'; }
+    if (_msg) _msg.textContent = success ? '✓ PDF ready — downloading…' : '✗ Generation failed';
+    if (_pct) _pct.textContent = '100%';
+  };
 
   try {
     const res = await fetch(`${API}/api/generate-report`, {
@@ -1008,10 +1069,12 @@ window.confirmReport = async function() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
-    closeReportModal();
+    _finishProgress(true);
+    setTimeout(() => { closeReportModal(); }, 1200);
     showToast('✓ Report generated — check your downloads folder');
 
   } catch (err) {
+    _finishProgress(false);
     if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = '📄 Generate Report'; }
     showToast(`Error generating report: ${err.message}`);
     console.error('[report] error:', err);
