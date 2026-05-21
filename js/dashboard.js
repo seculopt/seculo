@@ -437,11 +437,14 @@ function buildCard(prop) {
   const d    = prop.property_data || {};
   const img  = d.image || d.img || d.thumbnail || '';
   const title    = d.title || d.address || d.descricao || 'Property';
-  const location = [d.freguesia, d.concelho, d.distrito].filter(Boolean).join(', ')
-                || d.location || d.cidade || '';
+  // Support both dashboard field names (area/rooms/freguesia) and engine field names (areaCons/quartos/localidade)
+  const location = [d.freguesia || d.localidade, d.concelho, d.distrito].filter(Boolean).join(', ')
+                || d.location || d.cidade || d.address || '';
   const price  = d.price != null ? formatPrice(d.price) : '—';
-  const area   = d.area   != null ? `${d.area} m²` : '';
-  const rooms  = d.rooms  != null ? `${d.rooms} ${t.bed}` : '';
+  const areaVal = d.area ?? d.areaCons ?? null;
+  const area   = areaVal != null ? `${areaVal} m²` : '';
+  const roomsVal = d.rooms ?? d.quartos ?? null;
+  const rooms  = roomsVal != null ? `${roomsVal} ${t.bed}` : '';
   const portal = d.portal || d.source || '';
   const url    = d.url    || d.link   || '';
   const statusClass = prop.status || 'saved';
@@ -645,8 +648,8 @@ window.copyAllLinks = function() {
       const d = p.property_data || {};
       const title    = d.title || d.address || d.descricao || 'Propriedade';
       const price    = d.price != null ? '€ ' + Number(d.price).toLocaleString('pt-PT') : '';
-      const location = [d.freguesia, d.concelho, d.distrito].filter(Boolean).join(', ')
-                    || d.location || d.cidade || '';
+      const location = [d.freguesia || d.localidade, d.concelho, d.distrito].filter(Boolean).join(', ')
+                    || d.location || d.cidade || d.address || '';
       const link = `https://seculopt.com/share.html?id=${p.id}`;
       return [
         `${i + 1}. ${title}${price ? ' — ' + price : ''}`,
@@ -658,13 +661,23 @@ window.copyAllLinks = function() {
   if (!lines.length) { showToast('Nenhuma propriedade para partilhar'); return; }
 
   const text = `As minhas propriedades no Século Explorador:\n\n${lines.join('\n\n')}\n\nEncontrado em seculopt.com`;
-  navigator.clipboard.writeText(text)
-    .then(() => {
-      showToast(`✓ ${lines.length} link${lines.length === 1 ? '' : 's'} copiado${lines.length === 1 ? '' : 's'}!`);
-      const btn = document.getElementById('copyAllBtn');
-      if (btn) { btn.textContent = '✓ Copiado!'; setTimeout(() => { btn.innerHTML = '&#128203; Copiar todos os links'; }, 2500); }
-    })
-    .catch(() => showToast('Erro ao copiar — tenta de novo'));
+  const _doCopy = () => {
+    showToast(`✓ ${lines.length} link${lines.length === 1 ? '' : 's'} copiado${lines.length === 1 ? '' : 's'}!`);
+    const btn = document.getElementById('copyAllBtn');
+    if (btn) { btn.textContent = '✓ Copiado!'; setTimeout(() => { btn.innerHTML = '&#128203; Copiar todos os links'; }, 2500); }
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(_doCopy).catch(() => {
+      // Clipboard API blocked (incognito/permissions) — textarea fallback
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); _doCopy(); } catch(_) { showToast('Erro ao copiar — selecciona manualmente'); }
+      document.body.removeChild(ta);
+    });
+  } else {
+    showToast('Clipboard não disponível neste browser');
+  }
 };
 
 // ══════════════════════════════════════════════════════════════
@@ -683,7 +696,11 @@ function updateReportBtn() {
   if (!btn) return;
   const count = selectedForReport.size;
   badge.textContent = count;
-  btn.style.display = count > 0 ? 'flex' : 'none';
+  // Always show when there are properties; disabled+dimmed until at least 1 selected for report
+  btn.style.display = properties.length > 0 ? 'flex' : 'none';
+  btn.disabled = count === 0;
+  btn.title = count === 0 ? 'Click "📄 Report" on any property card to add it to the report' : `Generate PDF with ${count} propert${count === 1 ? 'y' : 'ies'}`;
+  btn.style.opacity = count === 0 ? '0.45' : '1';
 }
 
 function toggleReportSelect(propId, cardEl, btnEl) {
