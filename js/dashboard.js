@@ -842,50 +842,68 @@ window.openReportModal = function() {
     const concelho  = d.concelho || '';
     const mapId     = `rmap-${prop.id.replace(/-/g, '')}`;
 
+    // Build row with flat flex layout: [num][thumb][body(title+input+status)][map]
     const row = document.createElement('div');
     row.className = 'rconf-row';
     row.dataset.propId = prop.id;
 
-    // Top strip
-    const topDiv = document.createElement('div');
-    topDiv.className = 'rconf-row-top';
-    topDiv.innerHTML = `
-      <div class="rconf-num">${String(idx + 1).padStart(2, '0')}</div>
-      ${img
-        ? `<img class="rconf-thumb" src="${escHtml(img)}" alt="" onerror="this.style.display='none'">`
-        : `<div class="rconf-thumb-placeholder">&#127968;</div>`
-      }
-      <div class="rconf-body">
-        <div class="rconf-title">${escHtml(title)}</div>
-        ${knownAddr ? `<div class="rconf-known">&#9432; ${escHtml(I.orig)} ${escHtml(knownAddr)}</div>` : ''}
-      </div>`;
-    row.appendChild(topDiv);
+    // Number badge
+    const numEl = document.createElement('div');
+    numEl.className = 'rconf-num';
+    numEl.textContent = String(idx + 1).padStart(2, '0');
+    row.appendChild(numEl);
 
-    // Address + map section (built separately to avoid template-literal nesting issues)
-    const addrSection = document.createElement('div');
-    addrSection.className = 'rconf-addr-section';
+    // Thumbnail
+    if (img) {
+      const thumbEl = document.createElement('img');
+      thumbEl.className = 'rconf-thumb';
+      thumbEl.src = img; thumbEl.alt = '';
+      thumbEl.onerror = function() { this.style.display = 'none'; };
+      row.appendChild(thumbEl);
+    } else {
+      const phEl = document.createElement('div');
+      phEl.className = 'rconf-thumb-placeholder';
+      phEl.textContent = '🏠';
+      row.appendChild(phEl);
+    }
 
-    const addrMain = document.createElement('div');
-    addrMain.className = 'rconf-addr-main';
-    addrMain.innerHTML = `
-      <span class="rconf-label">${escHtml(I.label)}</span>
-      <input class="rconf-addr-input" type="text"
-        placeholder="${escHtml(I.ph)}"
-        value="${escHtml(knownAddr)}"
-        data-prop-id="${escHtml(prop.id)}"
-        data-concelho="${escHtml(concelho)}" />
-      <div class="rconf-geo-status" id="geoStatus-${escHtml(prop.id)}">
-        <div class="rconf-geo-dot red" id="geoDot-${escHtml(prop.id)}"></div>
-        <span id="geoText-${escHtml(prop.id)}">&#8212;</span>
-      </div>`;
+    // Central body: title + label + input + status
+    const bodyEl = document.createElement('div');
+    bodyEl.className = 'rconf-body';
 
+    const titleEl = document.createElement('div');
+    titleEl.className = 'rconf-title';
+    titleEl.textContent = title;
+    bodyEl.appendChild(titleEl);
+
+    const labelEl = document.createElement('span');
+    labelEl.className = 'rconf-label';
+    labelEl.textContent = I.label;
+    bodyEl.appendChild(labelEl);
+
+    const inputEl = document.createElement('input');
+    inputEl.className = 'rconf-addr-input';
+    inputEl.type = 'text';
+    inputEl.placeholder = I.ph;
+    inputEl.value = knownAddr;
+    inputEl.dataset.propId = prop.id;
+    inputEl.dataset.concelho = concelho;
+    bodyEl.appendChild(inputEl);
+
+    const statusEl = document.createElement('div');
+    statusEl.className = 'rconf-geo-status';
+    statusEl.id = `geoStatus-${prop.id}`;
+    statusEl.innerHTML = `<div class="rconf-geo-dot red" id="geoDot-${prop.id}"></div><span id="geoText-${prop.id}">—</span>`;
+    bodyEl.appendChild(statusEl);
+
+    row.appendChild(bodyEl);
+
+    // Mini-map
     const mapDiv = document.createElement('div');
     mapDiv.className = 'rconf-map';
     mapDiv.id = mapId;
+    row.appendChild(mapDiv);
 
-    addrSection.appendChild(addrMain);
-    addrSection.appendChild(mapDiv);
-    row.appendChild(addrSection);
     body.appendChild(row);
 
     // Wire up address input with debounced geocoding
@@ -948,7 +966,7 @@ function initMiniMap(propId, containerId, lat, lng) {
   if (!container || !window.L) return;
   const map = window.L.map(container, {
     center: [lat, lng],
-    zoom: 14,
+    zoom: 16,
     zoomControl: false,
     attributionControl: false,
     dragging: false,
