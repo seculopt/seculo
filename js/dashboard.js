@@ -845,37 +845,47 @@ window.openReportModal = function() {
     const row = document.createElement('div');
     row.className = 'rconf-row';
     row.dataset.propId = prop.id;
-    row.innerHTML = `
-      <div class="rconf-row-top">
-        <div class="rconf-num">${String(idx + 1).padStart(2, '0')}</div>
-        ${img
-          ? `<img class="rconf-thumb" src="${escHtml(img)}" alt="" onerror="this.style.display='none'">`
-          : `<div class="rconf-thumb-placeholder">&#127968;</div>`
-        }
-        <div class="rconf-body">
-          <div class="rconf-title">${escHtml(title)}</div>
-          ${knownAddr ? `<div class="rconf-known">&#128274; ${escHtml(I.orig)} ${escHtml(knownAddr)}</div>` : ''}
-        </div>
-      </div>
-      <div class="rconf-addr-section">
-        <div class="rconf-addr-main">
-          <span class="rconf-label">${escHtml(I.label)}</span>
-          <div class="rconf-input-wrap">
-            <input class="rconf-addr-input" type="text"
-              placeholder="${escHtml(I.ph)}"
-              value="${escHtml(knownAddr)}"
-              data-prop-id="${escHtml(prop.id)}"
-              data-concelho="${escHtml(concelho)}" />
-          </div>
-          <div class="rconf-geo-status" id="geoStatus-${escHtml(prop.id)}">
-            <div class="rconf-geo-dot red" id="geoDot-${escHtml(prop.id)}"></div>
-            <span id="geoText-${escHtml(prop.id)}">—</span>
-          </div>
-        </div>
-        <div class="rconf-map" id="${mapId}"></div>
-      </div>
-    `;
 
+    // Top strip
+    const topDiv = document.createElement('div');
+    topDiv.className = 'rconf-row-top';
+    topDiv.innerHTML = `
+      <div class="rconf-num">${String(idx + 1).padStart(2, '0')}</div>
+      ${img
+        ? `<img class="rconf-thumb" src="${escHtml(img)}" alt="" onerror="this.style.display='none'">`
+        : `<div class="rconf-thumb-placeholder">&#127968;</div>`
+      }
+      <div class="rconf-body">
+        <div class="rconf-title">${escHtml(title)}</div>
+        ${knownAddr ? `<div class="rconf-known">&#9432; ${escHtml(I.orig)} ${escHtml(knownAddr)}</div>` : ''}
+      </div>`;
+    row.appendChild(topDiv);
+
+    // Address + map section (built separately to avoid template-literal nesting issues)
+    const addrSection = document.createElement('div');
+    addrSection.className = 'rconf-addr-section';
+
+    const addrMain = document.createElement('div');
+    addrMain.className = 'rconf-addr-main';
+    addrMain.innerHTML = `
+      <span class="rconf-label">${escHtml(I.label)}</span>
+      <input class="rconf-addr-input" type="text"
+        placeholder="${escHtml(I.ph)}"
+        value="${escHtml(knownAddr)}"
+        data-prop-id="${escHtml(prop.id)}"
+        data-concelho="${escHtml(concelho)}" />
+      <div class="rconf-geo-status" id="geoStatus-${escHtml(prop.id)}">
+        <div class="rconf-geo-dot red" id="geoDot-${escHtml(prop.id)}"></div>
+        <span id="geoText-${escHtml(prop.id)}">&#8212;</span>
+      </div>`;
+
+    const mapDiv = document.createElement('div');
+    mapDiv.className = 'rconf-map';
+    mapDiv.id = mapId;
+
+    addrSection.appendChild(addrMain);
+    addrSection.appendChild(mapDiv);
+    row.appendChild(addrSection);
     body.appendChild(row);
 
     // Wire up address input with debounced geocoding
