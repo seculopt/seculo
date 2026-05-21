@@ -130,11 +130,17 @@ function getT() {
 
 // ── Load data ──────────────────────────────────────────────
 let _loadError = false;
+const _ctrl = new AbortController();
+const _timeout = setTimeout(() => _ctrl.abort(), 12000); // 12s max wait
+
 try {
+  const authHeader = { Authorization: `Bearer ${access_token}` };
+  const opts = { headers: authHeader, signal: _ctrl.signal };
   const [propsRes, foldsRes] = await Promise.all([
-    fetch(`${API}/api/my-properties`, { headers: { Authorization: `Bearer ${access_token}` } }),
-    fetch(`${API}/api/folders`,       { headers: { Authorization: `Bearer ${access_token}` } }),
+    fetch(`${API}/api/my-properties`, opts),
+    fetch(`${API}/api/folders`,       opts),
   ]);
+  clearTimeout(_timeout);
   if (propsRes.ok) {
     const d = await propsRes.json();
     properties = d.properties || [];
@@ -144,18 +150,21 @@ try {
   }
   if (foldsRes.ok) { const d = await foldsRes.json(); folders = d.folders || []; }
 } catch (e) {
+  clearTimeout(_timeout);
   console.error('Failed to load dashboard data', e);
   _loadError = true;
 }
 
-document.getElementById('dashLoading').style.display = 'none';
+const dashLoadingEl = document.getElementById('dashLoading');
+if (dashLoadingEl) dashLoadingEl.style.display = 'none';
+
 if (_loadError && properties.length === 0) {
   // Show a visible error so the user knows it's a network/auth issue, not empty list
   const errEl = document.createElement('div');
   errEl.style.cssText = 'text-align:center;padding:3rem 1rem;color:#c0392b;';
   errEl.innerHTML = '<p style="font-size:1rem;font-weight:500;">⚠️ Could not load your saved properties.</p><p style="font-size:0.85rem;margin-top:0.5rem;color:#888;">Please refresh the page or <a href="login.html" style="color:inherit;">log in again</a>.</p>';
-  document.getElementById('dashMain') && document.getElementById('dashMain').prepend(errEl) ||
-  document.querySelector('.dash-main') && document.querySelector('.dash-main').prepend(errEl);
+  const mainEl = document.getElementById('dashMain') || document.querySelector('.dash-main');
+  if (mainEl) mainEl.prepend(errEl);
 }
 initDashboard();
 
