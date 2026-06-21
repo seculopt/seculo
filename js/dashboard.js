@@ -1006,6 +1006,8 @@ window.confirmReport = async function() {
 
   const config = {
     generated_at: new Date().toISOString(),
+    // PDF language = engine UI language at export time (pt/es/en).
+    lang: (window.getCurrentLang ? window.getCurrentLang() : 'pt') || 'pt',
     agent: { tier },
     properties: await Promise.all(selectedProps.map(async (prop, idx) => {
       const d    = prop.property_data || {};
