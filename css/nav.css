@@ -33,13 +33,16 @@
   flex-shrink: 0;
 }
 
+/* v2 logo is a 192x87 lockup (wordmark + tagline) where the old one was a
+   737x240 wordmark. At the previous 36px the tagline rendered ~4px tall and
+   was unreadable, so the height is raised to fit the taller artwork. */
 .nav-logo img {
-  height: 36px;
+  height: 46px;
   width: auto;
 }
 
 .nav-logo-text {
-  font-family: var(--font-display);
+  font-family: var(--font-logo);
   font-size: 1.2rem;
   font-weight: 700;
   color: var(--color-white);
@@ -47,7 +50,7 @@
 }
 
 .nav-logo-text span {
-  color: var(--color-accent);
+  color: var(--color-accent-on-dark);
 }
 
 /* ── Nav Links ── */
@@ -70,7 +73,7 @@
 }
 
 .nav-links a:not(.btn):hover {
-  color: var(--color-accent);
+  color: var(--color-accent-on-dark);
 }
 
 .nav-links .btn {
@@ -83,7 +86,7 @@
 }
 
 .nav-links .btn-outline:hover {
-  color: var(--color-primary);
+  color: var(--brand-light);
 }
 
 /* ── Language Toggle ── */
@@ -97,7 +100,7 @@
 .lang-btn {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.68);
   font-family: var(--font-body);
   font-size: 0.8rem;
   cursor: pointer;
@@ -109,12 +112,12 @@
 
 .lang-btn.active,
 .lang-btn:hover {
-  color: var(--color-accent);
+  color: var(--color-accent-on-dark);
   font-weight: 600;
 }
 
 .lang-toggle span {
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.32);
   font-size: 0.8rem;
   user-select: none;
 }

@@ -3,21 +3,39 @@
    ============================================================ */
 
 /* ── Google Fonts ── */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@200;300;400;500;600;700&family=Zalando+Sans+Expanded:wght@400;500;600;700&family=DM+Mono&display=swap');
 
 /* ── CSS Custom Properties ── */
 :root {
-  --color-primary:  #191927;
-  --color-accent:   #C8A96E;
-  --color-bg:       #F7F5F0;
-  --color-text:     #2D2D2D;
-  --color-mid:      #4A4A6A;
-  --color-divider:  #E0DDD8;
+  /* ── Brand palette ──
+     The four canonical brand colours. Everything below maps onto these —
+     change a value here and it propagates through the whole site. */
+  --brand-light:      #F6F5F0;
+  --brand-terracotta: #91301D;
+  --brand-dark:       #3E3A37;
+  --brand-grey:       #43515C;
+
+  /* ── Semantic roles ── */
+  --color-primary:  var(--brand-dark);
+  --color-accent:   var(--brand-terracotta);
+  --color-bg:       var(--brand-light);
+  --color-text:     var(--brand-dark);
+  --color-mid:      var(--brand-grey);
+  --color-divider:  #E3DFD7;
   --color-white:    #FFFFFF;
 
-  --font-display: 'Playfair Display', serif;
-  --font-body:    'DM Sans', sans-serif;
+  /* Terracotta on the dark surfaces (nav, footer) is only 1.45:1 — illegible.
+     This lifted tint reaches 4.9:1 on --brand-dark, so it passes WCAG AA.
+     Use it for any accent that sits on a dark background. */
+  --color-accent-on-dark: #E2947C;
+
+  --font-display: 'Zalando Sans Expanded', 'Bai Jamjuree', sans-serif;
+  --font-body:    'Bai Jamjuree', sans-serif;
   --font-mono:    'DM Mono', monospace;
+
+  /* FAIRE Octave is a foundry font and is not web-licensed or self-hosted yet,
+     so this currently falls back to the heading face. See README note. */
+  --font-logo:    'FAIRE Octave', 'Zalando Sans Expanded', sans-serif;
 
   --max-width:        1200px;
   --section-padding:  96px;
@@ -120,9 +138,10 @@ a {
 
 .btn-primary:hover {
   background: var(--color-accent);
-  color: var(--color-primary);
+  /* Light, not dark — dark ink on terracotta is 1.45:1 and unreadable. */
+  color: var(--brand-light);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(200, 169, 110, 0.35);
+  box-shadow: 0 8px 24px rgba(145, 48, 29, 0.35);
 }
 
 .btn-outline {
@@ -133,7 +152,7 @@ a {
 
 .btn-outline:hover {
   background: var(--color-accent);
-  color: var(--color-primary);
+  color: var(--brand-light);
   transform: translateY(-2px);
 }
 
@@ -157,9 +176,12 @@ a {
 }
 
 /* ── Footer ── */
+/* The footer sits on --brand-dark (#3E3A37), which is a good deal lighter than
+   the old #191927. Every muted white below was raised to compensate — at the
+   previous opacities they dropped under 4.5:1 against the new background. */
 .site-footer {
   background: var(--color-primary);
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.72);
   padding: 48px 0 32px;
 }
 
@@ -181,7 +203,7 @@ a {
 
 .footer-tagline {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.68);
   line-height: 1.6;
 }
 
@@ -191,7 +213,7 @@ a {
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-accent-on-dark);
   margin-bottom: 16px;
 }
 
@@ -203,41 +225,41 @@ a {
 
 .footer-links a {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.72);
   transition: color var(--transition);
 }
 
 .footer-links a:hover {
-  color: var(--color-accent);
+  color: var(--color-accent-on-dark);
 }
 
 .footer-nav-col .btn-outline {
   color: var(--color-white);
-  border-color: var(--color-accent);
+  border-color: var(--color-accent-on-dark);
   margin-bottom: 16px;
   white-space: normal;
   width: 100%;
 }
 
 .footer-nav-col .btn-outline:hover {
-  color: var(--color-primary);
+  color: var(--brand-light);
 }
 
 .footer-email {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.66);
   display: block;
   margin-top: 8px;
   transition: color var(--transition);
 }
 
 .footer-email:hover {
-  color: var(--color-accent);
+  color: var(--color-accent-on-dark);
 }
 
 .footer-whatsapp {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.66);
   display: block;
   margin-top: 8px;
   transition: color var(--transition);
@@ -263,7 +285,7 @@ a {
 
 .footer-copy {
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.62);
 }
 
 /* Footer lang toggle */
@@ -276,7 +298,7 @@ a {
 .footer-lang .lang-btn {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.62);
   font-family: var(--font-body);
   font-size: 0.8rem;
   cursor: pointer;
@@ -287,12 +309,12 @@ a {
 
 .footer-lang .lang-btn.active,
 .footer-lang .lang-btn:hover {
-  color: var(--color-accent);
+  color: var(--color-accent-on-dark);
   font-weight: 600;
 }
 
 .footer-lang span {
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.32);
   font-size: 0.8rem;
 }
 

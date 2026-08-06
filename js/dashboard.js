@@ -142,7 +142,7 @@ function showFolderMenu(folder, anchor) {
 
   const menu = document.createElement('div');
   menu.id = '_foldMenu';
-  menu.style.cssText = 'position:fixed;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9000;min-width:140px;padding:0.4rem 0;font-size:0.84rem;font-family:\'DM Sans\',sans-serif;';
+  menu.style.cssText = 'position:fixed;background:#fff;border:1px solid var(--color-divider);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9000;min-width:140px;padding:0.4rem 0;font-size:0.84rem;font-family:var(--font-body);';
 
   const rect = anchor.getBoundingClientRect();
   menu.style.top  = (rect.bottom + 4) + 'px';

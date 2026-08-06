@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@200;300;400;500;600;700&family=Zalando+Sans+Expanded:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/nav.css" />
@@ -36,7 +36,7 @@
       flex-wrap: wrap;
     }
     .dash-title {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--font-display);
       font-size: 1.75rem;
       font-weight: 600;
       color: var(--color-primary);
@@ -161,7 +161,7 @@
       padding: 0.45rem 1rem;
       background: none;
       border: none;
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--font-body);
       font-size: 0.84rem;
       color: var(--color-mid);
       cursor: pointer;
@@ -199,7 +199,7 @@
     }
     .dash-empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.35; }
     .dash-empty h2 {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--font-display);
       font-size: 1.3rem;
       color: var(--color-primary);
       margin-bottom: 0.5rem;
@@ -289,7 +289,7 @@
     }
     .prop-btn {
       flex: 1; padding: 0.45rem 0.6rem; border-radius: 6px;
-      font-size: 0.78rem; font-weight: 500; font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem; font-weight: 500; font-family: var(--font-body);
       cursor: pointer; border: 1px solid var(--color-divider);
       background: var(--color-white); color: var(--color-primary);
       text-align: center; transition: background 0.12s, border-color 0.12s;
@@ -306,7 +306,7 @@
     .prop-folder-select {
       width: 100%; padding: 0.35rem 0.6rem; border-radius: 6px;
       border: 1px solid var(--color-divider); background: var(--color-white);
-      font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--color-mid);
+      font-family: var(--font-body); font-size: 0.78rem; color: var(--color-mid);
       cursor: pointer; appearance: none; -webkit-appearance: none; outline: none;
     }
     .prop-folder-select:disabled { cursor: wait; opacity: 0.6; }
