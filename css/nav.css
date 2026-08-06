@@ -1,28 +1,40 @@
 /* ============================================================
    SÉCULO EXPLORER — Navigation
+   ------------------------------------------------------------
+   Mobile-first. The bar is transparent over the top of the page
+   and resolves into a light surface with a hairline underneath
+   once you scroll — so the nav reads as a drawn line rather than
+   a block of colour.
    ============================================================ */
 
 .site-nav {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--color-primary);
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12);
-  transition: box-shadow 0.3s ease;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background var(--transition),
+              border-color var(--transition),
+              backdrop-filter var(--transition);
 }
 
 .site-nav.scrolled {
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  background: rgba(246, 245, 240, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom-color: var(--rule);
 }
 
 .nav-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
   height: 72px;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 var(--gutter);
+  position: relative;
 }
 
 /* ── Logo ── */
@@ -31,121 +43,143 @@
   align-items: center;
   text-decoration: none;
   flex-shrink: 0;
+  /* Sits above the mobile panel so it stays visible while the menu is open. */
+  position: relative;
+  z-index: 2;
 }
 
 /* v2 logo is a 192x87 lockup (wordmark + tagline) where the old one was a
    737x240 wordmark. At the previous 36px the tagline rendered ~4px tall and
    was unreadable, so the height is raised to fit the taller artwork. */
 .nav-logo img {
-  height: 46px;
+  height: 38px;
   width: auto;
+  transition: height var(--transition);
 }
 
 .nav-logo-text {
   font-family: var(--font-logo);
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--color-white);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-primary);
   letter-spacing: 0.02em;
 }
 
 .nav-logo-text span {
-  color: var(--color-accent-on-dark);
+  color: var(--color-accent);
 }
 
 /* ── Nav Links ── */
 .nav-links {
-  display: flex;
-  align-items: center;
-  gap: 32px;
+  /* Mobile: a full-width panel that drops below the bar. */
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  background: var(--color-bg);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 8px var(--gutter) 24px;
   list-style: none;
+  max-height: calc(100vh - 72px);
+  overflow-y: auto;
+}
+
+.site-nav.is-open .nav-links {
+  display: flex;
+}
+
+.nav-links li {
+  border-bottom: 1px solid var(--rule-faint);
+}
+
+.nav-links li:last-child {
+  border-bottom: none;
+  padding-top: 20px;
 }
 
 .nav-links a {
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 0.9rem;
+  display: block;
+  color: var(--color-primary);
+  font-size: 1rem;
   font-family: var(--font-body);
-  font-weight: 400;
-  letter-spacing: 0.03em;
+  font-weight: 300;
+  letter-spacing: 0.02em;
   text-decoration: none;
   transition: color var(--transition);
-  padding: 4px 0;
+  padding: 16px 0;
 }
 
-.nav-links a:not(.btn):hover {
-  color: var(--color-accent-on-dark);
+.nav-links a:not(.btn):hover,
+.nav-links a:not(.btn):focus-visible {
+  color: var(--color-accent);
 }
 
 .nav-links .btn {
-  padding: 10px 20px;
-  font-size: 0.88rem;
-}
-
-.nav-links .btn-outline {
-  color: var(--color-white);
-}
-
-.nav-links .btn-outline:hover {
-  color: var(--brand-light);
+  width: 100%;
 }
 
 /* ── Language Toggle ── */
 .lang-toggle {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-left: 16px;
+  gap: 8px;
+  margin-left: auto;
+  margin-right: 4px;
 }
 
 .lang-btn {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.68);
+  color: var(--color-mid);
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: var(--t-label);
   cursor: pointer;
-  letter-spacing: 0.05em;
-  padding: 2px 4px;
-  transition: var(--transition);
+  letter-spacing: 0.14em;
+  padding: 6px 2px;
+  transition: color var(--transition);
   line-height: 1;
 }
 
 .lang-btn.active,
 .lang-btn:hover {
-  color: var(--color-accent-on-dark);
-  font-weight: 600;
+  color: var(--color-accent);
 }
 
 .lang-toggle span {
-  color: rgba(255, 255, 255, 0.32);
-  font-size: 0.8rem;
+  color: var(--rule-strong);
+  font-size: var(--t-label);
   user-select: none;
 }
 
-/* ── Hamburger ── */
+/* ── Hamburger ──
+   Two rules that cross into an X. Squared ends, no radius. */
 .nav-toggle {
-  display: none;
+  display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 5px;
+  gap: 6px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
-  margin-left: 12px;
+  padding: 12px 4px;
+  margin-right: -4px;
+  flex-shrink: 0;
 }
 
 .nav-toggle span {
   display: block;
-  width: 22px;
-  height: 2px;
-  background: var(--color-white);
-  border-radius: 2px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  width: 24px;
+  height: 1px;
+  background: var(--color-primary);
+  transition: transform var(--transition), opacity var(--transition);
   transform-origin: center;
 }
 
-/* Hamburger open animation */
 .site-nav.is-open .nav-toggle span:nth-child(1) {
   transform: translateY(7px) rotate(45deg);
 }
@@ -158,65 +192,97 @@
   transform: translateY(-7px) rotate(-45deg);
 }
 
-/* ── Medium — tighten spacing before hamburger kicks in ── */
-@media (max-width: 1100px) {
-  .nav-links {
-    gap: 20px;
-  }
+/* An open menu gets the resolved surface even at the top of the page. */
+.site-nav.is-open {
+  background: var(--color-bg);
+  border-bottom-color: var(--rule);
 }
 
-/* ── Mobile ── */
-@media (max-width: 900px) {
+/* ============================================================
+   RESPONSIVE — mobile-first, so these only ADD structure
+   ============================================================ */
+
+@media (min-width: 940px) {
+  .nav-inner {
+    height: 88px;
+  }
+
+  .nav-logo img {
+    height: 44px;
+  }
+
   .nav-toggle {
-    display: flex;
+    display: none;
   }
 
   .nav-links {
-    display: none;
-    position: absolute;
-    top: 72px;
-    left: 0;
-    width: 100%;
-    background: var(--color-primary);
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 24px;
-    gap: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    position: static;
+    width: auto;
+    flex-direction: row;
+    align-items: center;
+    gap: 34px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    max-height: none;
+    overflow: visible;
   }
 
-  .site-nav.is-open .nav-links {
-    display: flex;
+  .nav-links li {
+    border-bottom: none;
+  }
+
+  .nav-links li:last-child {
+    padding-top: 0;
   }
 
   .nav-links a {
-    font-size: 1rem;
+    padding: 4px 0;
+    font-size: var(--t-small);
+    letter-spacing: 0.04em;
+  }
+
+  /* Underline draws in from the left rather than appearing all at once. */
+  .nav-links a:not(.btn) {
+    position: relative;
+  }
+
+  .nav-links a:not(.btn)::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
     width: 100%;
+    height: 1px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition);
+  }
+
+  .nav-links a:not(.btn):hover::after,
+  .nav-links a:not(.btn):focus-visible::after {
+    transform: scaleX(1);
   }
 
   .nav-links .btn {
-    width: 100%;
-    justify-content: center;
+    width: auto;
+    padding: 12px 24px;
+    min-height: 44px;
   }
 
   .lang-toggle {
-    margin-left: 0;
-    margin-top: 8px;
-    gap: 4px;
-  }
-
-  .lang-btn {
-    padding: 2px 3px;
-  }
-
-  .nav-inner {
-    position: relative;
+    margin-left: 8px;
+    margin-right: 0;
   }
 }
 
-@media (max-width: 480px) {
-  .nav-inner {
-    padding: 0 16px;
+@media (prefers-reduced-motion: reduce) {
+  .site-nav,
+  .nav-logo img,
+  .nav-toggle span,
+  .nav-links a:not(.btn)::after {
+    transition: none;
   }
 }

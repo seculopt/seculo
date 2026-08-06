@@ -6,6 +6,18 @@
   <meta name="description" content="Século Explorer searches 11 Portuguese property portals at once. Find your home faster — filter by location, price, size, and type all in one place." />
   <title>Século Explorer — Find Your Home in Portugal</title>
 
+  <!-- Runs before first paint. The .js class means scroll-reveal elements are
+       only hidden when JS is actually there to reveal them again; the
+       intro-skip check keeps the curtain from flashing on a repeat visit. -->
+  <script>
+    document.documentElement.classList.add('js');
+    try {
+      if (sessionStorage.getItem('seculo-intro-played') === '1') {
+        document.documentElement.classList.add('intro-skip');
+      }
+    } catch (e) { /* storage blocked — the curtain simply plays again */ }
+  </script>
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,13 +31,22 @@
 <body>
 
   <!-- ══════════════════════════════════════════
+       INTRO CURTAIN — plays once per session
+  ══════════════════════════════════════════ -->
+  <div class="intro" id="intro" aria-hidden="true">
+    <img class="intro__logo" src="assets/logo.svg" alt="" />
+    <span class="intro__rule"></span>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
        NAVIGATION
   ══════════════════════════════════════════ -->
   <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
       <!-- Logo -->
       <a href="index.html" class="nav-logo" aria-label="Século Explorer — Home">
-        <img src="assets/logo-light.svg" alt="Século Explorer" />
+        <img src="assets/logo.svg" alt="Século Explorer" />
       </a>
 
       <!-- Links -->
@@ -43,17 +64,15 @@
       <!-- Language Toggle -->
       <div class="lang-toggle">
         <button class="lang-btn active" data-lang="en">EN</button>
-        <span>|</span>
+        <span>/</span>
         <button class="lang-btn" data-lang="pt">PT</button>
-        <span>|</span>
+        <span>/</span>
         <button class="lang-btn" data-lang="es">ES</button>
       </div>
 
       <!-- Hamburger -->
-      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
-        <span></span>
-        <span></span>
-        <span></span>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
@@ -63,24 +82,32 @@
        SECTION A — HERO
   ══════════════════════════════════════════ -->
   <section class="hero" aria-label="Hero">
+    <!-- Photo slot. Drop a file at assets/hero-bg.jpg and set
+         --hero-image below to switch it on. -->
+    <div class="hero__bg" aria-hidden="true"></div>
+
     <div class="hero-inner">
       <div class="hero-content">
-        <span class="hero-eyebrow" data-en="Smart Property Search" data-pt="Pesquisa Imobiliária Inteligente" data-es="Búsqueda Inteligente de Propiedades">Smart Property Search</span>
-        <h1 data-en="Stop searching. Start finding." data-pt="Encontre a Sua Casa em Portugal. Mais Depressa." data-es="Deja de buscar. Empieza a encontrar.">Find Your Home in Portugal. Faster.</h1>
+        <span class="eyebrow" data-en="Smart Property Search" data-pt="Pesquisa Imobiliária Inteligente" data-es="Búsqueda Inteligente de Propiedades">Smart Property Search</span>
+        <h1 data-en="Stop searching. Start finding." data-pt="Encontre a Sua Casa em Portugal. Mais Depressa." data-es="Deja de buscar. Empieza a encontrar.">Stop searching. Start finding.</h1>
         <p class="hero-sub"
-          data-en="Most people spend weeks jumping between property websites before finding anything worth visiting. <strong>We search across Portugal's top portals in one go.</strong> Set your filters and browse an interactive map of results. Dig deeper with map overlays covering <strong><i>land classification, flood zones, wildfire history, urban rehabilitation areas, drive-time isochrones, nearby amenities and more.</i></strong> Found something you like? Export your favourites to CSV and compare at your own pace."
-          data-pt="A maioria das pessoas passa semanas a saltar entre portais imobiliários antes de encontrar algo que valha a pena visitar. <strong>O Século Explorer pesquisa os principais portais portugueses de uma só vez.</strong> Defina os seus filtros e explore um mapa interativo com os resultados. Aprofunde a sua análise com camadas de informação sobre <strong> <i> classificação do solo, zonas inundáveis, histórico de incêndios, áreas de reabilitação urbana, isócronas de tempo de condução, equipamentos nas proximidades e muito mais.</strong></i> Encontrou algo que lhe interessa? Exporte os seus favoritos para CSV e compare ao seu ritmo."
-          data-es="La mayoría de las personas pasan semanas saltando entre portales inmobiliarios antes de encontrar algo que valga la pena visitar. <strong>Buscamos en los principales portales de Portugal de una sola vez.</strong> Define tus filtros y explora un mapa interactivo con los resultados. Profundiza más con capas de mapa sobre <strong><i>clasificación del suelo, zonas de inundación, historial de incendios, áreas de rehabilitación urbana, isocronas de tiempo de conducción, servicios cercanos y más.</i></strong> ¿Encontraste algo que te gusta? Exporta tus favoritos a CSV y compara a tu ritmo.">Século Explorer searches 11 Portuguese property portals at once, so you see every listing in one place. Filter by location, price, size, and type — and stop wasting time switching between sites.</p>
+          data-en="Most people spend weeks jumping between property websites before finding anything worth visiting. <strong>We search across Portugal's top portals in one go.</strong>"
+          data-pt="A maioria das pessoas passa semanas a saltar entre portais imobiliários antes de encontrar algo que valha a pena visitar. <strong>O Século Explorer pesquisa os principais portais portugueses de uma só vez.</strong>"
+          data-es="La mayoría de las personas pasan semanas saltando entre portales inmobiliarios antes de encontrar algo que valga la pena visitar. <strong>Buscamos en los principales portales de Portugal de una sola vez.</strong>">Most people spend weeks jumping between property websites before finding anything worth visiting. <strong>We search across Portugal's top portals in one go.</strong></p>
         <div class="hero-actions">
-          <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" data-en="Try it free — no account needed" data-pt="Experimenta grátis — sem registo" data-es="Pruébalo gratis — sin registro">Try it free — no account needed</a>
+          <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" data-en="Try it free" data-pt="Experimenta grátis" data-es="Pruébalo gratis">Try it free</a>
           <a href="products.html" class="btn btn-outline" data-en="See plans" data-pt="Ver planos" data-es="Ver planes">See plans</a>
         </div>
         <div class="hero-stats">
-          <div class="stat-pill">
+          <div class="stat">
             <span class="stat-number">98%+</span>
             <span class="stat-label" data-en="of the market covered" data-pt="do mercado coberto" data-es="del mercado cubierto">of the market covered</span>
           </div>
-          <div class="stat-pill">
+          <div class="stat">
+            <span class="stat-number">11</span>
+            <span class="stat-label" data-en="portals searched at once" data-pt="portais pesquisados de uma vez" data-es="portales buscados a la vez">portals searched at once</span>
+          </div>
+          <div class="stat">
             <span class="stat-number">0</span>
             <span class="stat-label" data-en="tabs to juggle" data-pt="abas para gerir" data-es="pestañas que gestionar">tabs to juggle</span>
           </div>
@@ -91,42 +118,49 @@
 
 
   <!-- ══════════════════════════════════════════
-       SECTION B — PROBLEM / VALUE
+       SECTION B — PROBLEM
   ══════════════════════════════════════════ -->
   <section class="section problem-section" id="how-it-works">
     <div class="container">
       <div class="problem-grid">
-        <!-- Left: text -->
         <div class="problem-col animate-on-scroll">
           <span class="section-label" data-en="The Problem" data-pt="O Problema" data-es="El Problema">The Problem</span>
           <h2
-            data-en="Finding a Property Shouldn't Feel Like a Second Job"
+            data-en="Finding a property shouldn't feel like a second job"
             data-pt="Procurar propriedade não deve ser um segundo trabalho"
             data-es="Buscar una propiedad no debería sentirse como un segundo trabajo">Finding a property shouldn't feel like a second job</h2>
-          <p class="problem-body"
-            data-en="Finding the right property in Portugal means searching across ImóVirtual, Idealista, SuperCasa, and a dozen regional portals. Each with its own filters, its own format, and no way to see everything side by side. <strong> Século Explorador changes that. </strong>"
-            data-pt="Encontrar o imóvel certo em Portugal significa pesquisar no ImóVirtual, Idealista, SuperCasa e dezenas de portais regionais. Cada um com os seus próprios filtros, o seu próprio formato, e sem forma de ver tudo lado a lado. <strong> O Século Explorador muda isso. </strong>"
-            data-es="Encontrar la propiedad adecuada en Portugal significa buscar en ImóVirtual, Idealista, SuperCasa y docenas de portales regionales. Cada uno con sus propios filtros, su propio formato y sin forma de ver todo lado a lado. <strong>Século Explorador cambia eso.</strong>">Finding a home means checking ImóVirtual, Idealista, SuperCasa, and dozens of other portals — one by one. Listings overlap, filters differ, and you can easily miss the perfect option buried on a smaller site.</p>
-          <ul class="problem-list">
+          <p class="problem-body measure"
+            data-en="Finding the right property in Portugal means searching across ImóVirtual, Idealista, SuperCasa, and a dozen regional portals. Each with its own filters, its own format, and no way to see everything side by side. <strong>Século Explorador changes that.</strong>"
+            data-pt="Encontrar o imóvel certo em Portugal significa pesquisar no ImóVirtual, Idealista, SuperCasa e dezenas de portais regionais. Cada um com os seus próprios filtros, o seu próprio formato, e sem forma de ver tudo lado a lado. <strong>O Século Explorador muda isso.</strong>"
+            data-es="Encontrar la propiedad adecuada en Portugal significa buscar en ImóVirtual, Idealista, SuperCasa y docenas de portales regionales. Cada uno con sus propios filtros, su propio formato y sin forma de ver todo lado a lado. <strong>Século Explorador cambia eso.</strong>">Finding the right property in Portugal means searching across ImóVirtual, Idealista, SuperCasa, and a dozen regional portals. Each with its own filters, its own format, and no way to see everything side by side. <strong>Século Explorador changes that.</strong></p>
+
+          <!-- Ruled list. The old version used emoji as bullets; the rules
+               and index numbers now carry the same structure. -->
+          <ul class="ruled-list">
             <li>
-              <span class="problem-icon">&#x23F1;</span>
+              <span class="ruled-list__index">01</span>
               <span data-en="Hours lost switching between portals" data-pt="Horas perdidas a alternar entre portais" data-es="Horas perdidas cambiando entre portales">Hours lost switching between portals</span>
             </li>
             <li>
-              <span class="problem-icon">&#x1F4CB;</span>
+              <span class="ruled-list__index">02</span>
               <span data-en="The same listing on five different sites, at five different prices" data-pt="O mesmo anúncio a aparecer em cinco portais diferentes" data-es="El mismo anuncio en cinco sitios diferentes, a cinco precios diferentes">The same listing on five different sites, at five different prices</span>
             </li>
             <li>
-              <span class="problem-icon">&#x1F50D;</span>
+              <span class="ruled-list__index">03</span>
               <span data-en="Great options hidden on smaller, lesser-known portals" data-pt="Boas opções escondidas em portais mais pequenos e menos conhecidos" data-es="Grandes opciones ocultas en portales más pequeños y menos conocidos">Great options hidden on smaller, lesser-known portals</span>
             </li>
             <li>
-              <span class="problem-icon">📊</span>
-              <span data-en="No way to see and compare everything side by side and actually decide" data-pt="Sem forma de ver e comparar tudo lado a lado e tomar uma decisão" data-es="Sin forma de ver y comparar todo lado a lado y tomar una decisión">No way to see and compare everything side by side and actually decide</span>            </li>
-
+              <span class="ruled-list__index">04</span>
+              <span data-en="No way to see and compare everything side by side and actually decide" data-pt="Sem forma de ver e comparar tudo lado a lado e tomar uma decisão" data-es="Sin forma de ver y comparar todo lado a lado y tomar una decisión">No way to see and compare everything side by side and actually decide</span>
+            </li>
           </ul>
         </div>
 
+        <!-- Photo slot — this column was empty before, which is what left the
+             gap on the right of this section. -->
+        <div class="problem-media animate-on-scroll" style="--i: 1">
+          <div class="media media--tall"></div>
+        </div>
       </div>
     </div>
   </section>
@@ -137,39 +171,49 @@
   ══════════════════════════════════════════ -->
   <section class="section steps-section">
     <div class="container">
-      <div class="steps-header">
-        <h2 data-en="How Século Works" data-pt="Como o Século Funciona" data-es="Cómo Funciona Século">How Século Works</h2>
+      <div class="steps-header animate-on-scroll">
+        <span class="section-label" data-en="The Method" data-pt="O Método" data-es="El Método">The Method</span>
+        <h2 data-en="How Século works" data-pt="Como o Século Funciona" data-es="Cómo Funciona Século">How Século works</h2>
       </div>
-      <div class="steps-grid">
-        <!-- Step 1 -->
-        <div class="step-card animate-on-scroll">
-          <div class="step-number">01</div>
-          <h3 data-en="Tell us what you're looking for" data-pt="Diga-nos o que procura" data-es="Dinos qué estás buscando">Tell us what you're looking for</h3>
-          <p
-            data-en="Location, property type, price, size, bedrooms, etc. Set your filters once and you're done. <strong> No repeating yourself across websites. </strong>"
-            data-pt="Localização, tipo de imóvel, preço, tamanho, número de quartos, etc. Defina seus filtros uma vez e está feito. <strong> Não precisa se repetir em vários sites. </strong>"
-            data-es="Ubicación, tipo de propiedad, precio, tamaño, habitaciones, etc. Define tus filtros una vez y listo. <strong>Sin repetirte en varios sitios.</strong>">Choose your location, property type, price range, number of bedrooms, and any features that matter to you. It only takes a moment.</p>
-        </div>
 
-        <!-- Step 2 -->
-        <div class="step-card animate-on-scroll">
-          <div class="step-number">02</div>
-          <h3 data-en="We cover over 98% of the available market. So you don't have to." data-pt="Cobrimos mais de 98% do mercado disponível. Então você não precisa." data-es="Cubrimos más del 98% del mercado disponible. Para que tú no tengas que hacerlo.">We cover over 98% of the available market. So you don't have to.</h3>
-          <p
-            data-en="We simultaneously search across multiple sites. Results are <strong> scored by relevance,pinned on a map,</strong> and <strong> enriched with nearby amenities,</strong> ready for you to explore."
-            data-pt="Pesquisamos simultaneamente em múltiplos sites. Os resultados são <strong> classificados por relevância, fixados num mapa,</strong> e <strong> enriquecidos com comodidades próximas,</strong> prontos para serem explorados."
-            data-es="Buscamos simultáneamente en múltiples sitios. Los resultados están <strong>puntuados por relevancia, marcados en un mapa,</strong> y <strong>enriquecidos con servicios cercanos,</strong> listos para explorar.">Século Explorer simultaneously searches ImóVirtual, Idealista, SuperCasa, and 8 more portals. Duplicate listings are removed so you only see real options.</p>
-        </div>
+      <ol class="steps-list">
+        <li class="step-item animate-on-scroll">
+          <span class="step-number">01</span>
+          <div class="step-body">
+            <h3 data-en="Tell us what you're looking for" data-pt="Diga-nos o que procura" data-es="Dinos qué estás buscando">Tell us what you're looking for</h3>
+            <p
+              data-en="Location, property type, price, size, bedrooms. Set your filters once and you're done. <strong>No repeating yourself across websites.</strong>"
+              data-pt="Localização, tipo de imóvel, preço, tamanho, número de quartos. Defina seus filtros uma vez e está feito. <strong>Não precisa se repetir em vários sites.</strong>"
+              data-es="Ubicación, tipo de propiedad, precio, tamaño, habitaciones. Define tus filtros una vez y listo. <strong>Sin repetirte en varios sitios.</strong>">Location, property type, price, size, bedrooms. Set your filters once and you're done. <strong>No repeating yourself across websites.</strong></p>
+          </div>
+        </li>
 
-        <!-- Step 3 -->
-        <div class="step-card animate-on-scroll">
-          <div class="step-number">03</div>
-          <h3 data-en="Explore on the map, export when ready" data-pt="Explore no mapa, exporte quando estiver pronto" data-es="Explora en el mapa, exporta cuando estés listo">Explore on the map, export when ready</h3>
-          <p
-            data-en="Browse results on an interactive map with real planning layers. Land classification, flood zones, wildfire history, drive-time isochrones, and nearby amenities. When you've found your shortlist, <strong>download it as Excel or CSV in one click.</strong>"
-            data-pt="Navegue pelos resultados num mapa interativo com camadas de planeamento real. Classificação de terras, zonas de enchentes, histórico de incêndios florestais, iscronas de tempo de condução e comodidades próximas. Quando tiver encontrado a sua lista curta, <strong>descarregue-a como Excel ou CSV com um clique.</strong>"
-            data-es="Navega por los resultados en un mapa interactivo con capas de planificación reales. Clasificación del suelo, zonas de inundación, historial de incendios, isocronas y servicios cercanos. Cuando tengas tu lista reducida, <strong>descárgala como Excel o CSV con un clic.</strong>">Explore the map to visualize properties and their surroundings. When you've found your shortlist, download it as Excel or CSV in one click.</p>
-        </div>
+        <li class="step-item animate-on-scroll" style="--i: 1">
+          <span class="step-number">02</span>
+          <div class="step-body">
+            <h3 data-en="We cover over 98% of the market, so you don't have to" data-pt="Cobrimos mais de 98% do mercado disponível. Então você não precisa." data-es="Cubrimos más del 98% del mercado disponible. Para que tú no tengas que hacerlo.">We cover over 98% of the market, so you don't have to</h3>
+            <p
+              data-en="We search across every major portal at once. Results are <strong>scored by relevance, pinned on a map</strong> and <strong>enriched with nearby amenities</strong>, ready for you to explore."
+              data-pt="Pesquisamos simultaneamente em múltiplos sites. Os resultados são <strong>classificados por relevância, fixados num mapa</strong> e <strong>enriquecidos com comodidades próximas</strong>, prontos para serem explorados."
+              data-es="Buscamos simultáneamente en múltiples sitios. Los resultados están <strong>puntuados por relevancia, marcados en un mapa</strong> y <strong>enriquecidos con servicios cercanos</strong>, listos para explorar.">We search across every major portal at once. Results are <strong>scored by relevance, pinned on a map</strong> and <strong>enriched with nearby amenities</strong>, ready for you to explore.</p>
+          </div>
+        </li>
+
+        <li class="step-item animate-on-scroll" style="--i: 2">
+          <span class="step-number">03</span>
+          <div class="step-body">
+            <h3 data-en="Explore on the map, export when ready" data-pt="Explore no mapa, exporte quando estiver pronto" data-es="Explora en el mapa, exporta cuando estés listo">Explore on the map, export when ready</h3>
+            <p
+              data-en="Browse results on an interactive map with real planning layers: land classification, flood zones, wildfire history, drive-time isochrones and nearby amenities. When you've found your shortlist, <strong>download it as Excel or CSV in one click.</strong>"
+              data-pt="Navegue pelos resultados num mapa interativo com camadas de planeamento real: classificação do solo, zonas inundáveis, histórico de incêndios, isócronas de tempo de condução e equipamentos nas proximidades. Quando tiver encontrado a sua lista, <strong>descarregue-a como Excel ou CSV com um clique.</strong>"
+              data-es="Navega por los resultados en un mapa interactivo con capas de planificación reales: clasificación del suelo, zonas de inundación, historial de incendios, isocronas y servicios cercanos. Cuando tengas tu lista reducida, <strong>descárgala como Excel o CSV con un clic.</strong>">Browse results on an interactive map with real planning layers: land classification, flood zones, wildfire history, drive-time isochrones and nearby amenities. When you've found your shortlist, <strong>download it as Excel or CSV in one click.</strong></p>
+          </div>
+        </li>
+      </ol>
+
+      <!-- Photo slot — a wide product or location shot sits well here. -->
+      <div class="steps-media animate-on-scroll">
+        <div class="media media--wide"></div>
       </div>
     </div>
   </section>
@@ -180,36 +224,34 @@
   ══════════════════════════════════════════ -->
   <section class="section use-cases-section" id="use-cases">
     <div class="container">
-      <div class="use-cases-header">
-        <h2 class="use-cases-heading" data-en="For anyone Looking for property" data-pt="Para qualquer pessoa que esteja à procura de propriedade" data-es="Para cualquiera que busque una propiedad">For Everyone Looking for a Property</h2>
+      <div class="use-cases-header animate-on-scroll">
+        <span class="section-label" data-en="Who It's For" data-pt="Para Quem É" data-es="Para Quién Es">Who It's For</span>
+        <h2 data-en="For everyone looking for a property" data-pt="Para qualquer pessoa que esteja à procura de propriedade" data-es="Para cualquiera que busque una propiedad">For everyone looking for a property</h2>
       </div>
+
       <div class="use-cases-grid">
-        <!-- Card 1 -->
         <div class="use-case-card animate-on-scroll">
           <h3 data-en="Individuals" data-pt="Indivíduos" data-es="Particulares">Individuals</h3>
-
           <p
-            data-en="Whether it's your first apartment in Lisbon or a quinta in the Alentejo, get a complete picture of what's available without the tab overload"
+            data-en="Whether it's your first apartment in Lisbon or a quinta in the Alentejo, get a complete picture of what's available without the tab overload."
             data-pt="Seja um apartamento em Lisboa ou uma quinta no Alentejo, tenha uma visão completa do que existe no mercado — sem o caos dos mil separadores abertos."
-            data-es="Ya sea tu primer apartamento en Lisboa o una quinta en el Alentejo, obtén una visión completa de lo disponible sin el caos de las pestañas abiertas.">Whether it's your first apartment in Lisbon or a quinta in the Alentejo, get a complete picture of what's available without the tab overload</p>
+            data-es="Ya sea tu primer apartamento en Lisboa o una quinta en el Alentejo, obtén una visión completa de lo disponible sin el caos de las pestañas abiertas.">Whether it's your first apartment in Lisbon or a quinta in the Alentejo, get a complete picture of what's available without the tab overload.</p>
         </div>
 
-        <!-- Card 2 -->
-        <div class="use-case-card animate-on-scroll">
-          <h3 data-en="Professionals / VC / Investors" data-pt="Profissionais / VC / Investidores" data-es="Profesionales / VC / Inversores">Professionals / VC / Investors</h3>
+        <div class="use-case-card animate-on-scroll" style="--i: 1">
+          <h3 data-en="Professionals &amp; Investors" data-pt="Profissionais e Investidores" data-es="Profesionales e Inversores">Professionals &amp; Investors</h3>
           <p
-            data-en="Spot undervalued properties across the portuguese region before they show up everywhere else. Export structured data and move fast"
+            data-en="Spot undervalued properties across Portugal before they show up everywhere else. Export structured data and move fast."
             data-pt="Identifique propriedades subavaliadas em toda a região portuguesa antes de aparecerem em outros lugares. Exporte dados estruturados e avance rapidamente."
-            data-es="Identifica propiedades infravaloradas en la región portuguesa antes de que aparezcan en todas partes. Exporta datos estructurados y actúa rápido.">Spot undervalued properties across the portuguese region before they show up everywhere else. Export structured data and move fast</p>
+            data-es="Identifica propiedades infravaloradas en la región portuguesa antes de que aparezcan en todas partes. Exporta datos estructurados y actúa rápido.">Spot undervalued properties across Portugal before they show up everywhere else. Export structured data and move fast.</p>
         </div>
 
-        <!-- Card 3 -->
-        <div class="use-case-card animate-on-scroll">
-          <h3 data-en="Real Estate Companies" data-pt="Para Agências de Imóveis" data-es="Empresas Inmobiliarias">Real Estate Companies</h3>
+        <div class="use-case-card animate-on-scroll" style="--i: 2">
+          <h3 data-en="Real Estate Companies" data-pt="Agências de Imóveis" data-es="Empresas Inmobiliarias">Real Estate Companies</h3>
           <p
-            data-en="Run full market scans for clients with specific briefs. Deliver a professional, data-rich shortlist in minutes; not days"
+            data-en="Run full market scans for clients with specific briefs. Deliver a professional, data-rich shortlist in minutes, not days."
             data-pt="Realize varreduras completas do mercado para clientes com briefs específicos. Entregue uma lista profissional e rica em dados em minutos, não em dias."
-            data-es="Realiza análisis completos del mercado para clientes con requisitos específicos. Entrega una lista profesional y rica en datos en minutos, no en días.">Run full market scans for clients with specific briefs. Deliver a professional, data-rich shortlist in minutes — not days.</p>
+            data-es="Realiza análisis completos del mercado para clientes con requisitos específicos. Entrega una lista profesional y rica en datos en minutos, no en días.">Run full market scans for clients with specific briefs. Deliver a professional, data-rich shortlist in minutes, not days.</p>
         </div>
       </div>
     </div>
@@ -217,26 +259,31 @@
 
 
   <!-- ══════════════════════════════════════════
-       SECTION E — ORIGIN STORY + CTA
+       SECTION E — ORIGIN + CTA
   ══════════════════════════════════════════ -->
   <section class="section origin-section">
     <div class="container">
-      <div class="origin-content animate-on-scroll">
+      <div class="origin-content animate-on-scroll measure">
         <span class="section-label" data-en="Our Story" data-pt="A Nossa História" data-es="Nuestra Historia">Our Story</span>
-        <h2 data-en="Built Out of Frustration." data-pt="Criado por frustração." data-es="Creado por frustración.">Built out of frustration.</h2>
+        <h2 data-en="Built out of frustration" data-pt="Criado por frustração" data-es="Creado por frustración">Built out of frustration</h2>
         <p class="origin-body"
-          data-en="We built this for ourselves first. After weeks of browser tabs, endless listings, and never truly knowing the neighbourhood behind the photos, we decided there had to be a better way. Século Explorador is <strong> the tool we wished existed </strong> when we started searching. <strong>Now it's yours too.</strong>"
-          data-pt="Construímos isto para nós primeiro. Depois de semanas entre separadores abertos, anúncios duplicados e folhas de cálculo que nunca pareciam completas, decidimos que tinha de haver uma forma melhor. O Século Explorador é <strong>a ferramenta que gostaríamos de ter tido </strong> quando começámos a pesquisar. <strong>Agora é também sua.</strong>"
-          data-es="Lo construimos para nosotros primero. Después de semanas con pestañas del navegador, anuncios duplicados y hojas de cálculo que nunca parecían completas, decidimos que tenía que haber una mejor manera. Século Explorador es <strong>la herramienta que desearíamos que hubiera existido</strong> cuando comenzamos a buscar. <strong>Ahora también es tuya.</strong>">We built this for ourselves first. After weeks of browser tabs, duplicate listings, and spreadsheets that never felt complete, we decided there had to be a better way. Século Explorador is the tool we wished existed when we started searching. <strong>Now it's yours too.</strong></p>
+          data-en="We built this for ourselves first. After weeks of browser tabs, endless listings, and never truly knowing the neighbourhood behind the photos, we decided there had to be a better way. Século Explorador is <strong>the tool we wished existed</strong> when we started searching. <strong>Now it's yours too.</strong>"
+          data-pt="Construímos isto para nós primeiro. Depois de semanas entre separadores abertos, anúncios duplicados e folhas de cálculo que nunca pareciam completas, decidimos que tinha de haver uma forma melhor. O Século Explorador é <strong>a ferramenta que gostaríamos de ter tido</strong> quando começámos a pesquisar. <strong>Agora é também sua.</strong>"
+          data-es="Lo construimos para nosotros primero. Después de semanas con pestañas del navegador, anuncios duplicados y hojas de cálculo que nunca parecían completas, decidimos que tenía que haber una mejor manera. Século Explorador es <strong>la herramienta que desearíamos que hubiera existido</strong> cuando comenzamos a buscar. <strong>Ahora también es tuya.</strong>">We built this for ourselves first. After weeks of browser tabs, endless listings, and never truly knowing the neighbourhood behind the photos, we decided there had to be a better way. Século Explorador is <strong>the tool we wished existed</strong> when we started searching. <strong>Now it's yours too.</strong></p>
       </div>
+    </div>
+  </section>
 
-      <hr class="divider" />
 
-      <div class="cta-card">
-        <div class="cta-accent-line"></div>
-        <h2 class="cta-heading" data-en="Ready to find your Property?" data-pt="Pronto para encontrar a sua casa?" data-es="¿Listo para encontrar tu propiedad?">Ready to find your home?</h2>
+  <!-- ══════════════════════════════════════════
+       SECTION F — CLOSING CTA
+  ══════════════════════════════════════════ -->
+  <section class="section cta-section">
+    <div class="container">
+      <div class="cta-block animate-on-scroll">
+        <h2 class="cta-heading" data-en="Ready to find your property?" data-pt="Pronto para encontrar a sua casa?" data-es="¿Listo para encontrar tu propiedad?">Ready to find your property?</h2>
         <p class="cta-sub" data-en="Every portal. Every listing. One map." data-pt="Cada portal. Cada anúncio. Um mapa." data-es="Cada portal. Cada anuncio. Un mapa.">Every portal. Every listing. One map.</p>
-        <a href="products.html" class="btn btn-outline cta-btn" data-en="Start Finding" data-pt="Começar a Encontrar" data-es="Empezar a Encontrar">Start Finding</a>
+        <a href="products.html" class="btn btn-primary cta-btn" data-en="Start finding" data-pt="Começar a Encontrar" data-es="Empezar a Encontrar">Start finding</a>
       </div>
     </div>
   </section>
@@ -282,9 +329,9 @@
         <!-- Right: Get Started -->
         <div class="footer-nav-col">
           <p class="footer-heading" data-en="Get Started" data-pt="Começar" data-es="Empezar">Get Started</p>
-          <a href="products.html" class="btn btn-outline" data-en="Start Finding" data-pt="Começar a Encontrar" data-es="Empezar a Encontrar">Start Finding</a>
+          <a href="products.html" class="btn btn-outline" data-en="Start finding" data-pt="Começar a Encontrar" data-es="Empezar a Encontrar">Start finding</a>
           <a href="mailto:hello@seculopt.com" class="footer-email">hello@seculopt.com</a>
-          <a href="https://wa.me/351912102647" class="footer-whatsapp" target="_blank" rel="noopener">&#x1F4AC; WhatsApp</a>
+          <a href="https://wa.me/351912102647" class="footer-whatsapp" target="_blank" rel="noopener">WhatsApp</a>
         </div>
       </div>
 
@@ -294,9 +341,9 @@
         <span class="footer-copy" data-en="&copy; 2026 S&eacute;culo Explorer. All rights reserved." data-pt="&copy; 2026 S&eacute;culo Explorer. Todos os direitos reservados." data-es="&copy; 2026 S&eacute;culo Explorer. Todos los derechos reservados.">&copy; 2026 S&eacute;culo Explorer. All rights reserved.</span>
         <div class="footer-lang">
           <button class="lang-btn active" data-lang="en">EN</button>
-          <span>|</span>
+          <span>/</span>
           <button class="lang-btn" data-lang="pt">PT</button>
-          <span>|</span>
+          <span>/</span>
           <button class="lang-btn" data-lang="es">ES</button>
         </div>
       </div>
@@ -307,6 +354,7 @@
   <!-- ══════════════════════════════════════════
        SCRIPTS
   ══════════════════════════════════════════ -->
+  <script src="js/intro.js"></script>
   <script src="js/nav.js"></script>
   <script src="js/lang.js"></script>
   <script src="js/cookies.js"></script>
@@ -314,27 +362,48 @@
 
   <!-- ══════════════════════════════════════════
        PAGE-LEVEL STYLES (Home-specific)
+       Mobile-first: base rules are the phone layout.
   ══════════════════════════════════════════ -->
   <style>
     /* ── Hero ── */
     .hero {
-      min-height: 100vh;
       position: relative;
-      background-image: url('assets/hero-bg.jpg');
-      background-size: cover;
-      background-position: center 25%;
-      background-repeat: no-repeat;
       display: flex;
-      align-items: center;
+      align-items: flex-end;
+      /* Fills the screen minus the nav, using dvh so mobile browser chrome
+         appearing and disappearing does not crop the content. */
+      min-height: calc(100svh - 72px);
+      padding-top: clamp(48px, 12vh, 120px);
+      overflow: hidden;
     }
 
-    /* Off-white overlay */
-    .hero::before {
+    /* Photo slot. To switch the background photo on, drop the file in and
+       uncomment the --hero-image line. Until then this shows the quiet
+       sunken tone rather than requesting a file that isn't there. */
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      /* --hero-image: url('assets/hero-bg.jpg'); */
+      background-color: var(--color-sunken);
+      background-image: var(--hero-image, none);
+      background-size: cover;
+      background-position: center 30%;
+      background-repeat: no-repeat;
+    }
+
+    /* Warm scrim so type stays readable once a photo is in place. On mobile
+       it is stronger, because text sits over more of the image. */
+    .hero__bg::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(247, 245, 240, 0.80);
-      z-index: 0;
+      background: linear-gradient(
+        to top,
+        rgba(246, 245, 240, 0.97) 0%,
+        rgba(246, 245, 240, 0.88) 45%,
+        rgba(246, 245, 240, 0.72) 100%
+      );
     }
 
     .hero-inner {
@@ -343,385 +412,267 @@
       width: 100%;
       max-width: var(--max-width);
       margin: 0 auto;
-      padding: 96px 24px;
-      display: flex;
-      align-items: center;
+      padding: 0 var(--gutter) clamp(56px, 9vh, 104px);
     }
 
     .hero-content {
-      max-width: 680px;
-    }
-
-    .hero-eyebrow {
-      display: inline-block;
-      font-family: var(--font-body);
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--color-accent);
-      margin-bottom: 20px;
+      max-width: 22ch;
     }
 
     .hero h1 {
-      font-family: var(--font-display);
-      font-size: 3.5rem;
-      color: var(--color-primary);
-      line-height: 1.12;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .hero-sub {
-      font-size: 1.15rem;
+      font-size: var(--t-lead);
       color: var(--color-mid);
-      line-height: 1.7;
-      max-width: 560px;
-      margin-bottom: 40px;
+      max-width: 46ch;
+      margin-bottom: 36px;
     }
 
     .hero-actions {
       display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 12px;
       margin-bottom: 48px;
     }
 
-    .hero-actions .btn-outline {
-      border-color: var(--color-accent);
-      color: var(--color-primary);
-    }
-
-    .hero-actions .btn-outline:hover {
-      background: var(--color-accent);
-      color: var(--color-primary);
-    }
-
+    /* ── Hero stats — a ruled row, not pills ── */
     .hero-stats {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: 1fr;
+      border-top: 1px solid var(--rule);
     }
 
-    .stat-pill {
+    .stat {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(26, 26, 46, 0.06);
-      border: 1px solid rgba(26, 26, 46, 0.12);
-      border-radius: 100px;
-      padding: 8px 16px;
-      cursor: default;
+      align-items: baseline;
+      gap: 12px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--rule-faint);
     }
 
     .stat-number {
-      font-family: var(--font-mono);
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--color-accent);
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--color-primary);
+      line-height: 1;
+      min-width: 3.5ch;
     }
 
     .stat-label {
-      font-size: 0.82rem;
+      font-size: var(--t-label);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
       color: var(--color-mid);
+      line-height: 1.4;
     }
 
     /* ── Problem Section ── */
-    .problem-section {
-      background: var(--color-white);
-    }
-
     .problem-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 64px;
-      align-items: center;
-    }
-
-    .problem-col h2 {
-      margin-bottom: 16px;
+      grid-template-columns: 1fr;
+      gap: clamp(40px, 7vw, 80px);
+      align-items: start;
     }
 
     .problem-body {
-      margin-bottom: 32px;
+      margin-bottom: 40px;
     }
 
-    .problem-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+    /* ── Ruled list ── */
+    .ruled-list {
+      border-top: 1px solid var(--rule);
     }
 
-    .problem-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      font-family: var(--font-body);
-      font-size: 0.95rem;
+    .ruled-list li {
+      display: grid;
+      grid-template-columns: 3.5ch 1fr;
+      gap: 18px;
+      align-items: start;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--rule-faint);
+      font-size: var(--t-body);
       color: var(--color-mid);
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
-    .problem-icon {
-      font-size: 1.1rem;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    /* Search mock card */
-    .search-mock {
-      background: var(--color-white);
-      border-radius: var(--radius);
-      box-shadow: 0 8px 40px rgba(26, 26, 46, 0.08);
-      border-left: 3px solid var(--color-accent);
-      overflow: hidden;
-    }
-
-    .search-mock-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 24px;
-      border-bottom: 1px solid var(--color-divider);
-    }
-
-    .search-mock-title {
-      font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--color-primary);
-    }
-
-    .search-mock-badge {
+    .ruled-list__index {
       font-family: var(--font-mono);
-      font-size: 0.72rem;
-      background: var(--color-primary);
+      font-size: var(--t-label);
       color: var(--color-accent);
-      padding: 3px 8px;
-      border-radius: 3px;
-      letter-spacing: 0.05em;
-    }
-
-    .search-mock-body {
-      padding: 20px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .mock-field {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .mock-field label {
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--color-accent);
-    }
-
-    .mock-input {
-      font-family: var(--font-mono);
-      font-size: 0.88rem;
-      color: var(--color-primary);
-      background: var(--color-bg);
-      border: 1px solid var(--color-divider);
-      border-radius: var(--radius);
-      padding: 8px 12px;
-    }
-
-    .search-mock-footer {
-      padding: 16px 24px 20px;
-      border-top: 1px solid var(--color-divider);
-    }
-
-    .mock-search-btn {
-      padding: 10px 20px;
-      font-size: 0.88rem;
+      letter-spacing: 0.04em;
+      padding-top: 0.35em;
     }
 
     /* ── Steps Section ── */
-    .steps-section {
-      background: var(--color-bg);
-    }
-
     .steps-header {
-      text-align: center;
-      margin-bottom: 56px;
+      margin-bottom: clamp(40px, 6vw, 72px);
     }
 
-    .steps-grid {
+    .steps-list {
+      border-top: 1px solid var(--rule);
+    }
+
+    .step-item {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 32px;
-    }
-
-    .step-card {
-      background: var(--color-white);
-      border-radius: var(--radius);
-      padding: 40px 32px;
-      box-shadow: 0 2px 16px rgba(26, 26, 46, 0.06);
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: clamp(28px, 4vw, 44px) 0;
+      border-bottom: 1px solid var(--rule);
     }
 
     .step-number {
-      font-family: var(--font-display);
-      font-size: 2.2rem;
-      font-weight: 700;
+      font-family: var(--font-mono);
+      font-size: var(--t-label);
+      letter-spacing: 0.14em;
       color: var(--color-accent);
-      margin-bottom: 20px;
-      line-height: 1;
     }
 
-    .step-card h3 {
-      margin-bottom: 12px;
+    .step-body h3 {
+      margin-bottom: 10px;
     }
 
-    /* ── Use Cases Section ── */
-    .use-cases-section {
-      background: var(--color-primary);
+    .step-body p {
+      max-width: 62ch;
     }
 
+    .steps-media {
+      margin-top: clamp(40px, 6vw, 72px);
+    }
+
+    /* ── Use Cases ── */
     .use-cases-header {
-      text-align: center;
-      margin-bottom: 48px;
-    }
-
-    .use-cases-heading {
-      color: var(--color-white);
+      margin-bottom: clamp(40px, 6vw, 72px);
     }
 
     .use-cases-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
+      grid-template-columns: 1fr;
+      gap: 0;
+      border-top: 1px solid var(--rule);
     }
 
     .use-case-card {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: var(--radius);
-      padding: 32px;
-    }
-
-    .use-case-icon {
-      font-size: 2rem;
-      margin-bottom: 20px;
+      padding: clamp(28px, 4vw, 40px) 0;
+      border-bottom: 1px solid var(--rule);
     }
 
     .use-case-card h3 {
-      color: var(--color-white);
       margin-bottom: 12px;
     }
 
     .use-case-card p {
-      color: rgba(255, 255, 255, 0.65);
-      font-size: 0.92rem;
+      max-width: 46ch;
     }
 
-    /* ── Origin / CTA Section ── */
-    .origin-section {
-      background: var(--color-white);
-    }
-
-    .origin-content {
-      max-width: 680px;
-      margin: 0 auto;
-      text-align: center;
+    /* ── Origin ── */
+    .origin-body {
+      font-size: var(--t-lead);
     }
 
     .origin-content h2 {
       margin-bottom: 20px;
     }
 
-    .origin-body {
-      font-size: 1.05rem;
-      color: var(--color-mid);
-      line-height: 1.8;
-    }
-
-    .cta-card {
-      background: var(--color-primary);
-      border-radius: var(--radius);
-      padding: 56px 40px;
+    /* ── Closing CTA ── */
+    .cta-section {
       text-align: center;
-      overflow: hidden;
-      position: relative;
     }
 
-    .cta-accent-line {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--color-accent);
+    .cta-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
     }
 
     .cta-heading {
-      color: var(--color-white);
-      margin-bottom: 12px;
+      max-width: 18ch;
     }
 
     .cta-sub {
-      color: rgba(255, 255, 255, 0.65);
-      margin-bottom: 32px;
+      font-size: var(--t-lead);
+      letter-spacing: 0.02em;
     }
 
     .cta-btn {
-      padding: 16px 36px;
-      font-size: 1rem;
+      margin-top: 16px;
     }
 
-    .cta-card .btn-outline {
-      color: var(--color-white);
-    }
+    /* ══════════════════════════════════════════
+       RESPONSIVE — additive from mobile upward
+    ══════════════════════════════════════════ */
 
-    .cta-card .btn-outline:hover {
-      color: var(--color-primary);
-    }
+    @media (min-width: 600px) {
+      .hero-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
 
-    /* ── Responsive ── */
-    @media (max-width: 900px) {
-      .steps-grid,
+      .hero-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0 24px;
+      }
+
+      .stat {
+        flex-direction: column;
+        gap: 8px;
+        border-bottom: none;
+      }
+
       .use-cases-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 clamp(32px, 5vw, 64px);
       }
     }
 
-    @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 2.4rem;
+    @media (min-width: 940px) {
+      .hero {
+        min-height: calc(100svh - 88px);
+      }
+
+      .hero__bg::after {
+        background: linear-gradient(
+          to right,
+          rgba(246, 245, 240, 0.96) 0%,
+          rgba(246, 245, 240, 0.86) 46%,
+          rgba(246, 245, 240, 0.52) 100%
+        );
+      }
+
+      .hero-content {
+        max-width: 17ch;
+      }
+
+      .hero-sub {
+        max-width: 48ch;
       }
 
       .problem-grid {
-        grid-template-columns: 1fr;
-        gap: 40px;
+        grid-template-columns: 1.15fr 0.85fr;
       }
 
-      .steps-grid,
+      /* The step index sits in its own column, which is what gives the
+         section its drawn, tabular feel on wider screens. */
+      .step-item {
+        grid-template-columns: 8ch 1fr;
+        gap: clamp(24px, 4vw, 56px);
+      }
+
+      .step-number {
+        padding-top: 0.45em;
+      }
+
       .use-cases-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .cta-card {
-        padding: 40px 24px;
+        grid-template-columns: repeat(3, 1fr);
       }
     }
 
-    @media (max-width: 480px) {
-      .hero h1 {
-        font-size: 2rem;
-      }
-
-      .hero-actions {
-        flex-direction: column;
-      }
-
-      .hero-actions .btn {
-        width: 100%;
-        justify-content: center;
+    @media (min-width: 1100px) {
+      .hero-content {
+        max-width: 15ch;
       }
     }
   </style>

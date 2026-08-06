@@ -1,5 +1,10 @@
 /* ============================================================
    SÉCULO EXPLORER — Global Styles
+   ------------------------------------------------------------
+   Written mobile-first: every base rule is the small-screen
+   case, and min-width media queries add complexity upward.
+   Structure is expressed through hairline rules and space
+   rather than boxes, fills and shadows.
    ============================================================ */
 
 /* ── Google Fonts ── */
@@ -15,32 +20,68 @@
   --brand-dark:       #3E3A37;
   --brand-grey:       #43515C;
 
-  /* ── Semantic roles ── */
-  --color-primary:  var(--brand-dark);
-  --color-accent:   var(--brand-terracotta);
-  --color-bg:       var(--brand-light);
-  --color-text:     var(--brand-dark);
-  --color-mid:      var(--brand-grey);
-  --color-divider:  #E3DFD7;
-  --color-white:    #FFFFFF;
+  /* ── Surfaces ──
+     There is no pure white anywhere. The page sits on one warm ground and
+     sections are separated by rules and space, not by alternating fills.
+     --color-raised is a barely-there shift for the rare panel that must
+     detach from the page; it is deliberately only ~3% off the ground. */
+  --color-bg:      var(--brand-light);
+  --color-raised:  #F1EFE8;
+  --color-sunken:  #EBE8E0;
+
+  /* ── Ink ── */
+  --color-primary: var(--brand-dark);
+  --color-text:    var(--brand-dark);
+  --color-mid:     var(--brand-grey);
+  --color-accent:  var(--brand-terracotta);
+
+  /* Grey carries the structure: rules, labels, meta, secondary type.
+     Terracotta is rationed — it marks a section opening and the live
+     state of a control, nothing else. */
+  --rule:          rgba(67, 81, 92, 0.18);
+  --rule-strong:   rgba(67, 81, 92, 0.34);
+  --rule-faint:    rgba(67, 81, 92, 0.10);
+  --color-divider: var(--rule);
 
   /* Terracotta on the dark surfaces (nav, footer) is only 1.45:1 — illegible.
-     This lifted tint reaches 4.9:1 on --brand-dark, so it passes WCAG AA.
-     Use it for any accent that sits on a dark background. */
+     This lifted tint reaches 4.9:1 on --brand-dark, so it passes WCAG AA. */
   --color-accent-on-dark: #E2947C;
+  /* Light-on-dark type: the brand light, never #FFF. */
+  --color-on-dark:        #F0EEE8;
+  --rule-on-dark:         rgba(240, 238, 232, 0.20);
 
+  /* Retained so older rules referencing it stay valid — repointed off #FFF. */
+  --color-white: var(--brand-light);
+
+  /* ── Type ── */
   --font-display: 'Zalando Sans Expanded', 'Bai Jamjuree', sans-serif;
   --font-body:    'Bai Jamjuree', sans-serif;
   --font-mono:    'DM Mono', monospace;
 
   /* FAIRE Octave is a foundry font and is not web-licensed or self-hosted yet,
-     so this currently falls back to the heading face. See README note. */
+     so this currently falls back to the heading face. */
   --font-logo:    'FAIRE Octave', 'Zalando Sans Expanded', sans-serif;
 
-  --max-width:        1200px;
-  --section-padding:  96px;
-  --radius:           4px;
-  --transition:       0.25s ease;
+  /* ── Fluid type scale ──
+     clamp() means no size ever needs a breakpoint to stay readable. */
+  --t-hero:   clamp(2.15rem, 1.30rem + 3.9vw, 4.30rem);
+  --t-h2:     clamp(1.60rem, 1.24rem + 1.6vw, 2.55rem);
+  --t-h3:     clamp(1.12rem, 1.03rem + 0.4vw, 1.38rem);
+  --t-body:   clamp(0.97rem, 0.94rem + 0.16vw, 1.06rem);
+  --t-lead:   clamp(1.04rem, 0.97rem + 0.36vw, 1.22rem);
+  --t-small:  clamp(0.82rem, 0.80rem + 0.10vw, 0.88rem);
+  --t-label:  clamp(0.66rem, 0.64rem + 0.09vw, 0.72rem);
+
+  /* ── Space ── */
+  --gutter:         clamp(20px, 5.2vw, 48px);
+  --section-space:  clamp(72px, 9.5vw, 168px);
+  --section-padding: var(--section-space);   /* legacy alias */
+  --measure:        64ch;
+
+  --max-width:  1240px;
+  --radius:     0;          /* squared off — corners are architectural */
+  --transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out:   cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 /* ── Reset ── */
@@ -68,32 +109,50 @@ img, svg {
 /* ── Base ── */
 html {
   scroll-behavior: smooth;
+  /* Anchor jumps land below the sticky nav rather than under it. */
+  scroll-padding-top: 88px;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background: var(--color-bg);
   font-family: var(--font-body);
+  font-size: var(--t-body);
+  font-weight: 300;
   color: var(--color-text);
-  line-height: 1.65;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ── Typography ── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
+  font-weight: 500;
   color: var(--color-primary);
-  line-height: 1.2;
+  line-height: 1.14;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
 }
 
-h1 { font-size: 3.2rem; line-height: 1.15; }
-h2 { font-size: 2.4rem; line-height: 1.25; }
-h3 { font-size: 1.6rem; line-height: 1.3; }
-h4 { font-size: 1.2rem; }
+h1 { font-size: var(--t-hero); line-height: 1.06; }
+h2 { font-size: var(--t-h2); }
+h3 { font-size: var(--t-h3); line-height: 1.3; letter-spacing: -0.005em; }
+h4 { font-size: 1.05rem; }
 
 p {
   color: var(--color-mid);
-  line-height: 1.7;
+  line-height: 1.75;
+  text-wrap: pretty;
 }
+
+/* Bold inside body copy shifts to ink rather than shouting in weight. */
+p strong, li strong {
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+p i, li i { font-style: italic; }
 
 /* ── Links ── */
 a {
@@ -103,249 +162,405 @@ a {
 
 /* ── Layout ── */
 .container {
+  width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 var(--gutter);
 }
 
+/* Sections are separated by a hairline, not by a change of background.
+   This is the core architectural move — it reads as drawn structure. */
 .section {
-  padding: var(--section-padding) 0;
+  padding: var(--section-space) 0;
+  position: relative;
 }
 
-/* ── Buttons ── */
+.section + .section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: var(--gutter);
+  right: var(--gutter);
+  height: 1px;
+  background: var(--rule);
+}
+
+/* Full-bleed variant — the rule runs edge to edge of the viewport. */
+.section--bleed-rule::before {
+  left: 0;
+  right: 0;
+}
+
+/* Constrained reading measure for long-form copy. */
+.measure { max-width: var(--measure); }
+
+/* ── Eyebrow / section label ──
+   Grey, not terracotta. A short terracotta rule does the accenting,
+   which keeps the colour rationed and reads as a drawn mark. */
+.section-label,
+.eyebrow {
+  /* inline-flex, not flex, so the label inherits the parent's text-align.
+     Several pages centre their section headers and would otherwise get a
+     left-aligned label inside a centred block. */
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-body);
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-mid);
+  margin-bottom: 22px;
+}
+
+.section-label::before,
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--color-accent);
+  flex-shrink: 0;
+}
+
+/* Centred variants get the rule on both sides. */
+.section-label--center,
+.eyebrow--center {
+  justify-content: center;
+}
+
+.section-label--center::after,
+.eyebrow--center::after {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--color-accent);
+  flex-shrink: 0;
+}
+
+/* ── Rules ──
+   Reusable architectural lines. */
+.rule {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 0;
+}
+
+.rule--faint { border-top-color: var(--rule-faint); }
+.rule--accent {
+  border-top: 1px solid var(--color-accent);
+  width: 48px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: clamp(48px, 7vw, 96px) 0;
+}
+
+/* ── Buttons ──
+   Squared, hairline-bordered, no shadow. The fill slides in from the
+   bottom on hover rather than snapping, which suits the slower pace. */
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 14px 28px;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+  padding: 15px 30px;
   border-radius: var(--radius);
   font-family: var(--font-body);
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: var(--t-small);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
   cursor: pointer;
-  border: none;
-  transition: var(--transition);
+  border: 1px solid transparent;
+  transition: color var(--transition), border-color var(--transition);
   text-decoration: none;
-  white-space: nowrap;
   max-width: 100%;
   min-width: 0;
+  /* Comfortable tap target on touch screens. */
+  min-height: 48px;
+  text-align: center;
+  /* Own stacking context, so the fill below can sit at z-index -1 without
+     escaping behind the page. A negative-index pseudo-element paints above
+     the button's own background but below its text — no wrapper span needed. */
+  isolation: isolate;
 }
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform var(--transition);
+}
+
+.btn:hover::after,
+.btn:focus-visible::after { transform: scaleY(1); }
 
 .btn-primary {
   background: var(--color-primary);
-  color: var(--color-white);
+  border-color: var(--color-primary);
+  color: var(--color-on-dark);
 }
 
-.btn-primary:hover {
-  background: var(--color-accent);
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  border-color: var(--color-accent);
   /* Light, not dark — dark ink on terracotta is 1.45:1 and unreadable. */
   color: var(--brand-light);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(145, 48, 29, 0.35);
 }
 
 .btn-outline {
   background: transparent;
-  border: 1.5px solid var(--color-accent);
+  border-color: var(--rule-strong);
   color: var(--color-primary);
 }
 
-.btn-outline:hover {
-  background: var(--color-accent);
+.btn-outline:hover,
+.btn-outline:focus-visible {
+  border-color: var(--color-accent);
   color: var(--brand-light);
-  transform: translateY(-2px);
 }
 
-/* ── Section Label ── */
-.section-label {
-  display: block;
-  font-family: var(--font-body);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
+/* ── Focus visibility ── */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* ── Media slots ──
+   Reserved space for photography that has not landed yet. Each slot keeps
+   its aspect ratio so dropping an image in later causes no reflow, and
+   shows a quiet placeholder in the meantime. Add a background-image (or an
+   <img>) and the placeholder styling disappears behind it. */
+.media {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--color-sunken);
+  background-size: cover;
+  background-position: center;
+}
+
+.media--wide    { aspect-ratio: 16 / 9; }
+.media--classic { aspect-ratio: 4 / 3; }
+.media--tall    { aspect-ratio: 3 / 4; }
+.media--square  { aspect-ratio: 1 / 1; }
+
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Placeholder cross-hairs — reads as an architectural drawing, and makes
+   an unfilled slot obvious during design without looking broken. */
+.media:empty::before,
+.media:empty::after {
+  content: '';
+  position: absolute;
+  background: var(--rule);
+}
+
+.media:empty::before {
+  left: 0; right: 0; top: 50%; height: 1px;
+}
+
+.media:empty::after {
+  top: 0; bottom: 0; left: 50%; width: 1px;
+}
+
+.media-caption {
+  margin-top: 12px;
+  font-size: var(--t-label);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--color-accent);
-  margin-bottom: 16px;
+  color: var(--color-mid);
 }
 
-/* ── Divider ── */
-.divider {
-  border: none;
-  border-top: 1px solid var(--color-divider);
-  margin: 64px 0;
-}
-
-/* ── Footer ── */
-/* The footer sits on --brand-dark (#3E3A37), which is a good deal lighter than
-   the old #191927. Every muted white below was raised to compensate — at the
-   previous opacities they dropped under 4.5:1 against the new background. */
+/* ── Footer ──
+   Sits on --brand-dark. Every light value here is --color-on-dark or a
+   tint of it; the old rgba(255,255,255,x) values were both pure white and
+   too dim against this lighter ground. */
 .site-footer {
   background: var(--color-primary);
-  color: rgba(255, 255, 255, 0.72);
-  padding: 48px 0 32px;
+  color: var(--color-on-dark);
+  padding: clamp(56px, 7vw, 88px) 0 32px;
 }
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr;
-  gap: 48px;
+  grid-template-columns: 1fr;
+  gap: 40px;
   margin-bottom: 48px;
 }
 
 .footer-brand .footer-logo {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  color: var(--color-white);
-  font-weight: 700;
-  margin-bottom: 10px;
+  font-family: var(--font-logo);
+  font-size: 1.15rem;
+  color: var(--color-on-dark);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  margin-bottom: 12px;
   display: block;
 }
 
 .footer-tagline {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.68);
-  line-height: 1.6;
+  font-size: var(--t-small);
+  color: rgba(240, 238, 232, 0.68);
+  line-height: 1.7;
+  max-width: 34ch;
 }
 
 .footer-heading {
   font-family: var(--font-body);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-size: var(--t-label);
+  font-weight: 500;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--color-accent-on-dark);
-  margin-bottom: 16px;
+  color: rgba(240, 238, 232, 0.55);
+  padding-bottom: 14px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--rule-on-dark);
 }
 
 .footer-links {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .footer-links a {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.72);
+  font-size: var(--t-small);
+  color: rgba(240, 238, 232, 0.78);
   transition: color var(--transition);
 }
 
-.footer-links a:hover {
+.footer-links a:hover,
+.footer-links a:focus-visible {
   color: var(--color-accent-on-dark);
 }
 
 .footer-nav-col .btn-outline {
-  color: var(--color-white);
-  border-color: var(--color-accent-on-dark);
-  margin-bottom: 16px;
+  color: var(--color-on-dark);
+  border-color: var(--rule-on-dark);
+  margin-bottom: 18px;
   white-space: normal;
   width: 100%;
 }
 
-.footer-nav-col .btn-outline:hover {
+.footer-nav-col .btn-outline:hover,
+.footer-nav-col .btn-outline:focus-visible {
   color: var(--brand-light);
+  border-color: var(--color-accent);
 }
 
-.footer-email {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.66);
-  display: block;
-  margin-top: 8px;
-  transition: color var(--transition);
-}
-
-.footer-email:hover {
-  color: var(--color-accent-on-dark);
-}
-
+.footer-email,
 .footer-whatsapp {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.66);
+  font-size: var(--t-small);
+  color: rgba(240, 238, 232, 0.7);
   display: block;
-  margin-top: 8px;
+  margin-top: 10px;
   transition: color var(--transition);
 }
 
-.footer-whatsapp:hover {
-  color: #25D366;
+.footer-email:hover,
+.footer-email:focus-visible,
+.footer-whatsapp:hover,
+.footer-whatsapp:focus-visible {
+  color: var(--color-accent-on-dark);
 }
 
 .footer-divider {
   border: none;
-  border-top: 1px solid rgba(224, 221, 216, 0.2);
+  border-top: 1px solid var(--rule-on-dark);
   margin-bottom: 28px;
 }
 
 .footer-bottom {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
 }
 
 .footer-copy {
-  font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.62);
+  font-size: var(--t-label);
+  letter-spacing: 0.04em;
+  color: rgba(240, 238, 232, 0.55);
 }
 
 /* Footer lang toggle */
 .footer-lang {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
 .footer-lang .lang-btn {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.62);
+  color: rgba(240, 238, 232, 0.55);
   font-family: var(--font-body);
-  font-size: 0.8rem;
+  font-size: var(--t-label);
   cursor: pointer;
-  letter-spacing: 0.05em;
-  padding: 2px 4px;
-  transition: var(--transition);
+  letter-spacing: 0.14em;
+  padding: 4px 2px;
+  transition: color var(--transition);
 }
 
 .footer-lang .lang-btn.active,
 .footer-lang .lang-btn:hover {
   color: var(--color-accent-on-dark);
-  font-weight: 600;
 }
 
 .footer-lang span {
-  color: rgba(255, 255, 255, 0.32);
-  font-size: 0.8rem;
+  color: rgba(240, 238, 232, 0.25);
+  font-size: var(--t-label);
 }
 
-/* ── Responsive ── */
-@media (max-width: 900px) {
+/* ============================================================
+   RESPONSIVE — mobile-first, so these only ADD structure
+   ============================================================ */
+
+/* ── Small tablets and up ── */
+@media (min-width: 600px) {
   .footer-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 32px;
+    gap: 40px 32px;
+  }
+
+  .footer-brand { grid-column: 1 / -1; }
+
+  .footer-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 }
 
-@media (max-width: 768px) {
-  :root {
-    --section-padding: 64px;
-  }
-
-  h1 { font-size: 2.2rem; }
-  h2 { font-size: 1.8rem; }
-
-  .container {
-    padding: 0 16px;
-  }
+/* ── Desktop ── */
+@media (min-width: 940px) {
+  html { scroll-padding-top: 104px; }
 
   .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
+    grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+    gap: 56px;
   }
 
-  .footer-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
+  .footer-brand { grid-column: auto; }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  .btn::after { transition: none; }
 }

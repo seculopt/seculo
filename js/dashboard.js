@@ -64,11 +64,11 @@ function renderFolderSidebar() {
   title.textContent = t.folders.title;
   sidebar.appendChild(title);
 
-  sidebar.appendChild(makeFoldItem(null, '🗂️', t.folders.all, countInFolder(null)));
+  sidebar.appendChild(makeFoldItem(null, '', t.folders.all, countInFolder(null)));
 
   const unfiledCount = countInFolder('unfiled');
   if (folders.length > 0 || unfiledCount < properties.length) {
-    sidebar.appendChild(makeFoldItem('unfiled', '📋', t.folders.unfiled, unfiledCount));
+    sidebar.appendChild(makeFoldItem('unfiled', '', t.folders.unfiled, unfiledCount));
   }
 
   const topFolders = folders.filter(f => !f.parent_id);
@@ -78,10 +78,10 @@ function renderFolderSidebar() {
     sidebar.appendChild(hr);
 
     for (const f of topFolders) {
-      sidebar.appendChild(makeFoldItem(f.id, '📁', f.name, countInFolder(f.id), f));
+      sidebar.appendChild(makeFoldItem(f.id, '', f.name, countInFolder(f.id), f));
       const subs = folders.filter(s => s.parent_id === f.id);
       for (const s of subs) {
-        sidebar.appendChild(makeFoldItem(s.id, '📄', s.name, countInFolder(s.id), s, true));
+        sidebar.appendChild(makeFoldItem(s.id, '', s.name, countInFolder(s.id), s, true));
       }
     }
   }
@@ -142,7 +142,7 @@ function showFolderMenu(folder, anchor) {
 
   const menu = document.createElement('div');
   menu.id = '_foldMenu';
-  menu.style.cssText = 'position:fixed;background:#fff;border:1px solid var(--color-divider);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9000;min-width:140px;padding:0.4rem 0;font-size:0.84rem;font-family:var(--font-body);';
+  menu.style.cssText = 'position:fixed;background:var(--brand-light);border:1px solid var(--color-divider);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9000;min-width:140px;padding:0.4rem 0;font-size:0.84rem;font-family:var(--font-body);';
 
   const rect = anchor.getBoundingClientRect();
   menu.style.top  = (rect.bottom + 4) + 'px';
@@ -152,14 +152,14 @@ function showFolderMenu(folder, anchor) {
     const item = document.createElement('div');
     item.style.cssText = `padding:0.5rem 1rem;cursor:pointer;color:${color || 'inherit'};`;
     item.textContent = label;
-    item.addEventListener('mouseenter', () => item.style.background = '#f8f5f0');
+    item.addEventListener('mouseenter', () => item.style.background = 'var(--color-raised)');
     item.addEventListener('mouseleave', () => item.style.background = '');
     item.addEventListener('click', () => { menu.remove(); onClick(); });
     return item;
   };
 
   menu.appendChild(makeItem(t.folders.rename, null, () => promptRenameFolder(folder)));
-  menu.appendChild(makeItem(t.folders.delete, '#c0392b', () => confirmDeleteFolder(folder)));
+  menu.appendChild(makeItem(t.folders.delete, 'var(--brand-terracotta)', () => confirmDeleteFolder(folder)));
 
   document.body.appendChild(menu);
   setTimeout(() => document.addEventListener('click', () => menu.remove(), { once: true }), 10);
@@ -182,7 +182,7 @@ async function promptCreateFolder(parentId) {
     folders.push(folder);
     renderFolderSidebar();
     document.querySelectorAll('.prop-folder-select').forEach(sel => addFolderOption(sel, folder));
-    showToast(`📁 ${folder.name}`);
+    showToast(folder.name);
   } catch (e) {
     showToast('Could not create folder');
   }
@@ -203,9 +203,9 @@ async function promptRenameFolder(folder) {
     folder.name = rawName.trim();
     renderFolderSidebar();
     document.querySelectorAll(`.prop-folder-select option[value="${folder.id}"]`).forEach(opt => {
-      opt.textContent = '📁 ' + folder.name;
+      opt.textContent = folder.name;
     });
-    showToast('✓');
+    showToast(t.toastRenamed);
   } catch (e) {
     showToast('Could not rename folder');
   }
@@ -227,7 +227,7 @@ async function confirmDeleteFolder(folder) {
     renderFolderSidebar();
     renderDashGrid();
     document.querySelectorAll(`.prop-folder-select option[value="${folder.id}"]`).forEach(opt => opt.remove());
-    showToast('🗑️');
+    showToast(t.toastDeleted);
   } catch (e) {
     showToast('Could not delete folder');
   }
@@ -299,8 +299,8 @@ document.addEventListener('seculo-lang-change', function () {
 const CARD_T = {
   en: {
     status: { interested: 'Interested', visited: 'Visited', discarded: 'Discarded', saved: 'Saved' },
-    view: 'View listing \u2197',
-    copy: '\uD83D\uDD17 Copy link',
+    view: 'View listing',
+    copy: 'Copy link',
     del:  'Delete',
     expired:     'Link expired',
     expires_in:  (n) => `Link expires in ${n} day${n === 1 ? '' : 's'}`,
@@ -308,7 +308,11 @@ const CARD_T = {
     bed: 'bed',
     propSingular: 'saved property',
     propPlural:   'saved properties',
-    folderNone:  '📋 No folder',
+    folderNone:  'No folder',
+    toastRenamed: 'Folder renamed',
+    toastDeleted: 'Folder deleted',
+    toastUpdated: 'Status updated',
+    toastMoved:   'Moved',
     folders: {
       title:         'Folders',
       all:           'All',
@@ -323,8 +327,8 @@ const CARD_T = {
   },
   pt: {
     status: { interested: 'Interessado', visited: 'Visitado', discarded: 'Descartado', saved: 'Guardado' },
-    view: 'Ver anúncio \u2197',
-    copy: '\uD83D\uDD17 Copiar link',
+    view: 'Ver anúncio',
+    copy: 'Copiar link',
     del:  'Apagar',
     expired:     'Link expirado',
     expires_in:  (n) => `Link expira em ${n} dia${n === 1 ? '' : 's'}`,
@@ -332,7 +336,11 @@ const CARD_T = {
     bed: 'qto',
     propSingular: 'propriedade guardada',
     propPlural:   'propriedades guardadas',
-    folderNone:  '📋 Sem pasta',
+    folderNone:  'Sem pasta',
+    toastRenamed: 'Pasta renomeada',
+    toastDeleted: 'Pasta eliminada',
+    toastUpdated: 'Estado atualizado',
+    toastMoved:   'Movido',
     folders: {
       title:         'Pastas',
       all:           'Todas',
@@ -347,8 +355,8 @@ const CARD_T = {
   },
   es: {
     status: { interested: 'Interesado', visited: 'Visitado', discarded: 'Descartado', saved: 'Guardado' },
-    view: 'Ver anuncio \u2197',
-    copy: '\uD83D\uDD17 Copiar link',
+    view: 'Ver anuncio',
+    copy: 'Copiar link',
     del:  'Eliminar',
     expired:     'Link expirado',
     expires_in:  (n) => `Link expira en ${n} día${n === 1 ? '' : 's'}`,
@@ -356,7 +364,11 @@ const CARD_T = {
     bed: 'hab',
     propSingular: 'propiedad guardada',
     propPlural:   'propiedades guardadas',
-    folderNone:  '📋 Sin carpeta',
+    folderNone:  'Sin carpeta',
+    toastRenamed: 'Carpeta renombrada',
+    toastDeleted: 'Carpeta eliminada',
+    toastUpdated: 'Estado actualizado',
+    toastMoved:   'Movido',
     folders: {
       title:         'Carpetas',
       all:           'Todas',
@@ -379,7 +391,7 @@ function getT() {
 function addFolderOption(sel, folder) {
   const opt = document.createElement('option');
   opt.value = folder.id;
-  opt.textContent = '📁 ' + folder.name;
+  opt.textContent = folder.name;
   sel.appendChild(opt);
 }
 
@@ -405,8 +417,8 @@ function buildCard(prop) {
 
   card.innerHTML = `
     ${img
-      ? `<img class="prop-img" src="${escHtml(img)}" alt="${escHtml(title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="prop-img-placeholder" style="display:none;">&#127968;</div>`
-      : `<div class="prop-img-placeholder">&#127968;</div>`
+      ? `<img class="prop-img" src="${escHtml(img)}" alt="${escHtml(title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="prop-img-placeholder" style="display:none;"></div>`
+      : `<div class="prop-img-placeholder"></div>`
     }
     <div class="prop-body">
       <div class="prop-top">
@@ -419,7 +431,7 @@ function buildCard(prop) {
         </select>
       </div>
       <div class="prop-title">${escHtml(title)}</div>
-      ${location ? `<div class="prop-location">&#128205; ${escHtml(location)}</div>` : ''}
+      ${location ? `<div class="prop-location">${escHtml(location)}</div>` : ''}
       <div class="prop-price">${price}</div>
       ${(area || rooms) ? `<div class="prop-details">${[rooms, area].filter(Boolean).join(' · ')}</div>` : ''}
       ${prop.notes ? `<div class="prop-notes">${escHtml(prop.notes)}</div>` : ''}
@@ -453,7 +465,7 @@ function buildCard(prop) {
       statusSel.className = `prop-status-select ${newStatus}`;
       _currentStatus = newStatus;
       prop.status = newStatus;
-      showToast('✓');
+      showToast(t.toastUpdated);
     } catch (e) {
       statusSel.value = _currentStatus;
       showToast('Could not update — please try again');
@@ -499,7 +511,7 @@ function buildCard(prop) {
         _currentFolder = folderSel.value;
         folderSel.className = 'prop-folder-select' + (newFolderId ? ' has-folder' : '');
         renderFolderSidebar();
-        showToast('✓');
+        showToast(t.toastMoved);
       } catch (e) {
         folderSel.value = _currentFolder;
         showToast('Could not move — please try again');
@@ -585,8 +597,8 @@ window.copyAllLinks = function() {
       const link = `https://seculopt.com/share.html?id=${p.id}`;
       return [
         `${i + 1}. ${title}${price ? ' — ' + price : ''}`,
-        location ? `   📍 ${location}` : '',
-        `   🔗 ${link}`,
+        location ? `   ${location}` : '',
+        `   ${link}`,
       ].filter(Boolean).join('\n');
     });
 
@@ -595,9 +607,9 @@ window.copyAllLinks = function() {
   const text = `As minhas propriedades no Século Explorador:\n\n${lines.join('\n\n')}\n\nEncontrado em seculopt.com`;
   navigator.clipboard.writeText(text)
     .then(() => {
-      showToast(`✓ ${lines.length} link${lines.length === 1 ? '' : 's'} copiado${lines.length === 1 ? '' : 's'}!`);
+      showToast(`${lines.length} link${lines.length === 1 ? '' : 's'} copiado${lines.length === 1 ? '' : 's'}!`);
       const btn = document.getElementById('copyAllBtn');
-      if (btn) { btn.textContent = '✓ Copiado!'; setTimeout(() => { btn.innerHTML = '&#128203; Copiar todos os links'; }, 2500); }
+      if (btn) { btn.textContent = 'Copiado!'; setTimeout(() => { btn.innerHTML = 'Copiar todos os links'; }, 2500); }
     })
     .catch(() => showToast('Erro ao copiar — tenta de novo'));
 };

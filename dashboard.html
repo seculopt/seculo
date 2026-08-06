@@ -6,6 +6,10 @@
   <meta name="description" content="Your saved properties — Século Explorer dashboard." />
   <title>My Properties — Século Explorer</title>
 
+  <!-- Set before first paint so scroll-reveal elements are only hidden when
+       JS is actually available to reveal them again. -->
+  <script>document.documentElement.classList.add('js');</script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@200;300;400;500;600;700&family=Zalando+Sans+Expanded:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet" />
@@ -106,7 +110,7 @@
     }
     .fold-item:hover { background: var(--color-bg); }
     .fold-item.active {
-      background: #f4f1ec;
+      background: var(--color-raised);
       font-weight: 600;
     }
     .fold-item.active::before {
@@ -117,7 +121,7 @@
       background: var(--color-accent);
       border-radius: 0 2px 2px 0;
     }
-    .fold-item-icon { font-size: 0.9rem; flex-shrink: 0; }
+    .fold-item-icon { width: 10px; height: 1px; background: var(--rule-strong); flex-shrink: 0; align-self: center; }
     .fold-item-name {
       flex: 1;
       overflow: hidden;
@@ -128,7 +132,7 @@
       font-size: 0.73rem;
       color: var(--color-mid);
       font-weight: 400;
-      background: #f0ede8;
+      background: var(--color-raised);
       padding: 0.1rem 0.4rem;
       border-radius: 10px;
       flex-shrink: 0;
@@ -197,7 +201,7 @@
       padding: 5rem 1rem;
       display: none;
     }
-    .dash-empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.35; }
+    .dash-empty-icon { width: 48px; height: 1px; background: var(--color-accent); margin: 0 auto 1.75rem; }
     .dash-empty h2 {
       font-family: var(--font-display);
       font-size: 1.3rem;
@@ -239,7 +243,7 @@
     }
     .prop-img-placeholder {
       width: 100%; height: 160px;
-      background: linear-gradient(135deg, #f0ede8 0%, #e8e4dc 100%);
+      background: linear-gradient(135deg, var(--color-raised) 0%, var(--color-sunken) 100%);
       display: flex; align-items: center; justify-content: center;
       color: var(--color-mid); font-size: 2rem; flex-shrink: 0;
     }
@@ -266,7 +270,7 @@
     .prop-status-select:disabled { cursor: wait; }
     .prop-status-select.interested { background: #f0faf4; color: #27664a; }
     .prop-status-select.visited    { background: #fff8e6; color: #8a6200; }
-    .prop-status-select.discarded  { background: #fdf2f2; color: #c0392b; }
+    .prop-status-select.discarded  { background: var(--color-raised); color: var(--brand-terracotta); }
     .prop-title {
       font-size: 0.9rem; font-weight: 600; color: var(--color-primary);
       line-height: 1.35;
@@ -281,7 +285,7 @@
       border-left: 2px solid var(--color-accent); padding-left: 0.5rem; margin-top: 0.25rem;
     }
     .prop-expiry { font-size: 0.73rem; color: var(--color-mid); margin-top: auto; padding-top: 0.5rem; }
-    .prop-expiry.expiring-soon { color: #c0392b; }
+    .prop-expiry.expiring-soon { color: var(--brand-terracotta); }
     .prop-footer {
       display: flex; gap: 0.5rem; flex-wrap: wrap;
       padding: 0.75rem 1rem;
@@ -296,10 +300,10 @@
       text-decoration: none; display: inline-flex;
       align-items: center; justify-content: center; gap: 0.3rem; min-width: 0;
     }
-    .prop-btn:hover { background: #f4f1ec; border-color: var(--color-accent); }
+    .prop-btn:hover { background: var(--color-raised); border-color: var(--color-accent); }
     .prop-btn.share { color: var(--color-accent); border-color: var(--color-accent); }
-    .prop-btn.delete { color: #c0392b; border-color: #e8b4b4; }
-    .prop-btn.delete:hover { background: #fdf2f2; }
+    .prop-btn.delete { color: var(--brand-terracotta); border-color: var(--rule-strong); }
+    .prop-btn.delete:hover { background: var(--color-raised); }
 
     /* Folder select in card footer */
     .prop-folder-wrap { width: 100%; margin-top: 0.15rem; }
@@ -356,7 +360,7 @@
         border-color: var(--color-primary);
       }
       .fold-item.active::before { display: none; }
-      .fold-item.active .fold-item-count { background: rgba(255,255,255,0.25); color: #fff; }
+      .fold-item.active .fold-item-count { background: rgba(240,238,232,0.25); color: var(--color-on-dark); }
       .fold-kebab { display: none; }
       .fold-new-btn {
         flex-shrink: 0; padding: 0.35rem 0.75rem; margin: 0 0.25rem;
@@ -372,7 +376,7 @@
   <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
       <a href="index.html" class="nav-logo" aria-label="Século Explorer — Home">
-        <img src="assets/logo-light.svg" alt="Século Explorer" />
+        <img src="assets/logo.svg" alt="Século Explorer" />
       </a>
       <ul class="nav-links">
         <li><a href="index.html" data-en="Home" data-pt="Início">Home</a></li>
@@ -414,7 +418,7 @@
           <p class="dash-meta" id="dashMeta"></p>
         </div>
         <div class="dash-actions">
-          <button class="btn btn-outline" id="copyAllBtn" style="display:none" onclick="copyAllLinks()" data-en="&#128203; Copy all links" data-pt="&#128203; Copiar todos os links" data-es="&#128203; Copiar todos los links">&#128203; Copy all links</button>
+          <button class="btn btn-outline" id="copyAllBtn" style="display:none" onclick="copyAllLinks()" data-en="Copy all links" data-pt="Copiar todos os links" data-es="Copiar todos los links">Copy all links</button>
           <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" id="engineLink" data-en="View on map" data-pt="Ver no mapa" data-es="Ver en el mapa">View on map</a>
         </div>
       </div>
@@ -436,7 +440,7 @@
 
           <!-- Empty: no properties at all -->
           <div class="dash-empty" id="dashEmpty">
-            <div class="dash-empty-icon">&#128278;</div>
+            <div class="dash-empty-icon" aria-hidden="true"></div>
             <h2 data-en="No saved properties yet" data-pt="Sem propriedades guardadas" data-es="Sin propiedades guardadas">No saved properties yet</h2>
             <p data-en="Use the engine to search for properties in Portugal. When you find one you like, click the bookmark button to save it here." data-pt="Usa o motor de busca para encontrar imóveis em Portugal. Quando encontrares um que gostes, clica no marcador para o guardar aqui." data-es="Usa el motor de búsqueda para encontrar propiedades en Portugal. Cuando encuentres una que te guste, haz clic en el marcador para guardarla aquí.">Use the engine to search for properties in Portugal. When you find one you like, click the bookmark button to save it here.</p>
             <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" data-en="Start searching" data-pt="Começar a explorar" data-es="Empezar a explorar">Start searching</a>
@@ -444,7 +448,7 @@
 
           <!-- Empty: folder has no properties -->
           <div class="dash-empty" id="dashEmptyFolder" style="display:none;">
-            <div class="dash-empty-icon">&#128194;</div>
+            <div class="dash-empty-icon" aria-hidden="true"></div>
             <h2 data-en="No properties in this folder" data-pt="Nenhuma propriedade nesta pasta" data-es="Sin propiedades en esta carpeta">No properties in this folder</h2>
             <p data-en="Move properties here using the folder selector on each card." data-pt="Move propriedades aqui usando o selector de pasta em cada cartão." data-es="Mueve propiedades aquí usando el selector de carpeta en cada tarjeta.">Move properties here using the folder selector on each card.</p>
           </div>

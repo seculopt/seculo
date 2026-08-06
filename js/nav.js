@@ -44,10 +44,17 @@
   window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll(); // run on load
 
-  // ── IntersectionObserver: scroll-triggered fade-up animations ──
-  const animatedEls = document.querySelectorAll('.animate-on-scroll');
+  // ── IntersectionObserver: scroll-triggered reveals ──
+  const animatedEls = document.querySelectorAll('.animate-on-scroll, .rule-draw');
 
   if (animatedEls.length > 0) {
+    // No observer support: reveal everything rather than leaving the page
+    // blank, since these elements start at opacity 0.
+    if (!('IntersectionObserver' in window)) {
+      animatedEls.forEach(function (el) { el.classList.add('in-view'); });
+      return;
+    }
+
     const observer = new IntersectionObserver(
       function (entries) {
         entries.forEach(function (entry) {
@@ -57,7 +64,10 @@
           }
         });
       },
-      { threshold: 0.15 }
+      // A threshold alone never fires for elements taller than the viewport,
+      // which is common on mobile. Trigger as soon as any part clears the
+      // bottom 12% of the screen instead.
+      { threshold: 0, rootMargin: '0px 0px -12% 0px' }
     );
 
     animatedEls.forEach(function (el) {
