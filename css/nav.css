@@ -102,7 +102,11 @@
   padding-top: 20px;
 }
 
-.nav-links a {
+/* Scoped to :not(.btn) deliberately. This selector is more specific than
+   .btn-primary, so without the exclusion it repainted the menu's button in
+   the ink colour — dark text on a dark fill, invisible — and its display and
+   padding overrode the button's own layout. */
+.nav-links a:not(.btn) {
   display: block;
   color: var(--color-primary);
   font-size: 1rem;
@@ -112,6 +116,11 @@
   text-decoration: none;
   transition: color var(--transition);
   padding: 16px 0;
+}
+
+/* Log In is the one menu item that carries weight. */
+.nav-links a.nav-login {
+  font-weight: 600;
 }
 
 .nav-links a:not(.btn):hover,
@@ -237,7 +246,7 @@
     padding-top: 0;
   }
 
-  .nav-links a {
+  .nav-links a:not(.btn) {
     padding: 4px 0;
     font-size: var(--t-small);
     letter-spacing: 0.04em;
@@ -266,9 +275,12 @@
     transform: scaleX(1);
   }
 
+  /* The nav button is the one exception to the shared minimum width — a
+     200px button in the bar would crowd the links. */
   .nav-links .btn {
     width: auto;
-    padding: 12px 24px;
+    min-width: 0;
+    padding: 12px 26px;
     min-height: 44px;
   }
 

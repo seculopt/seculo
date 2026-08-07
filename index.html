@@ -55,7 +55,7 @@
         <li><a href="#how-it-works" data-en="How It Works" data-pt="Como Funciona" data-es="Cómo Funciona">How It Works</a></li>
         <li><a href="#use-cases" data-en="Use Cases" data-pt="Casos de Uso" data-es="Casos de Uso">Use Cases</a></li>
         <li><a href="products.html" data-en="Plans" data-pt="Planos" data-es="Planes">Plans</a></li>
-        <li><a href="login.html" data-en="Log in" data-pt="Entrar" data-es="Entrar">Log in</a></li>
+        <li><a href="login.html" class="nav-login" data-en="Log In" data-pt="Entrar" data-es="Entrar">Log In</a></li>
         <li>
           <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" data-en="Try it free" data-pt="Experimenta grátis" data-es="Pruébalo gratis">Try it free</a>
         </li>
@@ -88,23 +88,23 @@
 
     <div class="hero-inner">
       <div class="hero-content">
-        <span class="eyebrow" data-en="Smart Property Search" data-pt="Pesquisa Imobiliária Inteligente" data-es="Búsqueda Inteligente de Propiedades">Smart Property Search</span>
+        <img class="hero-logo" src="assets/logo.svg" alt="Século Explorer" width="192" height="87" />
         <h1 data-en="Stop searching. Start finding." data-pt="Encontre a Sua Casa em Portugal. Mais Depressa." data-es="Deja de buscar. Empieza a encontrar.">Stop searching. Start finding.</h1>
         <p class="hero-sub"
           data-en="Most people spend weeks jumping between property websites before finding anything worth visiting. <strong>We search across Portugal's top portals in one go.</strong>"
           data-pt="A maioria das pessoas passa semanas a saltar entre portais imobiliários antes de encontrar algo que valha a pena visitar. <strong>O Século Explorer pesquisa os principais portais portugueses de uma só vez.</strong>"
           data-es="La mayoría de las personas pasan semanas saltando entre portales inmobiliarios antes de encontrar algo que valga la pena visitar. <strong>Buscamos en los principales portales de Portugal de una sola vez.</strong>">Most people spend weeks jumping between property websites before finding anything worth visiting. <strong>We search across Portugal's top portals in one go.</strong></p>
-        <div class="hero-actions">
+        <div class="hero-actions btn-group">
           <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" data-en="Try it free" data-pt="Experimenta grátis" data-es="Pruébalo gratis">Try it free</a>
           <a href="products.html" class="btn btn-outline" data-en="See plans" data-pt="Ver planos" data-es="Ver planes">See plans</a>
         </div>
         <div class="hero-stats">
           <div class="stat">
-            <span class="stat-number">98%+</span>
+            <span class="stat-number" data-count-to="98" data-count-suffix="%+">98%+</span>
             <span class="stat-label" data-en="of the market covered" data-pt="do mercado coberto" data-es="del mercado cubierto">of the market covered</span>
           </div>
           <div class="stat">
-            <span class="stat-number">11</span>
+            <span class="stat-number" data-count-to="11">11</span>
             <span class="stat-label" data-en="portals searched at once" data-pt="portais pesquisados de uma vez" data-es="portales buscados a la vez">portals searched at once</span>
           </div>
           <div class="stat">
@@ -356,6 +356,7 @@
   ══════════════════════════════════════════ -->
   <script src="js/intro.js"></script>
   <script src="js/nav.js"></script>
+  <script src="js/counters.js"></script>
   <script src="js/lang.js"></script>
   <script src="js/cookies.js"></script>
 
@@ -419,7 +420,18 @@
       max-width: 22ch;
     }
 
+    /* The logo now opens the hero in place of the old eyebrow line. */
+    .hero-logo {
+      width: clamp(148px, 33vw, 208px);
+      height: auto;
+      margin-bottom: clamp(22px, 3vw, 32px);
+    }
+
+    /* Stated explicitly rather than inherited, so the heading face is
+       obvious at this spot and survives any future change to the h1 base. */
     .hero h1 {
+      font-family: var(--font-display);
+      font-weight: 500;
       margin-bottom: 20px;
     }
 
@@ -430,10 +442,8 @@
       margin-bottom: 36px;
     }
 
+    /* Layout comes from .btn-group; this only adds the spacing below. */
     .hero-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
       margin-bottom: 48px;
     }
 
@@ -606,11 +616,6 @@
     ══════════════════════════════════════════ */
 
     @media (min-width: 600px) {
-      .hero-actions {
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
-
       .hero-stats {
         grid-template-columns: repeat(3, 1fr);
         gap: 0 24px;

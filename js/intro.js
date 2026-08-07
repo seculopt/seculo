@@ -16,10 +16,21 @@
   'use strict';
 
   var SESSION_KEY = 'seculo-intro-played';
-  var TOTAL_MS    = 2650;   // .js .intro delay (1.75s) + duration (0.9s)
+  var BASE_MS     = 2650;   // .js .intro delay (1.75s) + duration (0.9s), unscaled
 
   var root  = document.documentElement;
   var intro = document.querySelector('.intro');
+
+  // --intro-speed is the single timing dial, defined on :root in
+  // animations.css. Reading it here rather than hardcoding a duration means
+  // retiming the sequence in CSS cannot leave this script out of step.
+  function totalMs() {
+    var scale = parseFloat(
+      getComputedStyle(root).getPropertyValue('--intro-speed')
+    );
+    if (!scale || scale <= 0) scale = 1;
+    return BASE_MS * scale;
+  }
 
   // Hero rises immediately rather than waiting out a curtain that is not there.
   function skip() {
@@ -66,5 +77,5 @@
   setTimeout(function () {
     document.body.classList.remove('intro-active');
     remove();
-  }, TOTAL_MS);
+  }, totalMs());
 })();

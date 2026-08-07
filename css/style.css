@@ -280,7 +280,10 @@ a {
   transition: color var(--transition), border-color var(--transition);
   text-decoration: none;
   max-width: 100%;
-  min-width: 0;
+  /* Shared minimum width. Buttons are sized by this rather than by their
+     label, so two sitting next to each other always match no matter how
+     long their text is. The nav and .btn-sm opt out. */
+  min-width: 200px;
   /* Comfortable tap target on touch screens. */
   min-height: 48px;
   text-align: center;
@@ -327,6 +330,41 @@ a {
 .btn-outline:focus-visible {
   border-color: var(--color-accent);
   color: var(--brand-light);
+}
+
+/* Compact variant for dense placements (the legal-page nav bars). Opts out
+   of the shared minimum, since it is never sat beside a full-size button. */
+.btn-sm {
+  min-width: 0;
+  padding: 10px 20px;
+  min-height: 40px;
+  font-size: var(--t-label);
+}
+
+/* ── Button groups ──
+   Any run of buttons. Stacked and full width on a phone; in a row and
+   matched in width from 600px up. Use this anywhere two buttons sit
+   together so they can never render at different sizes. */
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn-group > .btn {
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .btn-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .btn-group > .btn {
+    width: auto;
+  }
 }
 
 /* ── Focus visibility ── */

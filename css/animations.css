@@ -64,6 +64,16 @@
    to remove the curtain. A failed or blocked script therefore cannot leave
    the page covered. It is hidden outright without JS, since the reveal
    animations it hides are themselves JS-gated. */
+/* Single dial for the whole intro sequence. 1 = the original pace; 1.35 runs
+   it 35% slower. Every duration and delay in the sequence is multiplied by
+   it — including the hero's start offset, which has to stay behind the
+   curtain — and js/intro.js reads this same value, so nothing can drift out
+   of step. Raise it to slow the intro further, lower it to speed it up.
+   Lives on :root because .hero-content is not a descendant of .intro. */
+:root {
+  --intro-speed: 1.35;
+}
+
 .intro { display: none; }
 
 /* Decided in the document head, so a repeat visitor never sees it flash. */
@@ -80,14 +90,22 @@
   justify-content: center;
   gap: 22px;
   padding: var(--gutter);
-  animation: introLift 0.9s var(--ease-out) 1.75s forwards;
+  animation: introLift
+             calc(0.9s * var(--intro-speed))
+             var(--ease-out)
+             calc(1.75s * var(--intro-speed))
+             forwards;
 }
 
 .intro__logo {
   width: min(230px, 56vw);
   height: auto;
   opacity: 0;
-  animation: riseIn 1s var(--ease-out) 0.15s forwards;
+  animation: riseIn
+             calc(1s * var(--intro-speed))
+             var(--ease-out)
+             calc(0.15s * var(--intro-speed))
+             forwards;
 }
 
 .intro__rule {
@@ -96,7 +114,11 @@
   background: var(--color-accent);
   transform: scaleX(0);
   transform-origin: center;
-  animation: drawLine 0.9s var(--ease-out) 0.65s forwards;
+  animation: drawLine
+             calc(0.9s * var(--intro-speed))
+             var(--ease-out)
+             calc(0.65s * var(--intro-speed))
+             forwards;
 }
 
 /* While the curtain is up the page must not scroll behind it. */
@@ -111,7 +133,7 @@ body.intro-active {
 .js .hero-content > * {
   opacity: 0;
   animation: riseIn 1s var(--ease-out) forwards;
-  animation-delay: calc(2.05s + var(--d, 0s));
+  animation-delay: calc(2.05s * var(--intro-speed) + var(--d, 0s));
 }
 
 .js.intro-skip .hero-content > * {

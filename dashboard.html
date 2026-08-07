@@ -63,10 +63,10 @@
       margin-left: 0.5rem;
       vertical-align: middle;
     }
+    /* Layout comes from .btn-group in style.css: stacked and full width on a
+       phone, matched widths in a row from 600px up. Two auto-width buttons
+       side by side would otherwise overflow a narrow screen. */
     .dash-actions {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
       flex-shrink: 0;
     }
 
@@ -417,7 +417,7 @@
           </h1>
           <p class="dash-meta" id="dashMeta"></p>
         </div>
-        <div class="dash-actions">
+        <div class="dash-actions btn-group">
           <button class="btn btn-outline" id="copyAllBtn" style="display:none" onclick="copyAllLinks()" data-en="Copy all links" data-pt="Copiar todos os links" data-es="Copiar todos los links">Copy all links</button>
           <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" id="engineLink" data-en="View on map" data-pt="Ver no mapa" data-es="Ver en el mapa">View on map</a>
         </div>
