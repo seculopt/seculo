@@ -159,7 +159,9 @@
         <!-- Photo slot — this column was empty before, which is what left the
              gap on the right of this section. -->
         <div class="problem-media animate-on-scroll" style="--i: 1">
-          <div class="media media--tall"></div>
+          <div class="media media--tall">
+            <img src="assets/home/problem.jpg" alt="" onerror="this.remove()" />
+          </div>
         </div>
       </div>
     </div>
@@ -213,7 +215,9 @@
 
       <!-- Photo slot — a wide product or location shot sits well here. -->
       <div class="steps-media animate-on-scroll">
-        <div class="media media--wide"></div>
+        <div class="media media--wide">
+          <img src="assets/home/method.jpg" alt="" onerror="this.remove()" />
+        </div>
       </div>
     </div>
   </section>
@@ -271,7 +275,9 @@
 
         <!-- Photo slot — a map or GIS overlay screenshot belongs here. -->
         <div class="informed-media">
-          <div class="media media--wide"></div>
+          <div class="media media--wide">
+            <img src="assets/home/layers.jpg" alt="" onerror="this.remove()" />
+          </div>
         </div>
       </div>
     </div>
@@ -398,14 +404,14 @@
       overflow: hidden;
     }
 
-    /* Photo slot. To switch the background photo on, drop the file in and
-       uncomment the --hero-image line. Until then this shows the quiet
-       sunken tone rather than requesting a file that isn't there. */
+    /* Photo slot. Live — drop a file at assets/home/hero.jpg and it appears.
+       While that file does not exist the browser simply falls back to the
+       sunken tone underneath, so there is nothing to switch on or off. */
     .hero__bg {
       position: absolute;
       inset: 0;
       z-index: 0;
-      /* --hero-image: url('assets/hero-bg.jpg'); */
+      --hero-image: url('assets/home/hero.jpg');
       background-color: var(--color-sunken);
       background-image: var(--hero-image, none);
       background-size: cover;
