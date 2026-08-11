@@ -176,8 +176,8 @@
         <h2 data-en="How Século works" data-pt="Como o Século Funciona" data-es="Cómo Funciona Século">How Século works</h2>
       </div>
 
-      <ol class="steps-list">
-        <li class="step-item animate-on-scroll">
+      <ol class="steps-list" data-hover-media>
+        <li class="step-item animate-on-scroll slot--step1">
           <span class="step-number">01</span>
           <div class="step-body">
             <h3 data-en="Tell us what you're looking for" data-pt="Diga-nos o que procura" data-es="Dinos qué estás buscando">Tell us what you're looking for</h3>
@@ -188,7 +188,7 @@
           </div>
         </li>
 
-        <li class="step-item animate-on-scroll" style="--i: 1">
+        <li class="step-item animate-on-scroll slot--step2" style="--i: 1">
           <span class="step-number">02</span>
           <div class="step-body">
             <h3 data-en="We cover the whole Portuguese market, so you don't have to" data-pt="Cobrimos todo o mercado português, para que não tenha de o fazer" data-es="Cubrimos todo el mercado portugués, para que tú no tengas que hacerlo">We cover the whole Portuguese market, so you don't have to</h3>
@@ -199,7 +199,7 @@
           </div>
         </li>
 
-        <li class="step-item animate-on-scroll" style="--i: 2">
+        <li class="step-item animate-on-scroll slot--step3" style="--i: 2">
           <span class="step-number">03</span>
           <div class="step-body">
             <h3 data-en="Explore on the map, export when ready" data-pt="Explore no mapa, exporte quando estiver pronto" data-es="Explora en el mapa, exporta cuando estés listo">Explore on the map, export when ready</h3>
@@ -211,10 +211,8 @@
         </li>
       </ol>
 
-      <!-- Photo slot — a wide product or location shot sits well here. -->
-      <div class="steps-media animate-on-scroll">
-        <div class="media media--wide media--filled slot--method"></div>
-      </div>
+      <!-- The photography for this section now appears on hover, following
+           the cursor across the three steps. See js/hover-media.js. -->
     </div>
   </section>
 
@@ -269,9 +267,12 @@
           <li><span data-en="Population and demographic analysis of the surrounding area" data-pt="Análise populacional e demográfica da zona envolvente" data-es="Análisis poblacional y demográfico del entorno">Population and demographic analysis of the surrounding area</span></li>
         </ul>
 
-        <!-- Photo slot — a map or GIS overlay screenshot belongs here. -->
-        <div class="informed-media">
-          <div class="media media--wide media--filled slot--layers"></div>
+        <!-- Three portrait slots rather than one wide band — the source
+             photography is all 2:3, which a 16:9 crop mangles. -->
+        <div class="photo-row informed-media">
+          <div class="media media--tall media--filled slot--layers1"></div>
+          <div class="media media--tall media--filled slot--layers2"></div>
+          <div class="media media--tall media--filled slot--layers3"></div>
         </div>
       </div>
     </div>
@@ -377,6 +378,7 @@
   <script src="js/intro.js"></script>
   <script src="js/nav.js"></script>
   <script src="js/counters.js"></script>
+  <script src="js/hover-media.js"></script>
   <script src="js/lang.js"></script>
   <script src="js/cookies.js"></script>
 
@@ -418,14 +420,27 @@
       --img: url('assets/home/kaboompics_colorful-wooden-door-in-the-facade-of-a-typical-portuguese-house-at-lisbon-portugal-8276.jpg');
     }
 
-    /* Wide band under How Século Works */
-    .slot--method {
+    /* How Século Works — these three appear under the cursor on hover,
+       one per step. js/hover-media.js reads these same variables. */
+    .slot--step1 {
       --img: url('assets/home/kaboompics_interior-inspo-warm-minimalist-living-room-de-sede-ds-2011-leather-sofa-and-travertine-furniture-36458.jpg');
     }
+    .slot--step2 {
+      --img: url('assets/home/kaboompics_cityscape-of-lisbon-portugal-8435.jpg');
+    }
+    .slot--step3 {
+      --img: url('assets/home/kaboompics_casa-do-alentejo-lisbon-portugal-8325.jpg');
+    }
 
-    /* Wide band under Make informed decisions */
-    .slot--layers {
+    /* Row of three under Make informed decisions */
+    .slot--layers1 {
       --img: url('assets/home/kaboompics_portuguese-azulejos-typical-glazed-ceramic-tiles-with-marble-8238.jpg');
+    }
+    .slot--layers2 {
+      --img: url('assets/home/kaboompics_plants-of-portugal-8654.jpg');
+    }
+    .slot--layers3 {
+      --img: url('assets/home/kaboompics_oranges-on-the-tree-8315.jpg');
     }
 
     /* Paints whatever --img above points at. A filename that doesn't exist
@@ -595,6 +610,12 @@
       gap: 0;
     }
 
+    /* Same reasoning as the use-case cards: the rule below the final row
+       closes nothing, it just dangles. */
+    .ruled-list li:last-child {
+      border-bottom: none;
+    }
+
     /* ── Steps Section ── */
     .steps-header {
       margin-bottom: clamp(40px, 6vw, 72px);
@@ -627,8 +648,49 @@
       max-width: 62ch;
     }
 
-    .steps-media {
-      margin-top: clamp(40px, 6vw, 72px);
+    /* ── Cursor-following photo (How Século Works) ──
+       Fixed-position so it can sit over the section without affecting
+       layout. Pointer-events off so it never blocks the text underneath.
+       Only ever shown on devices with a real pointer — see the media query
+       at the foot of this block. */
+    .hover-media {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: clamp(180px, 17vw, 260px);
+      aspect-ratio: 2 / 3;
+      background-color: var(--color-sunken);
+      background-size: cover;
+      background-position: center;
+      pointer-events: none;
+      z-index: 40;
+      opacity: 0;
+      transform: translate3d(-50%, -50%, 0) scale(0.92);
+      transition: opacity 0.45s var(--ease-out), transform 0.45s var(--ease-out);
+      display: none;
+    }
+
+    .hover-media.is-active {
+      opacity: 1;
+      transform: translate3d(-50%, -50%, 0) scale(1);
+    }
+
+    /* Rows fade the non-hovered steps back, so the one under the cursor
+       reads as selected rather than the photo just floating over a list. */
+    .steps-list.is-hovering .step-item {
+      transition: opacity var(--transition);
+      opacity: 0.45;
+    }
+
+    .steps-list.is-hovering .step-item:hover {
+      opacity: 1;
+    }
+
+    /* ── Photo row ── */
+    .photo-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(12px, 2vw, 20px);
     }
 
     /* ── Use Cases ── */
@@ -646,6 +708,12 @@
     .use-case-card {
       padding: clamp(28px, 4vw, 40px) 0;
       border-bottom: 1px solid var(--rule);
+    }
+
+    /* Stacked on a phone the rules separate one card from the next, so the
+       one after the final card is doing nothing. */
+    .use-case-card:last-child {
+      border-bottom: none;
     }
 
     .use-case-card h3 {
@@ -730,6 +798,35 @@
       .use-cases-grid {
         grid-template-columns: 1fr 1fr;
         gap: 0 clamp(32px, 5vw, 64px);
+      }
+
+      /* Side by side, a rule under each card no longer separates anything —
+         it just leaves a broken line with gaps where the columns divide.
+         The rule above the grid already sets the block off. */
+      .use-case-card {
+        border-bottom: none;
+      }
+
+      .photo-row {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* The cursor-following photo only exists where there is a cursor. On a
+       touch screen it would either never show or stick after a tap. */
+    @media (hover: hover) and (pointer: fine) {
+      .hover-media {
+        display: block;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hover-media {
+        display: none;
+      }
+
+      .steps-list.is-hovering .step-item {
+        opacity: 1;
       }
     }
 
