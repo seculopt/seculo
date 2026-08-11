@@ -159,9 +159,7 @@
         <!-- Photo slot — this column was empty before, which is what left the
              gap on the right of this section. -->
         <div class="problem-media animate-on-scroll" style="--i: 1">
-          <div class="media media--tall">
-            <img src="assets/home/problem.jpg" alt="" onerror="this.remove()" />
-          </div>
+          <div class="media media--tall media--filled slot--problem"></div>
         </div>
       </div>
     </div>
@@ -215,9 +213,7 @@
 
       <!-- Photo slot — a wide product or location shot sits well here. -->
       <div class="steps-media animate-on-scroll">
-        <div class="media media--wide">
-          <img src="assets/home/method.jpg" alt="" onerror="this.remove()" />
-        </div>
+        <div class="media media--wide media--filled slot--method"></div>
       </div>
     </div>
   </section>
@@ -275,9 +271,7 @@
 
         <!-- Photo slot — a map or GIS overlay screenshot belongs here. -->
         <div class="informed-media">
-          <div class="media media--wide">
-            <img src="assets/home/layers.jpg" alt="" onerror="this.remove()" />
-          </div>
+          <div class="media media--wide media--filled slot--layers"></div>
         </div>
       </div>
     </div>
@@ -392,6 +386,61 @@
        Mobile-first: base rules are the phone layout.
   ══════════════════════════════════════════ -->
   <style>
+    /* ══════════════════════════════════════════════════════════
+       PHOTO PICKER
+       The only place you need to touch to change a photo.
+       Swap the filename between the quotes, save, refresh.
+       Files live in  assets/home/
+       Set a slot to  none  to go back to the empty placeholder.
+
+       Currently in assets/home/ (all portrait, 2:3):
+         kaboompics_an-old-mercedes-benz-parked-in-the-street-8262.jpg
+         kaboompics_casa-do-alentejo-lisbon-portugal-8325.jpg
+         kaboompics_cityscape-of-lisbon-portugal-8435.jpg
+         kaboompics_coffee-table-book-and-craspedia-flower-styled-on-dark-wood-43428.jpg
+         kaboompics_colorful-wooden-door-in-the-facade-of-a-typical-portuguese-house-at-lisbon-portugal-8276.jpg
+         kaboompics_interior-inspo-warm-minimalist-living-room-de-sede-ds-2011-leather-sofa-and-travertine-furniture-36458.jpg
+         kaboompics_oranges-on-the-tree-8315.jpg
+         kaboompics_plants-of-portugal-8654.jpg
+         kaboompics_plants-of-portugal-8657.jpg
+         kaboompics_portuguese-azulejos-typical-glazed-ceramic-tiles-with-marble-8238.jpg
+         kaboompics_stations-of-the-cross-lagos-portugal-8640.jpg
+         kaboompics_uncommon-black-console-with-travertine-and-wood-veneer-decor-37100.jpg
+       ══════════════════════════════════════════════════════════ */
+
+    /* Hero background, behind "Stop searching. Start finding." */
+    .hero__bg {
+      --img: url('assets/home/kaboompics_cityscape-of-lisbon-portugal-8435.jpg');
+    }
+
+    /* Tall image beside "Finding a property shouldn't feel like a second job" */
+    .slot--problem {
+      --img: url('assets/home/kaboompics_colorful-wooden-door-in-the-facade-of-a-typical-portuguese-house-at-lisbon-portugal-8276.jpg');
+    }
+
+    /* Wide band under How Século Works */
+    .slot--method {
+      --img: url('assets/home/kaboompics_interior-inspo-warm-minimalist-living-room-de-sede-ds-2011-leather-sofa-and-travertine-furniture-36458.jpg');
+    }
+
+    /* Wide band under Make informed decisions */
+    .slot--layers {
+      --img: url('assets/home/kaboompics_portuguese-azulejos-typical-glazed-ceramic-tiles-with-marble-8238.jpg');
+    }
+
+    /* Paints whatever --img above points at. A filename that doesn't exist
+       just shows the flat placeholder tone — nothing breaks. */
+    .media--filled {
+      background-image: var(--img, none);
+    }
+
+    /* Suppress the crosshair placeholder on picker-driven slots, since the
+       div stays empty and the lines would otherwise sit on top of the photo. */
+    .media--filled:empty::before,
+    .media--filled:empty::after {
+      content: none;
+    }
+
     /* ── Hero ── */
     .hero {
       position: relative;
@@ -404,16 +453,13 @@
       overflow: hidden;
     }
 
-    /* Photo slot. Live — drop a file at assets/home/hero.jpg and it appears.
-       While that file does not exist the browser simply falls back to the
-       sunken tone underneath, so there is nothing to switch on or off. */
+    /* The photo itself is chosen in the PHOTO PICKER block at the top. */
     .hero__bg {
       position: absolute;
       inset: 0;
       z-index: 0;
-      --hero-image: url('assets/home/hero.jpg');
       background-color: var(--color-sunken);
-      background-image: var(--hero-image, none);
+      background-image: var(--img, none);
       background-size: cover;
       background-position: center 30%;
       background-repeat: no-repeat;
