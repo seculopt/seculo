@@ -1,6 +1,6 @@
 ﻿# Source photography while it is being trialled. These are 3000-7400px
 # originals at 1-5 MB each; they should not enter git history until they have
 # been resized for the web.
-assets/home/*.jpg
-assets/home/*.jpeg
-assets/home/*.png
+assets/images/*.jpg
+assets/images/*.jpeg
+assets/images/*.png
