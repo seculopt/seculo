@@ -128,8 +128,15 @@
   color: var(--color-accent);
 }
 
+/* The button in the bar is a quieter thing than a button on the page: set in
+   the same size and case as the links beside it rather than shouting in caps
+   at full button scale. */
 .nav-links .btn {
   width: 100%;
+  font-size: var(--t-small);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0.03em;
 }
 
 /* ── Language Toggle ── */
@@ -276,12 +283,13 @@
   }
 
   /* The nav button is the one exception to the shared minimum width — a
-     200px button in the bar would crowd the links. */
+     200px button in the bar would crowd the links. Sized off the 88px bar
+     so it sits inside it rather than filling it. */
   .nav-links .btn {
     width: auto;
     min-width: 0;
-    padding: 12px 26px;
-    min-height: 44px;
+    padding: 9px 20px;
+    min-height: 36px;
   }
 
   .lang-toggle {

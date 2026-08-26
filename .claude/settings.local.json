@@ -2,7 +2,26 @@
   "permissions": {
     "allow": [
       "Bash(grep -rn \"Request a Demo\" *.html)",
-      "Bash(python3 -c \":*)"
+      "Bash(python3 -c \":*)",
+      "PowerShell(foreach \\($c in \"python\",\"py\",\"node\",\"npx\"\\) { $p = Get-Command $c -ErrorAction SilentlyContinue; if \\($p\\) { Write-Output \"$c -> $\\($p.Source\\)\" } else { Write-Output \"$c -> not found\" } })",
+      "PowerShell(C:\\\\Users\\\\venus\\\\seculo-work\\\\preview.ps1 home)",
+      "PowerShell(foreach \\($f in \"logo.svg\",\"logo-light.svg\"\\) { $c = Get-Content \"C:\\\\Users\\\\venus\\\\seculo-work\\\\home\\\\assets\\\\$f\" -Raw; if \\($c -match 'viewBox=\"\\([^\"]+\\)\"'\\) { $vb = $Matches[1] }; if \\($c -match 'width=\"\\([^\"]+\\)\"'\\) { $w = $Matches[1] }; if \\($c -match 'height=\"\\([^\"]+\\)\"'\\) { $h = $Matches[1] }; Write-Output \"$f  width=$w height=$h viewBox=$vb\" })",
+      "PowerShell(git worktree add -b redesign/brand \"C:\\\\Users\\\\venus\\\\seculo-work\\\\brand\" main 2>&1)",
+      "PowerShell(git -C \"C:\\\\Users\\\\venus\\\\seculo-work\\\\brand\" rev-parse --abbrev-ref HEAD)",
+      "WebFetch(domain:halston-architecture-template.webflow.io)",
+      "WebFetch(domain:www.eleos.la)",
+      "WebFetch(domain:www.homeofambrose.com)",
+      "WebFetch(domain:www.carlinresidenceclub.com)",
+      "WebFetch(domain:stewartcorealty.com)",
+      "PowerShell(Start-Process \"http://localhost:8006\")",
+      "PowerShell(git -C $d add -A)",
+      "PowerShell(git -C $d commit -q -F $msg)",
+      "PowerShell(git -C $d log --oneline -2)",
+      "PowerShell(git -C $d show --stat --format=\"\" HEAD)",
+      "PowerShell(git -C $d status --short)",
+      "PowerShell($d = \"C:\\\\Users\\\\venus\\\\seculo-work\\\\brand\")",
+      "PowerShell($msg = \"C:\\\\Users\\\\venus\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-venus-OneDrive-Desktop-seculo\\\\393aff3b-3e28-460a-a6dd-2bbf242c6597\\\\scratchpad\\\\commitmsg.txt\")",
+      "PowerShell(git -C $d log --oneline -1)"
     ]
   }
 }

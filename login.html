@@ -153,15 +153,21 @@
         <img src="assets/logo.svg" alt="Século Explorer" />
       </a>
       <ul class="nav-links">
-        <li><a href="index.html" data-en="Home" data-pt="Início">Home</a></li>
-        <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona">How It Works</a></li>
-        <li><a href="products.html" data-en="Plans" data-pt="Planos">Plans</a></li>
-        <li><a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-outline" data-en="Try for free" data-pt="Experimenta Grátis">Try for free</a></li>
+        <li><a href="index.html" data-en="Home" data-pt="Início" data-es="Inicio">Home</a></li>
+        <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona" data-es="Cómo Funciona">How It Works</a></li>
+        <li><a href="index.html#use-cases" data-en="Use Cases" data-pt="Casos de Uso" data-es="Casos de Uso">Use Cases</a></li>
+        <li><a href="products.html" data-en="Plans" data-pt="Planos" data-es="Planes">Plans</a></li>
+        <li><a href="login.html" class="nav-login" data-en="Log In" data-pt="Entrar" data-es="Entrar">Log In</a></li>
+        <li>
+          <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" data-en="Try For Free" data-pt="Experimenta Grátis" data-es="Pruébalo Gratis">Try For Free</a>
+        </li>
       </ul>
       <div class="lang-toggle">
         <button class="lang-btn active" data-lang="en">EN</button>
-        <span>|</span>
+        <span>/</span>
         <button class="lang-btn" data-lang="pt">PT</button>
+        <span>/</span>
+        <button class="lang-btn" data-lang="es">ES</button>
       </div>
       <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -175,37 +181,38 @@
       <div class="auth-logo">SÉCULO</div>
 
       <div id="formView">
-        <h1 class="auth-title" data-en="Log in" data-pt="Entrar">Log in</h1>
+        <h1 class="auth-title" data-en="Log in" data-pt="Entrar" data-es="Iniciar sesión">Log in</h1>
         <p class="auth-subtitle"
           data-en="Enter your email. We'll send you a login link — no password needed."
-          data-pt="Introduz o teu email. Enviamos um link de acesso direto — sem password.">
+          data-pt="Introduz o teu email. Enviamos um link de acesso direto — sem password."
+          data-es="Introduce tu email. Te enviamos un enlace de acceso — sin contraseña.">
           Enter your email. We'll send you a login link — no password needed.
         </p>
 
         <form id="login-form">
           <div class="auth-field">
-            <label data-en="Email address" data-pt="Endereço de email">Email address</label>
+            <label data-en="Email address" data-pt="Endereço de email" data-es="Dirección de email">Email address</label>
             <input type="email" id="email-input" required
               placeholder="email@example.com"
               autocomplete="email" />
           </div>
           <button type="submit" id="send-btn" class="btn btn-primary auth-btn"
-            data-en="Send login link" data-pt="Enviar link de acesso">
+            data-en="Send login link" data-pt="Enviar link de acesso" data-es="Enviar enlace de acceso">
             Send login link
           </button>
         </form>
 
         <p id="login-message" class="auth-message"></p>
 
-        <div class="auth-divider" data-en="or" data-pt="ou">or</div>
+        <div class="auth-divider" data-en="or" data-pt="ou" data-es="o">or</div>
         <p class="auth-alt">
-          <span data-en="Don't have an account?" data-pt="Ainda não tens conta?">Don't have an account?</span>
-          <a href="register.html" data-en="Register for free" data-pt="Registar grátis">Register for free</a>
+          <span data-en="Don't have an account?" data-pt="Ainda não tens conta?" data-es="¿Aún no tienes cuenta?">Don't have an account?</span>
+          <a href="register.html" data-en="Register for free" data-pt="Registar grátis" data-es="Regístrate gratis">Register for free</a>
         </p>
       </div>
 
       <div class="auth-footer-note">
-        <a href="privacy-policy.html" data-en="Privacy Policy" data-pt="Política de Privacidade">Privacy Policy</a>
+        <a href="privacy-policy.html" data-en="Privacy Policy" data-pt="Política de Privacidade" data-es="Política de Privacidad">Privacy Policy</a>
         &nbsp;·&nbsp;
         <a href="mailto:suporte@seculopt.com">suporte@seculopt.com</a>
       </div>

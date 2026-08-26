@@ -57,7 +57,7 @@
         <li><a href="products.html" data-en="Plans" data-pt="Planos" data-es="Planes">Plans</a></li>
         <li><a href="login.html" class="nav-login" data-en="Log In" data-pt="Entrar" data-es="Entrar">Log In</a></li>
         <li>
-          <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" data-en="Try for free" data-pt="Experimenta grátis" data-es="Pruébalo gratis">Try for free</a>
+          <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" data-en="Try For Free" data-pt="Experimenta Grátis" data-es="Pruébalo Gratis">Try For Free</a>
         </li>
       </ul>
 
@@ -211,6 +211,15 @@
         </li>
       </ol>
 
+      <!-- The tutorials live on the YouTube channel. This is the section that
+           explains the product, so the one link to them belongs here. -->
+      <p class="steps-more animate-on-scroll">
+        <a href="https://www.youtube.com/@seculopt" target="_blank" rel="noopener"
+          data-en="Watch the tutorials on YouTube"
+          data-pt="Veja os tutoriais no YouTube"
+          data-es="Ve los tutoriales en YouTube">Watch the tutorials on YouTube</a>
+      </p>
+
       <!-- The photography for this section now appears on hover, following
            the cursor across the three steps. See js/hover-media.js. -->
     </div>
@@ -227,30 +236,53 @@
         <h2 data-en="For anyone looking for property" data-pt="Para qualquer pessoa à procura de propriedade" data-es="Para cualquiera que busque propiedad">For anyone looking for property</h2>
       </div>
 
+      <!-- One card per audience. The photo sits flush to the card edge and is
+           chosen in the PHOTO PICKER block at the foot of this file. -->
       <div class="use-cases-grid">
-        <div class="use-case-card animate-on-scroll">
-          <h3 data-en="Individuals" data-pt="Indivíduos" data-es="Particulares">Individuals</h3>
-          <p
-            data-en="Whether it's your first apartment in Lisbon or a quinta in the Alentejo, get a complete picture of what's available without the tab overload."
-            data-pt="Seja um apartamento em Lisboa ou uma quinta no Alentejo, tenha uma visão completa do que existe no mercado — sem o caos dos mil separadores abertos."
-            data-es="Ya sea tu primer apartamento en Lisboa o una quinta en el Alentejo, obtén una visión completa de lo disponible sin el caos de las pestañas abiertas.">Whether it's your first apartment in Lisbon or a quinta in the Alentejo, get a complete picture of what's available without the tab overload.</p>
-        </div>
+        <article class="use-case-card animate-on-scroll">
+          <div class="media media--filled use-case-media slot--who1"></div>
+          <div class="use-case-body">
+            <p class="use-case-meta">
+              <span class="use-case-index">01</span>
+              <span class="use-case-kicker" data-en="Buying a home to live in" data-pt="Comprar casa para viver" data-es="Comprar una casa para vivir">Buying a home to live in</span>
+            </p>
+            <h3 data-en="Individuals" data-pt="Indivíduos" data-es="Particulares">Individuals</h3>
+            <p
+              data-en="Whether it's your first apartment in Lisbon or a quinta in the Alentejo, get a complete picture of what's available without the tab overload."
+              data-pt="Seja um apartamento em Lisboa ou uma quinta no Alentejo, tenha uma visão completa do que existe no mercado — sem o caos dos mil separadores abertos."
+              data-es="Ya sea tu primer apartamento en Lisboa o una quinta en el Alentejo, obtén una visión completa de lo disponible sin el caos de las pestañas abiertas.">Whether it's your first apartment in Lisbon or a quinta in the Alentejo, get a complete picture of what's available without the tab overload.</p>
+          </div>
+        </article>
 
-        <div class="use-case-card animate-on-scroll" style="--i: 1">
-          <h3 data-en="Professionals &amp; Investors" data-pt="Profissionais e Investidores" data-es="Profesionales e Inversores">Professionals &amp; Investors</h3>
-          <p
-            data-en="Spot undervalued properties across Portugal before they show up everywhere else. Export structured data and move fast."
-            data-pt="Identifique propriedades subavaliadas em toda a região portuguesa antes de aparecerem em outros lugares. Exporte dados estruturados e avance rapidamente."
-            data-es="Identifica propiedades infravaloradas en la región portuguesa antes de que aparezcan en todas partes. Exporta datos estructurados y actúa rápido.">Spot undervalued properties across Portugal before they show up everywhere else. Export structured data and move fast.</p>
-        </div>
+        <article class="use-case-card animate-on-scroll" style="--i: 1">
+          <div class="media media--filled use-case-media slot--who2"></div>
+          <div class="use-case-body">
+            <p class="use-case-meta">
+              <span class="use-case-index">02</span>
+              <span class="use-case-kicker" data-en="Looking for a return" data-pt="À procura de rentabilidade" data-es="Buscando rentabilidad">Looking for a return</span>
+            </p>
+            <h3 data-en="Professionals &amp; Investors" data-pt="Profissionais e Investidores" data-es="Profesionales e Inversores">Professionals &amp; Investors</h3>
+            <p
+              data-en="Spot undervalued properties across Portugal before they show up everywhere else. Export structured data and move fast."
+              data-pt="Identifique propriedades subavaliadas em toda a região portuguesa antes de aparecerem em outros lugares. Exporte dados estruturados e avance rapidamente."
+              data-es="Identifica propiedades infravaloradas en la región portuguesa antes de que aparezcan en todas partes. Exporta datos estructurados y actúa rápido.">Spot undervalued properties across Portugal before they show up everywhere else. Export structured data and move fast.</p>
+          </div>
+        </article>
 
-        <div class="use-case-card animate-on-scroll" style="--i: 2">
-          <h3 data-en="Real Estate Companies" data-pt="Agências de Imóveis" data-es="Empresas Inmobiliarias">Real Estate Companies</h3>
-          <p
-            data-en="Run full market scans for clients with specific briefs. Deliver a professional, data-rich shortlist in minutes, not days."
-            data-pt="Realize varreduras completas do mercado para clientes com briefs específicos. Entregue uma lista profissional e rica em dados em minutos, não em dias."
-            data-es="Realiza análisis completos del mercado para clientes con requisitos específicos. Entrega una lista profesional y rica en datos en minutos, no en días.">Run full market scans for clients with specific briefs. Deliver a professional, data-rich shortlist in minutes, not days.</p>
-        </div>
+        <article class="use-case-card animate-on-scroll" style="--i: 2">
+          <div class="media media--filled use-case-media slot--who3"></div>
+          <div class="use-case-body">
+            <p class="use-case-meta">
+              <span class="use-case-index">03</span>
+              <span class="use-case-kicker" data-en="Searching for clients" data-pt="A procurar para clientes" data-es="Buscando para clientes">Searching for clients</span>
+            </p>
+            <h3 data-en="Real Estate Companies" data-pt="Agências de Imóveis" data-es="Empresas Inmobiliarias">Real Estate Companies</h3>
+            <p
+              data-en="Run full market scans for clients with specific briefs. Deliver a professional, data-rich shortlist in minutes."
+              data-pt="Realize varreduras completas do mercado para clientes com briefs específicos. Entregue uma lista profissional e rica em dados em minutos."
+              data-es="Realiza análisis completos del mercado para clientes con requisitos específicos. Entrega una lista profesional y rica en datos en minutos.">Run full market scans for clients with specific briefs. Deliver a professional, data-rich shortlist in minutes.</p>
+          </div>
+        </article>
       </div>
 
       <!-- Second block: what the data lets you know, rather than who it is for -->
@@ -265,15 +297,8 @@
           <li><span data-en="GIS map layers covering land classification and urban rehabilitation areas" data-pt="Camadas SIG com classificação do solo e áreas de reabilitação urbana" data-es="Capas SIG con clasificación del suelo y áreas de rehabilitación urbana">GIS map layers covering land classification and urban rehabilitation areas</span></li>
           <li><span data-en="Flood-risk zones and recorded wildfire history" data-pt="Zonas de risco de inundação e histórico de incêndios registados" data-es="Zonas de riesgo de inundación e historial de incendios registrados">Flood-risk zones and recorded wildfire history</span></li>
           <li><span data-en="Population and demographic analysis of the surrounding area" data-pt="Análise populacional e demográfica da zona envolvente" data-es="Análisis poblacional y demográfico del entorno">Population and demographic analysis of the surrounding area</span></li>
+          <li><span data-en="And more" data-pt="E mais" data-es="Y más">And more</span></li>
         </ul>
-
-        <!-- Three portrait slots rather than one wide band — the source
-             photography is all 2:3, which a 16:9 crop mangles. -->
-        <div class="photo-row informed-media">
-          <div class="media media--tall media--filled slot--layers1"></div>
-          <div class="media media--tall media--filled slot--layers2"></div>
-          <div class="media media--tall media--filled slot--layers3"></div>
-        </div>
       </div>
     </div>
   </section>
@@ -286,11 +311,15 @@
     <div class="container">
       <div class="origin-content animate-on-scroll measure">
         <span class="section-label" data-en="Our Story" data-pt="A Nossa História" data-es="Nuestra Historia">Our Story</span>
-        <h2 data-en="From a workaround to a tool" data-pt="De um improviso a uma ferramenta" data-es="De un apaño a una herramienta">From a workaround to a tool</h2>
+        <h2 data-en="We built it for ourselves first" data-pt="Construímos isto primeiro para nós" data-es="Lo construimos primero para nosotros">We built it for ourselves first</h2>
         <p class="origin-body"
-          data-en="Século started as a private workaround: a spreadsheet, a lot of open tabs, and no intention of showing it to anyone. What turned it into something worth sharing was the context. We kept finding that a listing's price told us almost nothing until we knew how the land was classified, where the water went in winter, and how the neighbourhood was changing. <strong>That context is now the centre of what we do.</strong>"
-          data-pt="O Século começou como um improviso privado: uma folha de cálculo, muitos separadores abertos e nenhuma intenção de o mostrar a alguém. O que o transformou em algo que valia a pena partilhar foi o contexto. Percebemos que o preço de um anúncio pouco nos dizia enquanto não soubéssemos como estava classificado o solo, por onde corria a água no inverno e como a zona estava a mudar. <strong>Esse contexto é hoje o centro do que fazemos.</strong>"
-          data-es="Século empezó como un apaño privado: una hoja de cálculo, muchas pestañas abiertas y ninguna intención de enseñárselo a nadie. Lo que lo convirtió en algo que merecía la pena compartir fue el contexto. Descubrimos que el precio de un anuncio decía muy poco hasta saber cómo estaba clasificado el suelo, por dónde iba el agua en invierno y cómo estaba cambiando el barrio. <strong>Ese contexto es hoy el centro de lo que hacemos.</strong>">Século started as a private workaround: a spreadsheet, a lot of open tabs, and no intention of showing it to anyone. What turned it into something worth sharing was the context. We kept finding that a listing's price told us almost nothing until we knew how the land was classified, where the water went in winter, and how the neighbourhood was changing. <strong>That context is now the centre of what we do.</strong></p>
+          data-en="Século began when we grew tired of looking for property options. Sleepless nights, hundreds of tabs open, and dozens of emails asking for more info on a property to find out more about the location."
+          data-pt="O Século nasceu quando nos cansámos de procurar imóveis. Noites sem dormir, centenas de separadores abertos e dezenas de emails a pedir mais informação sobre um imóvel para saber mais sobre a localização."
+          data-es="Século nació cuando nos cansamos de buscar propiedades. Noches sin dormir, cientos de pestañas abiertas y docenas de correos pidiendo más información sobre una propiedad para saber más sobre la ubicación.">Século began when we grew tired of looking for property options. Sleepless nights, hundreds of tabs open, and dozens of emails asking for more info on a property to find out more about the location.</p>
+        <p class="origin-body"
+          data-en="We created this to make our lives easier, and help people in similar situations trying to navigate the Portuguese housing and real estate market."
+          data-pt="Criámos isto para nos facilitar a vida e para ajudar quem está numa situação parecida, a tentar navegar o mercado habitacional e imobiliário português."
+          data-es="Lo creamos para hacernos la vida más fácil y para ayudar a quienes están en una situación parecida, intentando navegar el mercado de la vivienda y el inmobiliario portugués.">We created this to make our lives easier, and help people in similar situations trying to navigate the Portuguese housing and real estate market.</p>
       </div>
     </div>
   </section>
@@ -351,6 +380,7 @@
         <div class="footer-nav-col">
           <p class="footer-heading" data-en="Get Started" data-pt="Começar" data-es="Empezar">Get Started</p>
           <a href="products.html" class="btn btn-outline" data-en="Start finding" data-pt="Começar a Encontrar" data-es="Empezar a Encontrar">Start finding</a>
+          <a href="https://www.youtube.com/@seculopt" class="footer-tutorials" target="_blank" rel="noopener" data-en="Video tutorials" data-pt="Tutoriais em vídeo" data-es="Tutoriales en vídeo">Video tutorials</a>
           <a href="mailto:hello@seculopt.com" class="footer-email">hello@seculopt.com</a>
           <a href="https://wa.me/351912102647" class="footer-whatsapp" target="_blank" rel="noopener">WhatsApp</a>
         </div>
@@ -412,12 +442,12 @@
 
     /* Hero background, behind "Stop searching. Start finding." */
     .hero__bg {
-      --img: url('assets/images/kaboompics_an-old-mercedes-benz-parked-in-the-street-8262.jpg');
+      --img: url('assets/images/kaboompics_coffee-table-book-and-craspedia-flower-styled-on-dark-wood-43428.jpg');
     }
 
     /* Tall image beside "Finding a property shouldn't feel like a second job" */
     .slot--problem {
-      --img: url('assets/images/kaboompics_colorful-wooden-door-in-the-facade-of-a-typical-portuguese-house-at-lisbon-portugal-8276.jpg');
+      --img: url('assets/images/kaboompics_uncommon-black-console-with-travertine-and-wood-veneer-decor-37100.jpg');
     }
 
     /* How Século Works — these three appear under the cursor on hover,
@@ -429,18 +459,18 @@
       --img: url('assets/images/kaboompics_cityscape-of-lisbon-portugal-8435.jpg');
     }
     .slot--step3 {
-      --img: url('assets/images/kaboompics_casa-do-alentejo-lisbon-portugal-8325.jpg');
+      --img: url('assets/images/kaboompics_motion-blur-flash-photography-of-woman-typing-on-laptop-39777.jpg');
     }
 
-    /* Row of three under Make informed decisions */
-    .slot--layers1 {
-      --img: url('assets/images/kaboompics_portuguese-azulejos-typical-glazed-ceramic-tiles-with-marble-8238.jpg');
+    /* Who It's For — one photo per card, top to bottom */
+    .slot--who1 {
+      --img: url('assets/images/kaboompics_woman-starting-the-day-with-a-green-smoothie-39263.jpg');
     }
-    .slot--layers2 {
-      --img: url('assets/images/kaboompics_plants-of-portugal-8654.jpg');
+    .slot--who2 {
+      --img: url('assets/images/kaboompics_remote-work-and-home-office-with-laptop-phone-and-camera-38983.jpg');
     }
-    .slot--layers3 {
-      --img: url('assets/images/kaboompics_oranges-on-the-tree-8315.jpg');
+    .slot--who3 {
+      --img: url('assets/images/kaboompics_office-desk-flat-lay-with-retro-phone-notebook-and-glass-of-water-41953.jpg');
     }
 
     /* Paints whatever --img above points at. A filename that doesn't exist
@@ -488,9 +518,9 @@
       inset: 0;
       background: linear-gradient(
         to top,
-        rgba(246, 245, 240, 0.97) 0%,
-        rgba(246, 245, 240, 0.88) 45%,
-        rgba(246, 245, 240, 0.72) 100%
+        rgb(246, 245, 240) 0%,
+        rgba(246, 245, 240, 0.321) 45%,
+        rgba(246, 245, 240, 0.823) 100%
       );
     }
 
@@ -503,8 +533,13 @@
       padding: 0 var(--gutter) clamp(56px, 9vh, 104px);
     }
 
+    /* One measure for the whole hero column. Everything inside — heading,
+       copy, the two buttons and the rule above the stats — starts and ends
+       on the same two edges. The previous 22ch was resolved at body size, so
+       the column was narrower than the buttons and the stats sitting in it,
+       which is what left the rule short of the content beside it. */
     .hero-content {
-      max-width: 22ch;
+      max-width: 48ch;
     }
 
     /* The logo now opens the hero in place of the old eyebrow line. */
@@ -522,10 +557,11 @@
       margin-bottom: 20px;
     }
 
+    /* No measure of its own — the column already sets one, and a second
+       narrower cap here would pull the copy in off the rule below it. */
     .hero-sub {
       font-size: var(--t-lead);
       color: var(--color-mid);
-      max-width: 46ch;
       margin-bottom: 36px;
     }
 
@@ -610,8 +646,7 @@
       gap: 0;
     }
 
-    /* Same reasoning as the use-case cards: the rule below the final row
-       closes nothing, it just dangles. */
+    /* The rule below the final row closes nothing, it just dangles. */
     .ruled-list li:last-child {
       border-bottom: none;
     }
@@ -648,6 +683,40 @@
       max-width: 62ch;
     }
 
+    /* ── Link out to the tutorials ──
+       A drawn underline rather than a button: it leaves the site, so it should
+       not compete with the two real calls to action on the page. */
+    .steps-more {
+      margin-top: clamp(26px, 3.5vw, 40px);
+    }
+
+    .steps-more a {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: var(--t-small);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--color-primary);
+      padding-bottom: 5px;
+      border-bottom: 1px solid var(--rule-strong);
+      transition: color var(--transition), border-color var(--transition);
+    }
+
+    /* Marks the link as leaving the site. Set in CSS, not in the markup, so
+       the language switch cannot overwrite it. */
+    .steps-more a::after {
+      content: '\2197';
+      font-size: 0.95em;
+      line-height: 1;
+    }
+
+    .steps-more a:hover,
+    .steps-more a:focus-visible {
+      color: var(--color-accent);
+      border-bottom-color: var(--color-accent);
+    }
+
     /* ── Cursor-following photo (How Século Works) ──
        Fixed-position so it can sit over the section without affecting
        layout. Pointer-events off so it never blocks the text underneath.
@@ -657,7 +726,7 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: clamp(180px, 17vw, 260px);
+      width: clamp(148px, 13.5vw, 208px);
       aspect-ratio: 2 / 3;
       background-color: var(--color-sunken);
       background-size: cover;
@@ -686,14 +755,16 @@
       opacity: 1;
     }
 
-    /* ── Photo row ── */
-    .photo-row {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: clamp(12px, 2vw, 20px);
+    /* Step 03 closes the list with its own rule, so the divider this section
+       would otherwise draw at its top reads as a second line under it. */
+    .section + .use-cases-section::before {
+      content: none;
     }
 
-    /* ── Use Cases ── */
+    /* ── Use Cases ──
+       Cards, one per audience. Still squared and hairline-drawn rather than
+       shadowed — the box is the only concession, so the photography has an
+       edge to sit against. */
     .use-cases-header {
       margin-bottom: clamp(40px, 6vw, 72px);
     }
@@ -701,20 +772,52 @@
     .use-cases-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 0;
-      border-top: 1px solid var(--rule);
+      gap: clamp(20px, 3vw, 32px);
     }
 
     .use-case-card {
-      padding: clamp(28px, 4vw, 40px) 0;
-      border-bottom: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      background: var(--color-raised);
+      border: 1px solid var(--rule);
+      /* Keeps the photo inside the hairline while it scales on hover. */
+      overflow: hidden;
     }
 
-    /* Stacked on a phone the rules separate one card from the next, so the
-       one after the final card is doing nothing. */
-    .use-case-card:last-child {
-      border-bottom: none;
+    /* Landscape on a phone, where the card is full width; taller once the
+       cards sit side by side, which suits the 2:3 source photography. */
+    .use-case-media {
+      aspect-ratio: 4 / 3;
+      transition: transform 0.7s var(--ease-out), filter var(--transition);
     }
+
+    .use-case-card:hover .use-case-media {
+      transform: scale(1.04);
+    }
+
+    .use-case-body {
+      /* Grows to fill the card, so cards in a row end level even when one
+         paragraph runs a line longer. */
+      flex: 1;
+      padding: clamp(22px, 2.8vw, 34px);
+    }
+
+    /* Index and kicker on one drawn line, in the same mono voice as the
+       step numbers above. */
+    .use-case-meta {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      font-family: var(--font-mono);
+      font-size: var(--t-label);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      margin-bottom: 14px;
+    }
+
+    .use-case-index { color: var(--color-accent); }
+    .use-case-kicker { color: var(--color-mid); }
 
     .use-case-card h3 {
       margin-bottom: 12px;
@@ -737,17 +840,24 @@
       margin-bottom: 18px;
     }
 
-    .informed p {
-      margin-bottom: clamp(28px, 4vw, 40px);
+    /* These four are the substance of the section, so they carry ink and
+       weight rather than sitting in the grey of a secondary list. */
+    .informed .ruled-list li {
+      font-weight: 500;
+      color: var(--color-primary);
     }
 
-    .informed-media {
-      margin-top: clamp(36px, 5vw, 56px);
+    .informed p {
+      margin-bottom: clamp(28px, 4vw, 40px);
     }
 
     /* ── Origin ── */
     .origin-body {
       font-size: var(--t-lead);
+    }
+
+    .origin-body + .origin-body {
+      margin-top: 1.05em;
     }
 
     .origin-content h2 {
@@ -797,18 +907,10 @@
 
       .use-cases-grid {
         grid-template-columns: 1fr 1fr;
-        gap: 0 clamp(32px, 5vw, 64px);
       }
 
-      /* Side by side, a rule under each card no longer separates anything —
-         it just leaves a broken line with gaps where the columns divide.
-         The rule above the grid already sets the block off. */
-      .use-case-card {
-        border-bottom: none;
-      }
-
-      .photo-row {
-        grid-template-columns: repeat(3, 1fr);
+      .use-case-media {
+        aspect-ratio: 4 / 5;
       }
     }
 
@@ -828,6 +930,12 @@
       .steps-list.is-hovering .step-item {
         opacity: 1;
       }
+
+      .use-case-media,
+      .use-case-card:hover .use-case-media {
+        transition: none;
+        transform: none;
+      }
     }
 
     @media (min-width: 940px) {
@@ -845,15 +953,25 @@
       }
 
       .hero-content {
-        max-width: 17ch;
-      }
-
-      .hero-sub {
-        max-width: 48ch;
+        max-width: 52ch;
       }
 
       .problem-grid {
         grid-template-columns: 1.15fr 0.85fr;
+        /* The photo column is sized by the copy beside it rather than by its
+           own aspect ratio, so the two columns start and end level. */
+        align-items: stretch;
+      }
+
+      .problem-media {
+        height: 100%;
+      }
+
+      /* aspect-ratio has to go, or it would fight the full-height rule and
+         win — the crop is decided by the column height from here up. */
+      .problem-media .media {
+        height: 100%;
+        aspect-ratio: auto;
       }
 
       /* The step index sits in its own column, which is what gives the
@@ -874,7 +992,7 @@
 
     @media (min-width: 1100px) {
       .hero-content {
-        max-width: 15ch;
+        max-width: 56ch;
       }
     }
   </style>
