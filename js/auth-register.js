@@ -1,6 +1,5 @@
 // auth-register.js — register.html logic
-// Flow: name + email + password → signUp → Supabase sends ONE confirmation email
-// After confirmation, all future logins use email + password directly (no magic link).
+// Free user registration: name + email → Supabase signUp → confirmation email sent
 
 import { supabase } from './supabase-client.js';
 
@@ -30,10 +29,6 @@ const COPY = {
 const form    = document.getElementById('register-form');
 const nameIn  = document.getElementById('name-input');
 const emailIn = document.getElementById('email-input');
-const pwIn    = document.getElementById('password-input');
-const confirmPwIn = document.getElementById('confirm-pw-input');
-const togglePw = document.getElementById('toggle-pw');
-const toggleConfirmPw = document.getElementById('toggle-confirm-pw');
 const btn     = document.getElementById('register-btn');
 const message = document.getElementById('register-message');
 
@@ -50,48 +45,12 @@ const returnUrl = (action === 'share' && propId)
   ? `/dashboard.html?action=share&prop=${propId}`
   : '/dashboard.html';
 
-// Show/hide password toggles
-if (togglePw) {
-  togglePw.addEventListener('click', function () {
-    const isHidden = pwIn.type === 'password';
-    pwIn.type = isHidden ? 'text' : 'password';
-    togglePw.textContent = isHidden ? '🙈' : '👁';
-  });
-}
-if (toggleConfirmPw) {
-  toggleConfirmPw.addEventListener('click', function () {
-    const isHidden = confirmPwIn.type === 'password';
-    confirmPwIn.type = isHidden ? 'text' : 'password';
-    toggleConfirmPw.textContent = isHidden ? '🙈' : '👁';
-  });
-}
-
 form.addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  const name     = nameIn.value.trim();
-  const email    = emailIn.value.trim();
-  const password = pwIn.value;
-  const confirmPw = confirmPwIn ? confirmPwIn.value : password;
-  const lang     = document.documentElement.lang || 'pt';
-
-  if (!name || !email || !password) return;
-
-  if (password.length < 8) {
-    message.textContent = lang === 'pt'
-      ? 'A password deve ter pelo menos 8 caracteres.'
-      : 'Password must be at least 8 characters.';
-    message.className = 'auth-message auth-message--error';
-    return;
-  }
-
-  if (password !== confirmPw) {
-    message.textContent = lang === 'pt'
-      ? 'As passwords não coincidem.'
-      : 'Passwords do not match.';
-    message.className = 'auth-message auth-message--error';
-    return;
-  }
+  const name  = nameIn.value.trim();
+  const email = emailIn.value.trim();
+  if (!name || !email) return;
 
   btn.disabled = true;
   message.textContent = '';
@@ -104,7 +63,7 @@ form.addEventListener('submit', async function (e) {
 
   const { error } = await supabase.auth.signUp({
     email,
-    password,
+    password: crypto.randomUUID(), // random password — user always uses magic link
     options: {
       data: { full_name: name, tier: 'free', ...utm },
       emailRedirectTo: 'https://seculopt.com' + returnUrl,
@@ -120,17 +79,14 @@ form.addEventListener('submit', async function (e) {
   }
 
   if (error && error.message === 'User already registered') {
-    // User exists — tell them to log in
-    btn.disabled = false;
-    btn.textContent = lang === 'pt' ? 'Criar conta' : 'Create account';
-    message.innerHTML = lang === 'pt'
-      ? 'Já tens uma conta. <a href="login.html">Entra aqui</a>.'
-      : 'You already have an account. <a href="login.html">Log in here</a>.';
-    message.className = 'auth-message auth-message--error';
-    return;
+    // User exists → send magic link instead
+    await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: 'https://seculopt.com' + returnUrl },
+    });
   }
 
-  // Success — confirmation email sent
+  // Success either way
   form.style.display = 'none';
   message.textContent = copy.created;
   message.className = 'auth-message auth-message--success';
