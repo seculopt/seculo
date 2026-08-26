@@ -4,15 +4,33 @@
 
 import { supabase } from './supabase-client.js';
 
-const form        = document.getElementById('login-form');
-const emailInput  = document.getElementById('email-input');
-const pwInput     = document.getElementById('password-input');
-const togglePw    = document.getElementById('toggle-pw');
-const btn         = document.getElementById('send-btn');
-const message     = document.getElementById('login-message');
-const resendWrap  = document.getElementById('resend-wrap');
-const resendBtn   = document.getElementById('resend-btn');
-const resendMsg   = document.getElementById('resend-message');
+// Runtime copy for the three site languages. The page's static text comes from
+// data-en/pt/es attributes; these are the strings only JS ever writes.
+const COPY = {
+  en: {
+    sending: 'Sending...',
+    submit:  'Send login link',
+    error:   'Something went wrong. Please try again.',
+    sent:    'Link sent! Check your inbox.',
+  },
+  pt: {
+    sending: 'A enviar...',
+    submit:  'Enviar link de acesso',
+    error:   'Ocorreu um erro. Por favor tenta de novo.',
+    sent:    'Link enviado! Verifica o teu email.',
+  },
+  es: {
+    sending: 'Enviando...',
+    submit:  'Enviar enlace de acceso',
+    error:   'Ocurrió un error. Inténtalo de nuevo.',
+    sent:    '¡Enlace enviado! Revisa tu correo.',
+  },
+};
+
+const form    = document.getElementById('login-form');
+const input   = document.getElementById('email-input');
+const btn     = document.getElementById('send-btn');
+const message = document.getElementById('login-message');
 
 // Handle auth callback: if Supabase redirected here with ?code= (email confirmation),
 // exchange the code for a session and go to dashboard immediately.
@@ -54,67 +72,32 @@ form.addEventListener('submit', async function (e) {
 
   if (!email) return;
 
-  // Require password — no magic link from this form
-  if (!password) {
-    message.textContent = lang === 'pt'
-      ? 'Por favor introduz a tua password.'
-      : 'Please enter your password.';
-    message.className = 'auth-message auth-message--error';
-    return;
-  }
-
   btn.disabled = true;
   message.textContent = '';
   message.className = '';
-  btn.textContent = lang === 'pt' ? 'A entrar...' : 'Signing in...';
 
-  let data, error;
-  try {
-    ({ data, error } = await supabase.auth.signInWithPassword({ email, password }));
-  } catch (networkErr) {
-    btn.disabled = false;
-    btn.textContent = lang === 'pt' ? 'Entrar' : 'Log in';
-    message.textContent = lang === 'pt'
-      ? 'Erro de ligação. Verifica a tua internet e tenta de novo.'
-      : 'Connection error. Check your internet and try again.';
-    message.className = 'auth-message auth-message--error';
-    return;
-  }
+  const copy = COPY[document.documentElement.lang] || COPY.en;
+  btn.textContent = copy.sending;
 
-  btn.disabled = false;
-  btn.textContent = lang === 'pt' ? 'Entrar' : 'Log in';
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: 'https://seculopt.com/dashboard.html',
+    },
+  });
 
   if (error) {
-    const msg = error.message ? error.message.toLowerCase() : '';
-    const isCredentialError = msg.includes('invalid') || msg.includes('credentials') || msg.includes('password');
-    const isNotConfirmed    = msg.includes('confirm') || msg.includes('not confirmed') || msg.includes('email');
-
-    if (isNotConfirmed && !isCredentialError) {
-      message.textContent = lang === 'pt'
-        ? 'Confirma o teu email antes de entrar. Verifica a tua caixa de entrada e clica no link de confirmação.'
-        : 'Please confirm your email before logging in. Check your inbox and click the confirmation link.';
-      if (resendWrap) resendWrap.style.display = 'block';
-    } else if (isCredentialError) {
-      message.textContent = lang === 'pt'
-        ? 'Email ou password incorretos.'
-        : 'Invalid email or password.';
-    } else {
-      message.textContent = (lang === 'pt' ? 'Ocorreu um erro: ' : 'Error: ') + (error.message || 'unknown');
-    }
+    btn.disabled = false;
+    btn.textContent = copy.submit;
+    message.textContent = copy.error;
     message.className = 'auth-message auth-message--error';
     return;
   }
 
-  if (data?.session) {
-    window.location.href = 'dashboard.html';
-    return;
-  }
-
-  // Supabase returned no session and no error — show a visible message instead of silently freezing.
-  message.textContent = lang === 'pt'
-    ? 'Não foi possível iniciar sessão. Tenta de novo.'
-    : 'Could not sign in. Please try again.';
-  message.className = 'auth-message auth-message--error';
+  // Success
+  form.style.display = 'none';
+  message.textContent = copy.sent;
+  message.className = 'auth-message auth-message--success';
 });
 
 // Resend confirmation email

@@ -5,10 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Log in to Século Explorer — access your saved properties and analyses." />
   <title>Log In — Século Explorer</title>
+  <!-- Favicons — the S from the wordmark, reversed out of brand ink. -->
+  <link rel="icon" href="/favicon.ico?v=2" sizes="32x32" />
+  <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
+
+
+  <!-- Set before first paint so scroll-reveal elements are only hidden when
+       JS is actually available to reveal them again. -->
+  <script>document.documentElement.classList.add('js');</script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@200;300;400;500;600;700&family=Zalando+Sans+Expanded:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/nav.css" />
@@ -33,7 +42,7 @@
       box-shadow: 0 4px 24px rgba(25,25,39,0.07);
     }
     .auth-logo {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--font-display);
       font-size: 1.2rem;
       font-weight: 600;
       letter-spacing: 0.1em;
@@ -42,7 +51,7 @@
       margin-bottom: 2rem;
     }
     .auth-title {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--font-display);
       font-size: 1.5rem;
       font-weight: 600;
       color: var(--color-primary);
@@ -71,7 +80,7 @@
       border-radius: 6px;
       padding: 0.7rem 0.9rem;
       font-size: 0.9rem;
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--font-body);
       color: var(--color-primary);
       background: var(--color-white);
       transition: border-color 0.15s;
@@ -124,9 +133,9 @@
       display: block;
     }
     .auth-message--error {
-      background: #fdf2f2;
-      border: 1px solid #e8b4b4;
-      color: #c0392b;
+      background: var(--color-raised);
+      border: 1px solid var(--rule-strong);
+      color: var(--brand-terracotta);
       display: block;
     }
     .auth-footer-note {
@@ -146,18 +155,24 @@
   <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
       <a href="index.html" class="nav-logo" aria-label="Século Explorer — Home">
-        <img src="assets/logo-light.svg" alt="Século Explorer" />
+        <img src="assets/logo.svg" alt="Século Explorer" />
       </a>
       <ul class="nav-links">
-        <li><a href="index.html" data-en="Home" data-pt="Início">Home</a></li>
-        <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona">How It Works</a></li>
-        <li><a href="products.html" data-en="Plans" data-pt="Planos">Plans</a></li>
-        <li><a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-outline" data-en="Try for free" data-pt="Experimenta Grátis">Try for free</a></li>
+        <li><a href="index.html" data-en="Home" data-pt="Início" data-es="Inicio">Home</a></li>
+        <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona" data-es="Cómo Funciona">How It Works</a></li>
+        <li><a href="index.html#use-cases" data-en="Use Cases" data-pt="Casos de Uso" data-es="Casos de Uso">Use Cases</a></li>
+        <li><a href="products.html" data-en="Plans" data-pt="Planos" data-es="Planes">Plans</a></li>
+        <li><a href="login.html" class="nav-login" data-en="Log In" data-pt="Entrar" data-es="Entrar">Log In</a></li>
+        <li>
+          <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" data-en="Try For Free" data-pt="Experimenta Grátis" data-es="Pruébalo Gratis">Try For Free</a>
+        </li>
       </ul>
       <div class="lang-toggle">
         <button class="lang-btn active" data-lang="en">EN</button>
-        <span>|</span>
+        <span>/</span>
         <button class="lang-btn" data-lang="pt">PT</button>
+        <span>/</span>
+        <button class="lang-btn" data-lang="es">ES</button>
       </div>
       <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -171,16 +186,17 @@
       <div class="auth-logo">SÉCULO</div>
 
       <div id="formView">
-        <h1 class="auth-title" data-en="Log in" data-pt="Entrar">Log in</h1>
+        <h1 class="auth-title" data-en="Log in" data-pt="Entrar" data-es="Iniciar sesión">Log in</h1>
         <p class="auth-subtitle"
-          data-en="Enter your email and password to access your account."
-          data-pt="Introduz o teu email e password para aceder à tua conta.">
-          Enter your email and password to access your account.
+          data-en="Enter your email. We'll send you a login link — no password needed."
+          data-pt="Introduz o teu email. Enviamos um link de acesso direto — sem password."
+          data-es="Introduce tu email. Te enviamos un enlace de acceso — sin contraseña.">
+          Enter your email. We'll send you a login link — no password needed.
         </p>
 
         <form id="login-form">
           <div class="auth-field">
-            <label data-en="Email address" data-pt="Endereço de email">Email address</label>
+            <label data-en="Email address" data-pt="Endereço de email" data-es="Dirección de email">Email address</label>
             <input type="email" id="email-input" required
               placeholder="email@example.com"
               autocomplete="email" />
@@ -198,33 +214,22 @@
             </div>
           </div>
           <button type="submit" id="send-btn" class="btn btn-primary auth-btn"
-            data-en="Log in" data-pt="Entrar">
-            Log in
+            data-en="Send login link" data-pt="Enviar link de acesso" data-es="Enviar enlace de acceso">
+            Send login link
           </button>
         </form>
 
         <p id="login-message" class="auth-message"></p>
 
-        <div id="resend-wrap" style="display:none;text-align:center;margin-top:0.75rem">
-          <button type="button" id="resend-btn"
-            style="background:none;border:none;color:var(--color-accent);font-size:0.83rem;cursor:pointer;text-decoration:underline;padding:0;"
-            data-en="Resend confirmation email" data-pt="Reenviar email de confirmação">Resend confirmation email</button>
-          <p id="resend-message" style="font-size:0.78rem;margin-top:0.4rem;color:var(--color-mid);display:none;"></p>
-        </div>
-
-        <p class="auth-alt" style="margin-top:0.5rem">
-          <a href="forgot-password.html" data-en="Forgot your password?" data-pt="Esqueceste a password?">Forgot your password?</a>
-        </p>
-
-        <div class="auth-divider" data-en="or" data-pt="ou">or</div>
+        <div class="auth-divider" data-en="or" data-pt="ou" data-es="o">or</div>
         <p class="auth-alt">
-          <span data-en="Don't have an account?" data-pt="Ainda não tens conta?">Don't have an account?</span>
-          <a href="register.html" data-en="Register for free" data-pt="Registar grátis">Register for free</a>
+          <span data-en="Don't have an account?" data-pt="Ainda não tens conta?" data-es="¿Aún no tienes cuenta?">Don't have an account?</span>
+          <a href="register.html" data-en="Register for free" data-pt="Registar grátis" data-es="Regístrate gratis">Register for free</a>
         </p>
       </div>
 
       <div class="auth-footer-note">
-        <a href="privacy-policy.html" data-en="Privacy Policy" data-pt="Política de Privacidade">Privacy Policy</a>
+        <a href="privacy-policy.html" data-en="Privacy Policy" data-pt="Política de Privacidade" data-es="Política de Privacidad">Privacy Policy</a>
         &nbsp;·&nbsp;
         <a href="mailto:suporte@seculopt.com">suporte@seculopt.com</a>
       </div>

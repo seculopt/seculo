@@ -5,11 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Choose your Século Explorer plan. One-time reports or professional subscriptions — AI-matched property shortlists for every need." />
   <title>Plans &amp; Pricing — Século Explorer</title>
+  <!-- Favicons — the S from the wordmark, reversed out of brand ink. -->
+  <link rel="icon" href="/favicon.ico?v=2" sizes="32x32" />
+  <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
+
 
   <!-- Google Fonts -->
+  <!-- Set before first paint so scroll-reveal elements are only hidden when
+       JS is actually available to reveal them again. -->
+  <script>document.documentElement.classList.add('js');</script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@200;300;400;500;600;700&family=Zalando+Sans+Expanded:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet" />
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/style.css" />
@@ -47,18 +56,17 @@
   <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
       <a href="index.html" class="nav-logo" aria-label="Século Explorer — Home">
-        <img src="assets/logo-light.svg" alt="Século Explorer" />
+        <img src="assets/logo.svg" alt="Século Explorer" />
       </a>
+      <!-- Same menu as the rest of the site — see index.html. -->
       <ul class="nav-links">
         <li><a href="index.html" data-en="Home" data-pt="Início" data-es="Inicio">Home</a></li>
         <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona" data-es="Cómo Funciona">How It Works</a></li>
         <li><a href="index.html#use-cases" data-en="Use Cases" data-pt="Casos de Uso" data-es="Casos de Uso">Use Cases</a></li>
-        <li><a href="contact.html" data-en="Contact" data-pt="Contacto" data-es="Contacto">Contact</a></li>
+        <li><a href="products.html" data-en="Plans" data-pt="Planos" data-es="Planes">Plans</a></li>
+        <li><a href="login.html" class="nav-login" data-en="Log In" data-pt="Entrar" data-es="Entrar">Log In</a></li>
         <li>
-          <a href="products.html" class="btn btn-outline" data-en="Start Finding" data-pt="Começar a Encontrar" data-es="Empezar a Encontrar">Start Finding</a>
-        </li>
-        <li class="nav-login" id="navLoginBtn">
-          <a href="login.html" class="btn btn-outline btn-sm" data-en="Log in" data-pt="Entrar" data-es="Entrar">Log in</a>
+          <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" data-en="Try For Free" data-pt="Experimenta Grátis" data-es="Pruébalo Gratis">Try For Free</a>
         </li>
       </ul>
       <div class="nav-user" id="navUser" style="display:none;">
@@ -70,9 +78,9 @@
       </div>
       <div class="lang-toggle">
         <button class="lang-btn active" data-lang="en">EN</button>
-        <span>|</span>
+        <span>/</span>
         <button class="lang-btn" data-lang="pt">PT</button>
-        <span>|</span>
+        <span>/</span>
         <button class="lang-btn" data-lang="es">ES</button>
       </div>
       <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
@@ -87,7 +95,6 @@
   ══════════════════════════════════════════ -->
   <section class="pricing-hero">
     <div class="container">
-      <span class="section-label" data-en="Plans &amp; Pricing" data-pt="Planos e Preços" data-es="Planes y Precios">Plans &amp; Pricing</span>
       <h1
         data-en="Every portal. One search. Better decisions."
         data-pt="Todos os portais. Uma pesquisa. Melhores decisões."
@@ -485,24 +492,6 @@
           </ul>
           <button class="plan-read-more" data-en="See more" data-pt="Ver mais" data-es="Ver más">See more</button>
 
-          <!-- Product screenshots carousel -->
-          <div class="plan-media" data-carousel>
-            <div class="plan-media-track">
-              <img src="assets/products/pro-investor/ezgif.com-animated-gif-maker.gif"
-                   alt="Pro Investor — Live deal flow"
-                   class="plan-media-slide" loading="lazy" />
-              <img src="assets/products/pro-investor/image 2222.png"
-                   alt="Pro Investor — Overview"
-                   class="plan-media-slide" loading="lazy" />
-            </div>
-            <button class="plan-media-arrow plan-media-arrow--prev" aria-label="Previous screenshot">&#8249;</button>
-            <button class="plan-media-arrow plan-media-arrow--next" aria-label="Next screenshot">&#8250;</button>
-            <div class="plan-media-dots">
-              <span class="plan-media-dot is-active"></span>
-              <span class="plan-media-dot"></span>
-            </div>
-          </div>
-
           <button class="btn btn-outline plan-cta" data-tier="pro_investor"
             data-en="Get Pro Investor" data-pt="Obter Pro Investor" data-es="Obtener Pro Investor">Get Pro Investor</button>
         </div>
@@ -546,6 +535,7 @@
         <div class="footer-nav-col">
           <p class="footer-heading" data-en="Get Started" data-pt="Começar" data-es="Empezar">Get Started</p>
           <a href="products.html" class="btn btn-outline" data-en="Start Finding" data-pt="Começar a Encontrar" data-es="Empezar a Encontrar">Start Finding</a>
+          <a href="https://www.youtube.com/@seculopt" class="footer-tutorials" target="_blank" rel="noopener" data-en="Video tutorials" data-pt="Tutoriais em vídeo" data-es="Tutoriales en vídeo">Video tutorials</a>
           <a href="mailto:hello@seculopt.com" class="footer-email">hello@seculopt.com</a>
           <a href="https://wa.me/351912102647" class="footer-whatsapp" target="_blank" rel="noopener">WhatsApp</a>
         </div>
@@ -583,19 +573,16 @@
   <!-- ══════════════════════════════════════════
        EMAIL CHECKOUT MODAL
   ══════════════════════════════════════════ -->
-  <div id="checkout-overlay" style="display:none;position:fixed;inset:0;background:rgba(25,25,39,0.82);z-index:1000;align-items:center;justify-content:center;">
+  <div id="checkout-overlay" style="display:none;position:fixed;inset:0;background:rgba(62,58,55,0.86);z-index:1000;align-items:center;justify-content:center;">
     <div style="background:var(--color-bg);border-radius:4px;padding:40px 36px;max-width:420px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,0.4);">
       <h3 style="font-family:var(--font-display);margin-bottom:8px;" id="checkout-modal-title">Enter your email to continue</h3>
       <p style="color:var(--color-mid);font-size:0.9rem;margin-bottom:24px;" id="checkout-modal-sub">We will send your access link to this address after payment.</p>
       <input type="email" id="checkout-email"
-        style="width:100%;padding:12px 14px;border:1.5px solid var(--color-divider);border-radius:4px;font-family:var(--font-body);font-size:0.95rem;background:#fff;margin-bottom:8px;box-sizing:border-box;"
+        style="width:100%;padding:12px 14px;border:1.5px solid var(--color-divider);border-radius:4px;font-family:var(--font-body);font-size:0.95rem;background:var(--brand-light);margin-bottom:12px;box-sizing:border-box;"
         placeholder="email@example.com" autocomplete="email" />
-      <input type="email" id="checkout-email-confirm"
-        style="width:100%;padding:12px 14px;border:1.5px solid var(--color-divider);border-radius:4px;font-family:var(--font-body);font-size:0.95rem;background:#fff;margin-bottom:12px;box-sizing:border-box;"
-        placeholder="Confirm email address" autocomplete="email" />
-      <p id="checkout-error" style="display:none;color:#c0392b;font-size:0.82rem;margin-bottom:10px;"></p>
+      <p id="checkout-error" style="display:none;color:var(--brand-terracotta);font-size:0.82rem;margin-bottom:10px;"></p>
       <button id="checkout-confirm" disabled
-        style="width:100%;padding:13px;background:var(--color-primary);color:#fff;border:none;border-radius:4px;font-family:var(--font-body);font-weight:600;font-size:0.95rem;cursor:pointer;margin-bottom:10px;"
+        style="width:100%;padding:13px;background:var(--color-primary);color:var(--color-on-dark);border:none;border-radius:4px;font-family:var(--font-body);font-weight:600;font-size:0.95rem;cursor:pointer;margin-bottom:10px;"
         data-en="Continue to payment" data-pt="Continuar para pagamento">Continue to payment</button>
       <button id="checkout-cancel"
         style="width:100%;padding:10px;background:transparent;color:var(--color-mid);border:1.5px solid var(--color-divider);border-radius:4px;font-family:var(--font-body);font-size:0.88rem;cursor:pointer;"
@@ -798,30 +785,19 @@
     /* ── Pricing Hero ── */
     .pricing-hero {
       background: var(--color-primary);
-      background-image: repeating-linear-gradient(
-        135deg,
-        transparent, transparent 59px,
-        rgba(200, 169, 110, 0.06) 59px,
-        rgba(200, 169, 110, 0.06) 60px
-      );
       padding: 96px 0 80px;
       text-align: center;
     }
 
-    .pricing-hero .section-label {
-      color: var(--color-accent);
-      margin-bottom: 20px;
-    }
-
     .pricing-hero h1 {
-      color: var(--color-white);
+      color: var(--color-on-dark);
       font-size: 2.8rem;
       max-width: 640px;
       margin: 0 auto 20px;
     }
 
     .pricing-hero-sub {
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(240, 238, 232, 0.6);
       font-size: 1rem;
       max-width: 560px;
       margin: 0 auto;
@@ -832,8 +808,10 @@
       background: var(--color-bg);
     }
 
+    /* One ground for both sections, as everywhere else on the site — the
+       hairline between sections does the separating, not a change of fill. */
     .pricing-section--alt {
-      background: var(--color-white);
+      background: var(--color-bg);
     }
 
     .pricing-section-header {
@@ -872,9 +850,29 @@
       grid-template-columns: repeat(3, 1fr);
     }
 
-    /* ── Plan Card ── */
+    /* Five across is the tightest the cards ever get, so they give back a
+       little side padding — that is what buys the CTA its single line. */
+    .plans-grid--5 .plan-card {
+      padding: 26px 18px;
+    }
+
+    .plans-grid--5 .plan-card--featured {
+      padding-top: 42px;
+    }
+
+    /* The longest labels here are "Get Investment Match" and its translations.
+       A step down in size keeps every one of them inside two lines at this
+       column width, which is what keeps the row of buttons even. */
+    .plans-grid--5 .plan-cta {
+      font-size: var(--t-label);
+      padding: 10px 12px;
+    }
+
+    /* ── Plan Card ──
+       Same card as the home page: raised a hair off the ground, hairline
+       border, squared corners. */
     .plan-card {
-      background: var(--color-white);
+      background: var(--color-raised);
       border: 1px solid var(--color-divider);
       border-radius: var(--radius);
       padding: 28px 22px;
@@ -885,13 +883,12 @@
       min-width: 0;
     }
 
-    .pricing-section--alt .plan-card {
-      background: var(--color-bg);
-    }
-
+    /* The highlighted card is marked by inverting it onto the ink surface —
+       the same move as the nav and footer. That is the whole highlight; it
+       needs no second accent colour on top of it. */
     .plan-card--featured {
       background: var(--color-primary);
-      border-color: var(--color-accent);
+      border-color: var(--color-primary);
       padding-top: 44px;
     }
 
@@ -900,11 +897,11 @@
       top: -1px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--color-accent);
+      background: var(--brand-light);
       color: var(--color-primary);
       font-family: var(--font-body);
       font-size: 0.7rem;
-      font-weight: 700;
+      font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       padding: 4px 14px;
@@ -912,10 +909,12 @@
       white-space: nowrap;
     }
 
-    /* ── Audience label ── */
+    /* ── Audience label ──
+       Grey, like every other meta line on the site. It was terracotta, which
+       read as a warning next to a price. */
     .plan-audience {
       font-size: 0.78rem;
-      color: var(--color-accent);
+      color: var(--color-mid);
       font-family: var(--font-body);
       font-weight: 500;
       line-height: 1.4;
@@ -924,7 +923,7 @@
     }
 
     .plan-audience--featured {
-      color: rgba(200, 169, 110, 0.8);
+      color: rgba(240, 238, 232, 0.72);
     }
 
     /* ── Plan header ── */
@@ -942,7 +941,7 @@
     }
 
     .plan-card--featured .plan-name {
-      color: var(--color-white);
+      color: var(--color-on-dark);
     }
 
     .plan-price {
@@ -951,18 +950,20 @@
       gap: 4px;
     }
 
+    /* The price is set in ink, not in the accent. A red number beside a
+       currency reads as a debit or an error rather than a price. */
     .plan-amount {
       font-family: var(--font-mono);
       font-size: 2.2rem;
       font-weight: 600;
-      color: var(--color-accent);
+      color: var(--color-primary);
       line-height: 1;
     }
 
     .plan-currency {
       font-family: var(--font-mono);
       font-size: 0.85rem;
-      color: var(--color-accent);
+      color: var(--color-mid);
     }
 
     .plan-period {
@@ -970,8 +971,13 @@
       color: var(--color-mid);
     }
 
+    .plan-card--featured .plan-amount {
+      color: var(--color-on-dark);
+    }
+
+    .plan-card--featured .plan-currency,
     .plan-card--featured .plan-period {
-      color: rgba(255, 255, 255, 0.45);
+      color: rgba(240, 238, 232, 0.62);
     }
 
     /* ── Description ── */
@@ -992,14 +998,14 @@
     }
 
     .plan-card--featured .plan-description {
-      color: rgba(255, 255, 255, 0.65);
+      color: rgba(240, 238, 232, 0.78);
     }
 
     /* ── See more toggle ── */
     .plan-read-more {
       font-family: var(--font-body);
       font-size: 0.78rem;
-      color: var(--color-accent);
+      color: var(--color-primary);
       cursor: pointer;
       text-decoration: underline;
       text-decoration-style: dotted;
@@ -1017,29 +1023,48 @@
     }
 
     .plan-card--featured .plan-read-more {
-      color: rgba(200, 169, 110, 0.85);
+      color: var(--color-on-dark);
     }
 
     .plan-read-more.is-hidden {
       display: none;
     }
 
-    /* ── CTA ── */
+    /* ── CTA ──
+       Opts out of the 200px minimum every other button on the site shares: a
+       card in the five-up grid is only ~215px wide, so 200px plus the card
+       padding pushed the button past the card's own edge. It is sized to the
+       card instead, and carries one fixed height so a label that wraps to two
+       lines still frames like the labels that fit on one. */
     .plan-cta {
       width: 100%;
+      min-width: 0;
+      min-height: 54px;
+      padding: 10px 14px;
       justify-content: center;
+      text-align: center;
       margin-top: auto;
       white-space: normal;
-      word-break: break-word;
+      /* Wraps at spaces, and only breaks inside a word if a single word is
+         genuinely wider than the button. */
+      overflow-wrap: break-word;
+      letter-spacing: 0.05em;
+      line-height: 1.25;
     }
 
+    /* On the ink card the dark primary button would disappear, so it inverts:
+       light fill, ink label. Hover keeps the site's terracotta wipe, with the
+       label going light so it stays readable over the fill. */
     .plan-card--featured .btn-primary {
-      background: var(--color-accent);
+      background: var(--brand-light);
+      border-color: var(--brand-light);
       color: var(--color-primary);
     }
 
-    .plan-card--featured .btn-primary:hover {
-      background: var(--color-white);
+    .plan-card--featured .btn-primary:hover,
+    .plan-card--featured .btn-primary:focus-visible {
+      border-color: var(--color-accent);
+      color: var(--brand-light);
     }
 
     /* ── Plan Media Carousel ── */
@@ -1072,8 +1097,8 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(25, 25, 39, 0.55);
-      color: #fff;
+      background: rgba(62, 58, 55, 0.6);
+      color: var(--color-on-dark);
       border: none;
       border-radius: 50%;
       width: 28px;
@@ -1108,12 +1133,12 @@
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.45);
+      background: rgba(240, 238, 232, 0.45);
       transition: background 0.2s, transform 0.2s;
     }
 
     .plan-media-dot.is-active {
-      background: #fff;
+      background: var(--brand-light);
       transform: scale(1.2);
     }
 
@@ -1122,7 +1147,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(10, 10, 20, 0.92);
+      background: rgba(62, 58, 55, 0.94);
       z-index: 2000;
       align-items: center;
       justify-content: center;
@@ -1151,7 +1176,7 @@
       right: 0;
       background: none;
       border: none;
-      color: #fff;
+      color: var(--color-on-dark);
       font-size: 1.6rem;
       cursor: pointer;
       line-height: 1;
@@ -1164,8 +1189,8 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(255,255,255,0.12);
-      color: #fff;
+      background: rgba(240,238,232,0.12);
+      color: var(--color-on-dark);
       border: none;
       border-radius: 50%;
       width: 40px;
@@ -1194,6 +1219,10 @@
       }
     }
 
+    /* Two cards a row all the way down to the smallest phone, rather than a
+       single stack — a column of full-width cards buries the cheaper plans
+       several screens deep. Everything inside the card tightens to pay for
+       the narrower column. */
     @media (max-width: 600px) {
       .pricing-hero h1 {
         font-size: 2rem;
@@ -1201,7 +1230,39 @@
 
       .plans-grid--5,
       .plans-grid--3 {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .plans-grid--5 .plan-card,
+      .plans-grid--3 .plan-card {
+        padding: 20px 14px;
+        gap: 16px;
+      }
+
+      /* Still clears the badge sitting on the card's top edge. */
+      .plans-grid--5 .plan-card--featured,
+      .plans-grid--3 .plan-card--featured {
+        padding-top: 38px;
+      }
+
+      .plans-grid--5 .plan-cta,
+      .plans-grid--3 .plan-cta {
+        font-size: var(--t-label);
+        padding: 10px 8px;
+        letter-spacing: 0.03em;
+      }
+
+      .plan-amount {
+        font-size: 1.8rem;
+      }
+
+      .plan-audience {
+        font-size: 0.74rem;
+      }
+
+      .plan-description {
+        font-size: 0.8rem;
       }
     }
 

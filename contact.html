@@ -5,11 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Request a demo of Século Explorer — the intelligent property search tool for the Portuguese real estate market." />
   <title>Request a Demo — Século Explorer</title>
+  <!-- Favicons — the S from the wordmark, reversed out of brand ink. -->
+  <link rel="icon" href="/favicon.ico?v=2" sizes="32x32" />
+  <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
+
 
   <!-- Google Fonts -->
+  <!-- Set before first paint so scroll-reveal elements are only hidden when
+       JS is actually available to reveal them again. -->
+  <script>document.documentElement.classList.add('js');</script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@200;300;400;500;600;700&family=Zalando+Sans+Expanded:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet" />
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/style.css" />
@@ -25,7 +34,7 @@
     <div class="nav-inner">
       <!-- Logo -->
       <a href="index.html" class="nav-logo" aria-label="Século Explorer — Home">
-        <img src="assets/logo-light.svg" alt="Século Explorer" />
+        <img src="assets/logo.svg" alt="Século Explorer" />
       </a>
 
       <!-- Links -->
@@ -34,9 +43,9 @@
         <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona" data-es="Cómo Funciona">How It Works</a></li>
         <li><a href="index.html#use-cases" data-en="Use Cases" data-pt="Casos de Uso" data-es="Casos de Uso">Use Cases</a></li>
         <li><a href="products.html" data-en="Plans" data-pt="Planos" data-es="Planes">Plans</a></li>
-        <li><a href="login.html" data-en="Log in" data-pt="Entrar" data-es="Entrar">Log in</a></li>
+        <li><a href="login.html" class="nav-login" data-en="Log In" data-pt="Entrar" data-es="Entrar">Log In</a></li>
         <li>
-          <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" data-en="Try it free" data-pt="Experimenta grátis" data-es="Pruébalo gratis">Try it free</a>
+          <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" data-en="Try For Free" data-pt="Experimenta Grátis" data-es="Pruébalo Gratis">Try For Free</a>
         </li>
       </ul>
 
@@ -171,7 +180,7 @@
               </div>
             </div>
 
-            <button type="submit" class="btn btn-primary form-submit" data-en="Email Us &#x2192;" data-pt="Enviar Email &#x2192;" data-es="Escríbenos &#x2192;">Email Us &#x2192;</button>
+            <button type="submit" class="btn btn-primary form-submit" data-en="Email us" data-pt="Enviar email" data-es="Escríbenos">Email us</button>
           </form>
         </div>
 
@@ -219,6 +228,7 @@
         <div class="footer-nav-col">
           <p class="footer-heading" data-en="Get Started" data-pt="Começar" data-es="Empezar">Get Started</p>
           <a href="products.html" class="btn btn-outline" data-en="Start Finding" data-pt="Começar a Encontrar" data-es="Empezar a Encontrar">Start Finding</a>
+          <a href="https://www.youtube.com/@seculopt" class="footer-tutorials" target="_blank" rel="noopener" data-en="Video tutorials" data-pt="Tutoriais em vídeo" data-es="Tutoriales en vídeo">Video tutorials</a>
           <a href="mailto:hello@seculopt.com" class="footer-email">hello@seculopt.com</a>
           <a href="https://wa.me/351912102647" class="footer-whatsapp" target="_blank" rel="noopener">WhatsApp</a>
         </div>
@@ -289,7 +299,7 @@
     }
 
     .contact-hero p {
-      color: rgba(255, 255, 255, 0.7);
+      color: rgba(240, 238, 232, 0.7);
       font-size: 1.05rem;
     }
 

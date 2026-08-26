@@ -194,11 +194,11 @@ function renderFolderSidebar() {
   title.textContent = t.folders.title;
   sidebar.appendChild(title);
 
-  sidebar.appendChild(makeFoldItem(null, '🗂️', t.folders.all, countInFolder(null)));
+  sidebar.appendChild(makeFoldItem(null, '', t.folders.all, countInFolder(null)));
 
   const unfiledCount = countInFolder('unfiled');
   if (folders.length > 0 || unfiledCount < properties.length) {
-    sidebar.appendChild(makeFoldItem('unfiled', '📋', t.folders.unfiled, unfiledCount));
+    sidebar.appendChild(makeFoldItem('unfiled', '', t.folders.unfiled, unfiledCount));
   }
 
   const topFolders = folders.filter(f => !f.parent_id);
@@ -208,10 +208,10 @@ function renderFolderSidebar() {
     sidebar.appendChild(hr);
 
     for (const f of topFolders) {
-      sidebar.appendChild(makeFoldItem(f.id, '📁', f.name, countInFolder(f.id), f));
+      sidebar.appendChild(makeFoldItem(f.id, '', f.name, countInFolder(f.id), f));
       const subs = folders.filter(s => s.parent_id === f.id);
       for (const s of subs) {
-        sidebar.appendChild(makeFoldItem(s.id, '📄', s.name, countInFolder(s.id), s, true));
+        sidebar.appendChild(makeFoldItem(s.id, '', s.name, countInFolder(s.id), s, true));
       }
     }
   }
@@ -272,7 +272,7 @@ function showFolderMenu(folder, anchor) {
 
   const menu = document.createElement('div');
   menu.id = '_foldMenu';
-  menu.style.cssText = 'position:fixed;background:#fff;border:1px solid #ddd;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9000;min-width:140px;padding:0.4rem 0;font-size:0.84rem;font-family:\'DM Sans\',sans-serif;';
+  menu.style.cssText = 'position:fixed;background:var(--brand-light);border:1px solid var(--color-divider);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.12);z-index:9000;min-width:140px;padding:0.4rem 0;font-size:0.84rem;font-family:var(--font-body);';
 
   const rect = anchor.getBoundingClientRect();
   menu.style.top  = (rect.bottom + 4) + 'px';
@@ -282,14 +282,14 @@ function showFolderMenu(folder, anchor) {
     const item = document.createElement('div');
     item.style.cssText = `padding:0.5rem 1rem;cursor:pointer;color:${color || 'inherit'};`;
     item.textContent = label;
-    item.addEventListener('mouseenter', () => item.style.background = '#f8f5f0');
+    item.addEventListener('mouseenter', () => item.style.background = 'var(--color-raised)');
     item.addEventListener('mouseleave', () => item.style.background = '');
     item.addEventListener('click', () => { menu.remove(); onClick(); });
     return item;
   };
 
   menu.appendChild(makeItem(t.folders.rename, null, () => promptRenameFolder(folder)));
-  menu.appendChild(makeItem(t.folders.delete, '#c0392b', () => confirmDeleteFolder(folder)));
+  menu.appendChild(makeItem(t.folders.delete, 'var(--brand-terracotta)', () => confirmDeleteFolder(folder)));
 
   document.body.appendChild(menu);
   setTimeout(() => document.addEventListener('click', () => menu.remove(), { once: true }), 10);
@@ -312,7 +312,7 @@ async function promptCreateFolder(parentId) {
     folders.push(folder);
     renderFolderSidebar();
     document.querySelectorAll('.prop-folder-select').forEach(sel => addFolderOption(sel, folder));
-    showToast(`📁 ${folder.name}`);
+    showToast(folder.name);
   } catch (e) {
     showToast('Could not create folder');
   }
@@ -333,9 +333,9 @@ async function promptRenameFolder(folder) {
     folder.name = rawName.trim();
     renderFolderSidebar();
     document.querySelectorAll(`.prop-folder-select option[value="${folder.id}"]`).forEach(opt => {
-      opt.textContent = '📁 ' + folder.name;
+      opt.textContent = folder.name;
     });
-    showToast('✓');
+    showToast(t.toastRenamed);
   } catch (e) {
     showToast('Could not rename folder');
   }
@@ -357,7 +357,7 @@ async function confirmDeleteFolder(folder) {
     renderFolderSidebar();
     renderDashGrid();
     document.querySelectorAll(`.prop-folder-select option[value="${folder.id}"]`).forEach(opt => opt.remove());
-    showToast('🗑️');
+    showToast(t.toastDeleted);
   } catch (e) {
     showToast('Could not delete folder');
   }
@@ -431,12 +431,103 @@ document.addEventListener('seculo-lang-change', function () {
   if (properties.length > 0) { renderFolderSidebar(); renderDashGrid(); }
 });
 
+// ── Translations ───────────────────────────────────────────
+const CARD_T = {
+  en: {
+    status: { interested: 'Interested', visited: 'Visited', discarded: 'Discarded', saved: 'Saved' },
+    view: 'View listing',
+    copy: 'Copy link',
+    del:  'Delete',
+    expired:     'Link expired',
+    expires_in:  (n) => `Link expires in ${n} day${n === 1 ? '' : 's'}`,
+    expires_on:  (d) => `Link expires ${d}`,
+    bed: 'bed',
+    propSingular: 'saved property',
+    propPlural:   'saved properties',
+    folderNone:  'No folder',
+    toastRenamed: 'Folder renamed',
+    toastDeleted: 'Folder deleted',
+    toastUpdated: 'Status updated',
+    toastMoved:   'Moved',
+    folders: {
+      title:         'Folders',
+      all:           'All',
+      unfiled:       'Unfiled',
+      newFolder:     'New folder',
+      newFolderPrompt: 'Folder name:',
+      renamePrompt:  'New name:',
+      deleteConfirm: 'Delete folder "{name}"? Properties will become unfiled.',
+      rename:        'Rename',
+      delete:        'Delete folder',
+    },
+  },
+  pt: {
+    status: { interested: 'Interessado', visited: 'Visitado', discarded: 'Descartado', saved: 'Guardado' },
+    view: 'Ver anúncio',
+    copy: 'Copiar link',
+    del:  'Apagar',
+    expired:     'Link expirado',
+    expires_in:  (n) => `Link expira em ${n} dia${n === 1 ? '' : 's'}`,
+    expires_on:  (d) => `Link expira ${d}`,
+    bed: 'qto',
+    propSingular: 'propriedade guardada',
+    propPlural:   'propriedades guardadas',
+    folderNone:  'Sem pasta',
+    toastRenamed: 'Pasta renomeada',
+    toastDeleted: 'Pasta eliminada',
+    toastUpdated: 'Estado atualizado',
+    toastMoved:   'Movido',
+    folders: {
+      title:         'Pastas',
+      all:           'Todas',
+      unfiled:       'Sem pasta',
+      newFolder:     'Nova pasta',
+      newFolderPrompt: 'Nome da pasta:',
+      renamePrompt:  'Novo nome:',
+      deleteConfirm: 'Eliminar pasta "{name}"? As propriedades ficarão sem pasta.',
+      rename:        'Renomear',
+      delete:        'Eliminar pasta',
+    },
+  },
+  es: {
+    status: { interested: 'Interesado', visited: 'Visitado', discarded: 'Descartado', saved: 'Guardado' },
+    view: 'Ver anuncio',
+    copy: 'Copiar link',
+    del:  'Eliminar',
+    expired:     'Link expirado',
+    expires_in:  (n) => `Link expira en ${n} día${n === 1 ? '' : 's'}`,
+    expires_on:  (d) => `Link expira ${d}`,
+    bed: 'hab',
+    propSingular: 'propiedad guardada',
+    propPlural:   'propiedades guardadas',
+    folderNone:  'Sin carpeta',
+    toastRenamed: 'Carpeta renombrada',
+    toastDeleted: 'Carpeta eliminada',
+    toastUpdated: 'Estado actualizado',
+    toastMoved:   'Movido',
+    folders: {
+      title:         'Carpetas',
+      all:           'Todas',
+      unfiled:       'Sin carpeta',
+      newFolder:     'Nueva carpeta',
+      newFolderPrompt: 'Nombre de la carpeta:',
+      renamePrompt:  'Nuevo nombre:',
+      deleteConfirm: 'Eliminar carpeta "{name}"? Las propiedades quedarán sin carpeta.',
+      rename:        'Renombrar',
+      delete:        'Eliminar carpeta',
+    },
+  },
+};
+
+function getT() {
+  return CARD_T[window.getCurrentLang ? window.getCurrentLang() : 'en'] || CARD_T.en;
+}
 
 // ── Card builder ───────────────────────────────────────────
 function addFolderOption(sel, folder) {
   const opt = document.createElement('option');
   opt.value = folder.id;
-  opt.textContent = '📁 ' + folder.name;
+  opt.textContent = folder.name;
   sel.appendChild(opt);
 }
 
@@ -465,8 +556,8 @@ function buildCard(prop) {
 
   card.innerHTML = `
     ${img
-      ? `<img class="prop-img" src="${escHtml(img)}" alt="${escHtml(title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="prop-img-placeholder" style="display:none;">&#127968;</div>`
-      : `<div class="prop-img-placeholder">&#127968;</div>`
+      ? `<img class="prop-img" src="${escHtml(img)}" alt="${escHtml(title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" /><div class="prop-img-placeholder" style="display:none;"></div>`
+      : `<div class="prop-img-placeholder"></div>`
     }
     <div class="prop-body">
       <div class="prop-top">
@@ -479,7 +570,7 @@ function buildCard(prop) {
         </select>
       </div>
       <div class="prop-title">${escHtml(title)}</div>
-      ${location ? `<div class="prop-location">&#128205; ${escHtml(location)}</div>` : ''}
+      ${location ? `<div class="prop-location">${escHtml(location)}</div>` : ''}
       <div class="prop-price">${price}</div>
       ${(area || rooms) ? `<div class="prop-details">${[rooms, area].filter(Boolean).join(' · ')}</div>` : ''}
       ${prop.notes ? `<div class="prop-notes">${escHtml(prop.notes)}</div>` : ''}
@@ -514,7 +605,7 @@ function buildCard(prop) {
       statusSel.className = `prop-status-select ${newStatus}`;
       _currentStatus = newStatus;
       prop.status = newStatus;
-      showToast('✓');
+      showToast(t.toastUpdated);
     } catch (e) {
       statusSel.value = _currentStatus;
       showToast('Could not update — please try again');
@@ -575,7 +666,7 @@ function buildCard(prop) {
         _currentFolder = folderSel.value;
         folderSel.className = 'prop-folder-select' + (newFolderId ? ' has-folder' : '');
         renderFolderSidebar();
-        showToast('✓');
+        showToast(t.toastMoved);
       } catch (e) {
         folderSel.value = _currentFolder;
         showToast('Could not move — please try again');
@@ -661,488 +752,19 @@ window.copyAllLinks = function() {
       const link = `https://seculopt.com/share.html?id=${p.id}`;
       return [
         `${i + 1}. ${title}${price ? ' — ' + price : ''}`,
-        location ? `   📍 ${location}` : '',
-        `   🔗 ${link}`,
+        location ? `   ${location}` : '',
+        `   ${link}`,
       ].filter(Boolean).join('\n');
     });
 
   if (!lines.length) { showToast('Nenhuma propriedade para partilhar'); return; }
 
   const text = `As minhas propriedades no Século Explorador:\n\n${lines.join('\n\n')}\n\nEncontrado em seculopt.com`;
-  const _doCopy = () => {
-    showToast(`✓ ${lines.length} link${lines.length === 1 ? '' : 's'} copiado${lines.length === 1 ? '' : 's'}!`);
-    const btn = document.getElementById('copyAllBtn');
-    if (btn) { btn.textContent = '✓ Copiado!'; setTimeout(() => { btn.innerHTML = '&#128203; Copiar todos os links'; }, 2500); }
-  };
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(_doCopy).catch(() => {
-      // Clipboard API blocked (incognito/permissions) — textarea fallback
-      const ta = document.createElement('textarea');
-      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select();
-      try { document.execCommand('copy'); _doCopy(); } catch(_) { showToast('Erro ao copiar — selecciona manualmente'); }
-      document.body.removeChild(ta);
-    });
-  } else {
-    showToast('Clipboard não disponível neste browser');
-  }
-};
-
-// ══════════════════════════════════════════════════════════════
-// REPORT GENERATION — Address Confirmation Flow
-// ══════════════════════════════════════════════════════════════
-
-// selectedForReport + report state consts moved to top-level state section (line ~44) to avoid temporal dead zone
-
-function updateReportBtn() {
-  const btn   = document.getElementById('reportBtn');
-  const badge = document.getElementById('reportBadge');
-  if (!btn) return;
-  const count = selectedForReport.size;
-  badge.textContent = count;
-  // Always show when there are properties; disabled+dimmed until at least 1 selected for report
-  btn.style.display = properties.length > 0 ? 'flex' : 'none';
-  btn.disabled = count === 0;
-  btn.title = count === 0 ? 'Click "📄 Report" on any property card to add it to the report' : `Generate PDF with ${count} propert${count === 1 ? 'y' : 'ies'}`;
-  btn.style.opacity = count === 0 ? '0.45' : '1';
-}
-
-function toggleReportSelect(propId, cardEl, btnEl) {
-  if (selectedForReport.has(propId)) {
-    selectedForReport.delete(propId);
-    cardEl.classList.remove('in-report');
-    btnEl.textContent = '📄 Report';
-    btnEl.classList.remove('active');
-  } else {
-    if (selectedForReport.size >= 5) {
-      showToast('Maximum 5 properties per report');
-      return;
-    }
-    selectedForReport.add(propId);
-    cardEl.classList.add('in-report');
-    btnEl.textContent = '✓ In Report';
-    btnEl.classList.add('active');
-  }
-  updateReportBtn();
-}
-
-// ── Nominatim geocode ───────────────────────────────────────
-async function geocodeForReport(address, concelho) {
-  if (!address || address.trim().length < 5) return null;
-  const q = [address.trim(), concelho || '', 'Portugal'].filter(Boolean).join(', ');
-  try {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=pt&q=${encodeURIComponent(q)}`,
-      { headers: { 'Accept-Language': 'pt', 'User-Agent': 'seculopt.com/1.0' } }
-    );
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data || !data[0]) return null;
-    return {
-      lat: parseFloat(data[0].lat),
-      lng: parseFloat(data[0].lon),
-      display: data[0].display_name,
-      type:    data[0].type,        // building/house/road/suburb/city
-    };
-  } catch { return null; }
-}
-
-function geoConfidence(type) {
-  if (!type) return 'red';
-  if (['house','building','apartments','residential'].includes(type)) return 'green';
-  if (['road','street','pedestrian','path','cycleway'].includes(type)) return 'yellow';
-  return 'red';
-}
-
-function geoLabel(type, color) {
-  if (color === 'green')  return 'Building-level ✓';
-  if (color === 'yellow') return 'Street-level';
-  return 'Approximate';
-}
-
-// ── Update mini-map pin ─────────────────────────────────────
-function updateMiniMap(propId, lat, lng) {
-  const map    = _reportMaps[propId];
-  const marker = _reportMarkers[propId];
-  if (!map || !marker) return;
-  marker.setLatLng([lat, lng]);
-  map.setView([lat, lng], 14, { animate: true });
-}
-
-// ── Modal open ─────────────────────────────────────────────
-window.openReportModal = function() {
-  if (selectedForReport.size === 0) { showToast('Select at least one property first'); return; }
-
-  const selectedProps = properties.filter(p => selectedForReport.has(p.id));
-
-  // Instruction text in all 3 languages
-  const INSTR = {
-    en: { title: '📍 Verify property addresses',
-          body:  'Each property needs a confirmed address to place the isochrone and walkability analysis correctly on the map. The address has been pre-filled from the portal — review each one and correct it if needed. The map on the right updates automatically.',
-          label: '✏️ Address (edit if incorrect)',
-          ph:    'Street, number, city — Portugal',
-          orig:  'Portal data:',
-          cancel:'Cancel', generate:'📄 Generate Report' },
-    pt: { title: '📍 Verifique os endereços dos imóveis',
-          body:  'Cada imóvel precisa de um endereço confirmado para colocar a isócrona e a análise de walkability corretamente no mapa. O endereço foi pré-preenchido com os dados do portal — reveja cada um e corrija se necessário. O mapa à direita atualiza automaticamente.',
-          label: '✏️ Endereço (edite se necessário)',
-          ph:    'Rua, número, cidade — Portugal',
-          orig:  'Dados do portal:',
-          cancel:'Cancelar', generate:'📄 Gerar Relatório' },
-    es: { title: '📍 Verifica las direcciones de las propiedades',
-          body:  'Cada propiedad necesita una dirección confirmada para colocar correctamente la isócrona y el análisis de walkabilidad en el mapa. La dirección se ha pre-rellenado con los datos del portal — revisa cada una y corrígela si es necesario. El mapa de la derecha se actualiza automáticamente.',
-          label: '✏️ Dirección (edita si es incorrecta)',
-          ph:    'Calle, número, ciudad — Portugal',
-          orig:  'Datos del portal:',
-          cancel:'Cancelar', generate:'📄 Generar Informe' },
-  };
-  const lang = (window.getCurrentLang ? window.getCurrentLang() : 'en') || 'en';
-  const I = INSTR[lang] || INSTR.en;
-
-  const overlay = document.createElement('div');
-  overlay.className = 'report-overlay';
-  overlay.id = 'reportOverlay';
-
-  overlay.innerHTML = `
-    <div class="report-modal">
-      <div class="report-modal-head">
-        <div>
-          <h2>${escHtml(I.title)}</h2>
-          <p>${escHtml(I.body)}</p>
-        </div>
-        <button class="report-modal-close" onclick="closeReportModal()">&#10005;</button>
-      </div>
-      <div class="report-modal-body" id="reportModalBody"></div>
-      <div class="report-modal-foot">
-        <div class="report-modal-foot-note">
-          &#9679; <span style="color:#27ae60;font-weight:600">Green</span> = address found precisely &nbsp;|&nbsp;
-          &#9679; <span style="color:#f39c12;font-weight:600">Yellow</span> = street level &nbsp;|&nbsp;
-          &#9679; <span style="color:#e74c3c;font-weight:600">Red</span> = not found — please correct
-        </div>
-        <button class="btn-report-cancel" onclick="closeReportModal()">${escHtml(I.cancel)}</button>
-        <button class="btn-report-confirm" id="reportConfirmBtn" onclick="confirmReport()">
-          &#128196; ${escHtml(I.generate.replace('📄 ',''))}
-        </button>
-      </div>
-    </div>
-  `;
-
-  document.body.appendChild(overlay);
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeReportModal(); });
-
-  const body = document.getElementById('reportModalBody');
-
-  selectedProps.forEach((prop, idx) => {
-    const d         = prop.property_data || {};
-    const img       = d.image || d.img || d.thumbnail || '';
-    const title     = d.title || d.address || 'Property';
-    const portal    = d.portal || d.source || '';
-    const knownAddr = [d.address, d.localidade, d.concelho].filter(Boolean).join(', ')
-                   || d.location || '';
-    const concelho  = d.concelho || '';
-    const mapId     = `rmap-${prop.id.replace(/-/g, '')}`;
-
-    // Build row with flat flex layout: [num][thumb][body(title+input+status)][map]
-    const row = document.createElement('div');
-    row.className = 'rconf-row';
-    row.dataset.propId = prop.id;
-
-    // Number badge
-    const numEl = document.createElement('div');
-    numEl.className = 'rconf-num';
-    numEl.textContent = String(idx + 1).padStart(2, '0');
-    row.appendChild(numEl);
-
-    // Thumbnail
-    if (img) {
-      const thumbEl = document.createElement('img');
-      thumbEl.className = 'rconf-thumb';
-      thumbEl.src = img; thumbEl.alt = '';
-      thumbEl.onerror = function() { this.style.display = 'none'; };
-      row.appendChild(thumbEl);
-    } else {
-      const phEl = document.createElement('div');
-      phEl.className = 'rconf-thumb-placeholder';
-      phEl.textContent = '🏠';
-      row.appendChild(phEl);
-    }
-
-    // Central body: title + label + input + status
-    const bodyEl = document.createElement('div');
-    bodyEl.className = 'rconf-body';
-
-    const titleEl = document.createElement('div');
-    titleEl.className = 'rconf-title';
-    titleEl.textContent = title;
-    bodyEl.appendChild(titleEl);
-
-    const labelEl = document.createElement('span');
-    labelEl.className = 'rconf-label';
-    labelEl.textContent = I.label;
-    bodyEl.appendChild(labelEl);
-
-    const inputEl = document.createElement('input');
-    inputEl.className = 'rconf-addr-input';
-    inputEl.type = 'text';
-    inputEl.placeholder = I.ph;
-    inputEl.value = knownAddr;
-    inputEl.dataset.propId = prop.id;
-    inputEl.dataset.concelho = concelho;
-    bodyEl.appendChild(inputEl);
-
-    const statusEl = document.createElement('div');
-    statusEl.className = 'rconf-geo-status';
-    statusEl.id = `geoStatus-${prop.id}`;
-    statusEl.innerHTML = `<div class="rconf-geo-dot red" id="geoDot-${prop.id}"></div><span id="geoText-${prop.id}">—</span>`;
-    bodyEl.appendChild(statusEl);
-
-    row.appendChild(bodyEl);
-
-    // Mini-map
-    const mapDiv = document.createElement('div');
-    mapDiv.className = 'rconf-map';
-    mapDiv.id = mapId;
-    row.appendChild(mapDiv);
-
-    body.appendChild(row);
-
-    // Wire up address input with debounced geocoding
-    const input = row.querySelector('.rconf-addr-input');
-    input.addEventListener('input', () => {
-      clearTimeout(_debounceTimers[prop.id]);
-      const dotEl  = document.getElementById(`geoDot-${prop.id}`);
-      const textEl = document.getElementById(`geoText-${prop.id}`);
-      if (dotEl)  dotEl.className  = 'rconf-geo-dot yellow';
-      if (textEl) textEl.textContent = 'Geocoding…';
-
-      _debounceTimers[prop.id] = setTimeout(async () => {
-        const result = await geocodeForReport(input.value, input.dataset.concelho);
-        if (result) {
-          _reportGeoData[prop.id] = result;
-          updateMiniMap(prop.id, result.lat, result.lng);
-          const color = geoConfidence(result.type);
-          if (dotEl)  dotEl.className  = `rconf-geo-dot ${color}`;
-          if (textEl) textEl.textContent = geoLabel(result.type, color);
-        } else {
-          delete _reportGeoData[prop.id];
-          if (dotEl)  dotEl.className  = 'rconf-geo-dot red';
-          if (textEl) textEl.textContent = 'Not found';
-        }
-      }, 600);
-    });
-
-    // Pre-geocode the known address — disable Generate button while pending
-    const confirmBtn2 = document.getElementById('reportConfirmBtn');
-    if (confirmBtn2) { confirmBtn2.disabled = true; confirmBtn2.textContent = '⏳ Geocoding…'; }
-
-    setTimeout(async () => {
-      const result = await geocodeForReport(knownAddr, concelho);
-      const dotEl  = document.getElementById(`geoDot-${prop.id}`);
-      const textEl = document.getElementById(`geoText-${prop.id}`);
-      if (result) {
-        _reportGeoData[prop.id] = result;
-        const color = geoConfidence(result.type);
-        if (dotEl)  dotEl.className  = `rconf-geo-dot ${color}`;
-        if (textEl) textEl.textContent = geoLabel(result.type, color);
-        initMiniMap(prop.id, mapId, result.lat, result.lng);
-      } else {
-        const fallLat = d.lat || 38.72;
-        const fallLng = d.lng || (-9.45);
-        if (dotEl)  { dotEl.className = 'rconf-geo-dot red'; }
-        if (textEl) { textEl.textContent = 'Approximate (confirm address)'; }
-        initMiniMap(prop.id, mapId, fallLat, fallLng);
-      }
-      // Re-enable Generate button after the LAST property finishes geocoding
-      if (idx === selectedProps.length - 1) {
-        const btn = document.getElementById('reportConfirmBtn');
-        if (btn) { btn.disabled = false; btn.textContent = '📄 Generate Report'; }
-      }
-    }, 100 + idx * 300); // stagger to respect Nominatim rate limit
-  });
-};
-
-function initMiniMap(propId, containerId, lat, lng) {
-  const container = document.getElementById(containerId);
-  if (!container || !window.L) return;
-  const map = window.L.map(container, {
-    center: [lat, lng],
-    zoom: 16,
-    zoomControl: false,
-    attributionControl: false,
-    dragging: false,
-    scrollWheelZoom: false,
-    doubleClickZoom: false,
-  });
-  window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-  }).addTo(map);
-  const marker = window.L.circleMarker([lat, lng], {
-    radius: 7,
-    fillColor: '#b8a882',
-    color: '#6b5a3a',
-    weight: 2,
-    fillOpacity: 1,
-  }).addTo(map);
-  _reportMaps[propId]    = map;
-  _reportMarkers[propId] = marker;
-}
-
-window.closeReportModal = function() {
-  const overlay = document.getElementById('reportOverlay');
-  if (overlay) overlay.remove();
-  // Clean up map instances
-  Object.keys(_reportMaps).forEach(id => {
-    try { _reportMaps[id].remove(); } catch {}
-    delete _reportMaps[id];
-    delete _reportMarkers[id];
-  });
-};
-
-// ── Confirm → download config JSON ─────────────────────────
-window.confirmReport = async function() {
-  const selectedProps = properties.filter(p => selectedForReport.has(p.id));
-  const modal = document.getElementById('reportOverlay');
-  const inputs = modal ? modal.querySelectorAll('.rconf-addr-input') : [];
-
-  const config = {
-    generated_at: new Date().toISOString(),
-    // PDF language = engine UI language at export time (pt/es/en).
-    lang: (window.getCurrentLang ? window.getCurrentLang() : 'pt') || 'pt',
-    agent: { tier },
-    properties: await Promise.all(selectedProps.map(async (prop, idx) => {
-      const d    = prop.property_data || {};
-      const input = modal
-        ? modal.querySelector(`.rconf-addr-input[data-prop-id="${prop.id}"]`)
-        : null;
-      const confirmedAddress = input ? input.value : (d.address || '');
-
-      // Use pre-geocoded result; if missing and no portal GPS, geocode now
-      let geoResult = _reportGeoData[prop.id];
-      if (!geoResult && !(d.lat || d.lng) && confirmedAddress) {
-        geoResult = await geocodeForReport(confirmedAddress, d.concelho || '');
-        if (geoResult) _reportGeoData[prop.id] = geoResult;
-      }
-
-      return {
-        id:               prop.id,
-        idx:              idx + 1,
-        title:            d.title     || d.address || 'Property',
-        portal:           d.portal    || d.source  || '',
-        url:              d.url       || d.link    || '',
-        price:            d.price     || 0,
-        area_built:       d.area      || d.areaCons || 0,
-        area_total:       d.areaTerr  || 0,
-        bedrooms:         d.rooms     || d.quartos || 0,
-        image:            d.image     || d.img     || '',
-        address_portal:   d.address   || '',
-        address_confirmed: confirmedAddress,
-        lat:  geoResult ? geoResult.lat : (d.lat || 0),
-        lng:  geoResult ? geoResult.lng : (d.lng || 0),
-        geo_source:  geoResult ? 'nominatim-confirmed' : 'portal-approximate',
-        geo_type:    geoResult ? geoResult.type : 'unknown',
-        concelho:    d.concelho   || '',
-        distrito:    d.distrito   || '',
-        freguesia:   d.localidade || d.freguesia || '',
-      };
-    })),
-  };
-
-  // Show loading state + progress bar
-  const confirmBtn = document.getElementById('reportConfirmBtn');
-  if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.textContent = '⏳ Generating PDF…'; }
-
-  // Progress bar — injected into modal footer
-  const STAGES = [
-    { pct:  5, t:  0, msg: 'Connecting to report server…' },
-    { pct: 18, t:  8, msg: 'Fetching isochrones…' },
-    { pct: 35, t: 20, msg: 'Generating maps…' },
-    { pct: 55, t: 38, msg: 'Building slides…' },
-    { pct: 72, t: 54, msg: 'Rendering PDF…' },
-    { pct: 88, t: 70, msg: 'Finalizing…' },
-  ];
-  const TOTAL_SECS = 85; // expected generation time
-
-  const _foot = document.querySelector('.report-modal-foot');
-  const _prog = document.createElement('div');
-  _prog.style.cssText = 'width:100%;margin-top:10px;';
-  _prog.innerHTML = `
-    <div id="_rp_bar_wrap" style="background:#eee;border-radius:6px;height:8px;overflow:hidden;margin-bottom:6px;">
-      <div id="_rp_bar" style="background:#C9A26D;height:8px;width:0%;border-radius:6px;transition:width 0.8s ease;"></div>
-    </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <span id="_rp_msg" style="font-size:0.75rem;color:#888;">Starting…</span>
-      <span id="_rp_pct" style="font-size:0.75rem;font-weight:600;color:#C9A26D;font-family:monospace;">0%</span>
-    </div>`;
-  if (_foot) _foot.appendChild(_prog);
-
-  const _bar = document.getElementById('_rp_bar');
-  const _msg = document.getElementById('_rp_msg');
-  const _pct = document.getElementById('_rp_pct');
-
-  const _startTs = Date.now();
-  const _timer = setInterval(() => {
-    const elapsed = (Date.now() - _startTs) / 1000;
-    // Find current stage
-    let stage = STAGES[0];
-    for (const s of STAGES) { if (elapsed >= s.t) stage = s; }
-    // Interpolate within stage to next stage
-    const stageIdx = STAGES.indexOf(stage);
-    const next = STAGES[stageIdx + 1];
-    let pct = stage.pct;
-    if (next) {
-      const segLen = next.t - stage.t;
-      const segPct = next.pct - stage.pct;
-      pct = stage.pct + (Math.min(elapsed - stage.t, segLen) / segLen) * segPct;
-    } else {
-      // Past last stage — creep slowly toward 95%
-      pct = Math.min(95, stage.pct + (elapsed - stage.t) * 0.15);
-    }
-    // Estimate seconds remaining
-    const remaining = Math.max(0, Math.round(TOTAL_SECS - elapsed));
-    const remStr = remaining > 0 ? ` — ~${remaining}s left` : '';
-    if (_bar) _bar.style.width = pct.toFixed(1) + '%';
-    if (_msg) _msg.textContent = stage.msg + remStr;
-    if (_pct) _pct.textContent = Math.round(pct) + '%';
-  }, 800);
-
-  const _finishProgress = (success) => {
-    clearInterval(_timer);
-    if (_bar) { _bar.style.width = '100%'; _bar.style.background = success ? '#5a9660' : '#c05030'; }
-    if (_msg) _msg.textContent = success ? '✓ PDF ready — downloading…' : '✗ Generation failed';
-    if (_pct) _pct.textContent = '100%';
-  };
-
-  try {
-    const res = await fetch(`${API}/api/generate-report`, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${access_token}` },
-      body: JSON.stringify(config),
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
-      throw new Error(err.error || `HTTP ${res.status}`);
-    }
-
-    // Trigger PDF download
-    const blob = await res.blob();
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = `seculo-report-${new Date().toISOString().slice(0,10)}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-    _finishProgress(true);
-    setTimeout(() => { closeReportModal(); }, 1200);
-    showToast('✓ Report generated — check your downloads folder');
-
-  } catch (err) {
-    _finishProgress(false);
-    if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = '📄 Generate Report'; }
-    showToast(`Error generating report: ${err.message}`);
-    console.error('[report] error:', err);
-  }
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      showToast(`${lines.length} link${lines.length === 1 ? '' : 's'} copiado${lines.length === 1 ? '' : 's'}!`);
+      const btn = document.getElementById('copyAllBtn');
+      if (btn) { btn.textContent = 'Copiado!'; setTimeout(() => { btn.innerHTML = 'Copiar todos os links'; }, 2500); }
+    })
+    .catch(() => showToast('Erro ao copiar — tenta de novo'));
 };

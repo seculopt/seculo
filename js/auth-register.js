@@ -4,6 +4,29 @@
 
 import { supabase } from './supabase-client.js';
 
+// Runtime copy for the three site languages. The page's static text comes from
+// data-en/pt/es attributes; these are the strings only JS ever writes.
+const COPY = {
+  en: {
+    creating: 'Creating account...',
+    submit:   'Create account',
+    error:    'Something went wrong. Please try again.',
+    created:  'Account created! Check your email to log in.',
+  },
+  pt: {
+    creating: 'A criar conta...',
+    submit:   'Criar conta',
+    error:    'Ocorreu um erro. Por favor tenta de novo.',
+    created:  'Conta criada! Verifica o teu email para aceder.',
+  },
+  es: {
+    creating: 'Creando cuenta...',
+    submit:   'Crear cuenta',
+    error:    'Ocurrió un error. Inténtalo de nuevo.',
+    created:  '¡Cuenta creada! Revisa tu correo para acceder.',
+  },
+};
+
 const form    = document.getElementById('register-form');
 const nameIn  = document.getElementById('name-input');
 const emailIn = document.getElementById('email-input');
@@ -73,7 +96,9 @@ form.addEventListener('submit', async function (e) {
   btn.disabled = true;
   message.textContent = '';
   message.className = '';
-  btn.textContent = lang === 'pt' ? 'A criar conta...' : 'Creating account...';
+
+  const copy = COPY[document.documentElement.lang] || COPY.en;
+  btn.textContent = copy.creating;
 
   const utm = (typeof window.SECULO_UTM === 'object') ? window.SECULO_UTM : {};
 
@@ -88,10 +113,8 @@ form.addEventListener('submit', async function (e) {
 
   if (error && error.message !== 'User already registered') {
     btn.disabled = false;
-    btn.textContent = lang === 'pt' ? 'Criar conta' : 'Create account';
-    message.textContent = lang === 'pt'
-      ? 'Ocorreu um erro. Por favor tenta de novo.'
-      : 'Something went wrong. Please try again.';
+    btn.textContent = copy.submit;
+    message.textContent = copy.error;
     message.className = 'auth-message auth-message--error';
     return;
   }
@@ -109,8 +132,6 @@ form.addEventListener('submit', async function (e) {
 
   // Success — confirmation email sent
   form.style.display = 'none';
-  message.textContent = lang === 'pt'
-    ? 'Conta criada! Verifica o teu email para confirmar e aceder.'
-    : 'Account created! Check your email to confirm and log in.';
+  message.textContent = copy.created;
   message.className = 'auth-message auth-message--success';
 });

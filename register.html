@@ -5,10 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Create your free Século Explorer account — save and share your property analyses." />
   <title>Create Account — Século Explorer</title>
+  <!-- Favicons — the S from the wordmark, reversed out of brand ink. -->
+  <link rel="icon" href="/favicon.ico?v=2" sizes="32x32" />
+  <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
+
+
+  <!-- Set before first paint so scroll-reveal elements are only hidden when
+       JS is actually available to reveal them again. -->
+  <script>document.documentElement.classList.add('js');</script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@200;300;400;500;600;700&family=Zalando+Sans+Expanded:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/nav.css" />
@@ -33,7 +42,7 @@
       box-shadow: 0 4px 24px rgba(25,25,39,0.07);
     }
     .auth-logo {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--font-display);
       font-size: 1.2rem;
       font-weight: 600;
       letter-spacing: 0.1em;
@@ -42,7 +51,7 @@
       margin-bottom: 2rem;
     }
     .auth-title {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--font-display);
       font-size: 1.5rem;
       font-weight: 600;
       color: var(--color-primary);
@@ -70,9 +79,13 @@
       color: var(--color-mid);
     }
     .auth-value-props span::before {
-      content: '✓ ';
-      color: var(--color-accent);
-      font-weight: 700;
+      content: '';
+      display: inline-block;
+      width: 14px;
+      height: 1px;
+      vertical-align: middle;
+      margin-right: 10px;
+      background: var(--color-accent);
     }
     .auth-field {
       margin-bottom: 1rem;
@@ -89,7 +102,7 @@
       border-radius: 6px;
       padding: 0.7rem 0.9rem;
       font-size: 0.9rem;
-      font-family: 'DM Sans', sans-serif;
+      font-family: var(--font-body);
       color: var(--color-primary);
       background: var(--color-white);
       transition: border-color 0.15s;
@@ -128,9 +141,9 @@
       display: block;
     }
     .auth-message--error {
-      background: #fdf2f2;
-      border: 1px solid #e8b4b4;
-      color: #c0392b;
+      background: var(--color-raised);
+      border: 1px solid var(--rule-strong);
+      color: var(--brand-terracotta);
       display: block;
     }
     .auth-footer-note {
@@ -150,18 +163,24 @@
   <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
       <a href="index.html" class="nav-logo" aria-label="Século Explorer — Home">
-        <img src="assets/logo-light.svg" alt="Século Explorer" />
+        <img src="assets/logo.svg" alt="Século Explorer" />
       </a>
       <ul class="nav-links">
-        <li><a href="index.html" data-en="Home" data-pt="Início">Home</a></li>
-        <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona">How It Works</a></li>
-        <li><a href="products.html" data-en="Plans" data-pt="Planos">Plans</a></li>
-        <li><a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-outline" data-en="Try Free" data-pt="Experimenta Grátis">Try Free</a></li>
+        <li><a href="index.html" data-en="Home" data-pt="Início" data-es="Inicio">Home</a></li>
+        <li><a href="index.html#how-it-works" data-en="How It Works" data-pt="Como Funciona" data-es="Cómo Funciona">How It Works</a></li>
+        <li><a href="index.html#use-cases" data-en="Use Cases" data-pt="Casos de Uso" data-es="Casos de Uso">Use Cases</a></li>
+        <li><a href="products.html" data-en="Plans" data-pt="Planos" data-es="Planes">Plans</a></li>
+        <li><a href="login.html" class="nav-login" data-en="Log In" data-pt="Entrar" data-es="Entrar">Log In</a></li>
+        <li>
+          <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" data-en="Try For Free" data-pt="Experimenta Grátis" data-es="Pruébalo Gratis">Try For Free</a>
+        </li>
       </ul>
       <div class="lang-toggle">
         <button class="lang-btn active" data-lang="en">EN</button>
-        <span>|</span>
+        <span>/</span>
         <button class="lang-btn" data-lang="pt">PT</button>
+        <span>/</span>
+        <button class="lang-btn" data-lang="es">ES</button>
       </div>
       <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -177,30 +196,32 @@
       <div id="formView">
         <h1 class="auth-title"
           data-en="Save and share your findings"
-          data-pt="Guarda e partilha as tuas propriedades">
+          data-pt="Guarda e partilha as tuas propriedades"
+          data-es="Guarda y comparte tus propiedades">
           Save and share your findings
         </h1>
         <p class="auth-subtitle"
           data-en="Create your free account. No credit card needed."
-          data-pt="Cria a tua conta grátis. Não precisas de cartão.">
+          data-pt="Cria a tua conta grátis. Não precisas de cartão."
+          data-es="Crea tu cuenta gratis. No necesitas tarjeta.">
           Create your free account. No credit card needed.
         </p>
 
         <div class="auth-value-props">
-          <span data-en="Save up to 1 property analysis" data-pt="Guarda até 1 análise de propriedade">Save up to 1 property analysis</span>
-          <span data-en="Share with a private link (30 days)" data-pt="Partilha com um link privado (30 dias)">Share with a private link (30 days)</span>
-          <span data-en="Access from any device" data-pt="Acede a partir de qualquer dispositivo">Access from any device</span>
+          <span data-en="Save up to 1 property analysis" data-pt="Guarda até 1 análise de propriedade" data-es="Guarda hasta 1 análisis de propiedad">Save up to 1 property analysis</span>
+          <span data-en="Share with a private link (30 days)" data-pt="Partilha com um link privado (30 dias)" data-es="Comparte con un enlace privado (30 días)">Share with a private link (30 days)</span>
+          <span data-en="Access from any device" data-pt="Acede a partir de qualquer dispositivo" data-es="Accede desde cualquier dispositivo">Access from any device</span>
         </div>
 
         <form id="register-form">
           <div class="auth-field">
-            <label data-en="Your name" data-pt="O teu nome">Your name</label>
+            <label data-en="Your name" data-pt="O teu nome" data-es="Tu nombre">Your name</label>
             <input type="text" id="name-input" required
               placeholder="Maria Silva"
               autocomplete="name" />
           </div>
           <div class="auth-field">
-            <label data-en="Email address" data-pt="Endereço de email">Email address</label>
+            <label data-en="Email address" data-pt="Endereço de email" data-es="Dirección de email">Email address</label>
             <input type="email" id="email-input" required
               placeholder="email@example.com"
               autocomplete="email" />
@@ -230,7 +251,7 @@
             </div>
           </div>
           <button type="submit" id="register-btn" class="btn btn-primary auth-btn"
-            data-en="Create account" data-pt="Criar conta">
+            data-en="Create account" data-pt="Criar conta" data-es="Crear cuenta">
             Create account
           </button>
         </form>
@@ -238,16 +259,16 @@
         <p id="register-message" class="auth-message"></p>
 
         <p class="auth-alt">
-          <span data-en="Already have an account?" data-pt="Já tens conta?">Already have an account?</span>
-          <a href="login.html" data-en="Log in" data-pt="Entrar">Log in</a>
+          <span data-en="Already have an account?" data-pt="Já tens conta?" data-es="¿Ya tienes cuenta?">Already have an account?</span>
+          <a href="login.html" class="nav-login" data-en="Log In" data-pt="Entrar" data-es="Iniciar sesión">Log In</a>
         </p>
       </div>
 
       <div class="auth-footer-note">
-        <span data-en="By registering you agree to our" data-pt="Ao registares-te concordas com os nossos">By registering you agree to our</span>
-        <a href="terms.html" data-en="Terms" data-pt="Termos">Terms</a>
+        <span data-en="By registering you agree to our" data-pt="Ao registares-te concordas com os nossos" data-es="Al registrarte aceptas nuestros">By registering you agree to our</span>
+        <a href="terms.html" data-en="Terms" data-pt="Termos" data-es="Términos">Terms</a>
         &nbsp;·&nbsp;
-        <a href="privacy-policy.html" data-en="Privacy Policy" data-pt="Política de Privacidade">Privacy Policy</a>
+        <a href="privacy-policy.html" data-en="Privacy Policy" data-pt="Política de Privacidade" data-es="Política de Privacidad">Privacy Policy</a>
       </div>
     </div>
   </main>

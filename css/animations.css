@@ -1,17 +1,16 @@
 /* ============================================================
    SÉCULO EXPLORER — Animations & Micro-interactions
+   ------------------------------------------------------------
+   Motion here is slow and small. Nothing bounces, nothing lifts
+   off the page. Reveals travel a short distance over a long
+   duration, which is what makes movement read as considered
+   rather than eager.
    ============================================================ */
 
 /* ── Keyframes ── */
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeIn {
@@ -19,79 +18,183 @@
   to   { opacity: 1; }
 }
 
-/* ── Scroll-triggered animations ── */
-.animate-on-scroll {
+/* Rules draw themselves in from the left rather than fading. */
+@keyframes drawLine {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes introLift {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-100%); }
+}
+
+/* ── Scroll-triggered reveals ──
+   .animate-on-scroll starts hidden; js/nav.js adds .in-view via
+   IntersectionObserver. The <html> element carries .js so that a
+   failed or blocked script never leaves content permanently invisible. */
+.js .animate-on-scroll {
   opacity: 0;
   will-change: transform, opacity;
 }
 
-.animate-on-scroll.in-view {
-  animation: fadeUp 0.6s ease forwards;
+.js .animate-on-scroll.in-view {
+  animation: riseIn 0.9s var(--ease-out) forwards;
 }
 
-/* Staggered delays for sibling children */
-.animate-on-scroll:nth-child(2) { animation-delay: 0.1s; }
-.animate-on-scroll:nth-child(3) { animation-delay: 0.2s; }
-.animate-on-scroll:nth-child(4) { animation-delay: 0.3s; }
+/* Stagger siblings. --i is set inline where a custom order is wanted. */
+.js .animate-on-scroll.in-view { animation-delay: calc(var(--i, 0) * 90ms); }
 
-/* ── Hero entrance animations ── */
-.hero-content > * {
+/* ── Section rules draw in ── */
+.js .rule-draw {
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.js .rule-draw.in-view {
+  animation: drawLine 1.1s var(--ease-out) forwards;
+}
+
+/* ── Intro curtain ──
+   A single panel in the brand light, holding the logo, which lifts away
+   once the logo has settled.
+
+   The lift is a pure CSS animation on purpose. js/intro.js only ever makes
+   it *finish sooner* (repeat visit, reduced motion) — it is never required
+   to remove the curtain. A failed or blocked script therefore cannot leave
+   the page covered. It is hidden outright without JS, since the reveal
+   animations it hides are themselves JS-gated. */
+/* Single dial for the whole intro sequence. 1 = the original pace; 1.35 runs
+   it 35% slower. Every duration and delay in the sequence is multiplied by
+   it — including the hero's start offset, which has to stay behind the
+   curtain — and js/intro.js reads this same value, so nothing can drift out
+   of step. Raise it to slow the intro further, lower it to speed it up.
+   Lives on :root because .hero-content is not a descendant of .intro. */
+:root {
+  --intro-speed: 1.35;
+}
+
+.intro { display: none; }
+
+/* Decided in the document head, so a repeat visitor never sees it flash. */
+.js.intro-skip .intro { display: none; }
+
+.js .intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--brand-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: var(--gutter);
+  animation: introLift
+             calc(0.9s * var(--intro-speed))
+             var(--ease-out)
+             calc(1.75s * var(--intro-speed))
+             forwards;
+}
+
+.intro__logo {
+  width: min(230px, 56vw);
+  height: auto;
   opacity: 0;
-  animation: fadeUp 0.8s ease forwards;
+  animation: riseIn
+             calc(1s * var(--intro-speed))
+             var(--ease-out)
+             calc(0.15s * var(--intro-speed))
+             forwards;
 }
 
-.hero-content > *:nth-child(1) { animation-delay: 0.1s; }
-.hero-content > *:nth-child(2) { animation-delay: 0.25s; }
-.hero-content > *:nth-child(3) { animation-delay: 0.4s; }
-.hero-content > *:nth-child(4) { animation-delay: 0.55s; }
-.hero-content > *:nth-child(5) { animation-delay: 0.7s; }
-
-/* ── Stat pills ── */
-.stat-pill {
-  transition: background 0.2s ease, transform 0.2s ease;
+.intro__rule {
+  width: min(230px, 56vw);
+  height: 1px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: center;
+  animation: drawLine
+             calc(0.9s * var(--intro-speed))
+             var(--ease-out)
+             calc(0.65s * var(--intro-speed))
+             forwards;
 }
 
-.stat-pill:hover {
-  background: rgba(200, 169, 110, 0.15) !important;
-  transform: translateY(-2px);
+/* While the curtain is up the page must not scroll behind it. */
+body.intro-active {
+  overflow: hidden;
 }
 
-/* ── Use-case cards ── */
+/* ── Hero entrance ──
+   Staggered rise, offset past the curtain so the two do not overlap. On a
+   page with no curtain — every page but the home page — and on repeat
+   visits, js/intro.js sets .intro-skip and the offset drops to zero. */
+.js .hero-content > * {
+  opacity: 0;
+  animation: riseIn 1s var(--ease-out) forwards;
+  animation-delay: calc(2.05s * var(--intro-speed) + var(--d, 0s));
+}
+
+.js.intro-skip .hero-content > * {
+  animation-delay: var(--d, 0s);
+}
+
+.js .hero-content > *:nth-child(1) { --d: 0.00s; }
+.js .hero-content > *:nth-child(2) { --d: 0.10s; }
+.js .hero-content > *:nth-child(3) { --d: 0.20s; }
+.js .hero-content > *:nth-child(4) { --d: 0.30s; }
+.js .hero-content > *:nth-child(5) { --d: 0.40s; }
+.js .hero-content > *:nth-child(6) { --d: 0.50s; }
+
+/* ── Quiet hover states ──
+   No lift, no shadow. A rule brightens or a hairline draws. */
+.step-item,
 .use-case-card {
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: border-color var(--transition);
 }
 
+.step-item:hover,
 .use-case-card:hover {
-  border-color: var(--color-accent) !important;
-  transform: translateY(-4px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  border-color: var(--rule-strong);
 }
 
-/* ── Step cards ── */
-.step-card {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+/* Media slots warm very slightly on hover so they feel live once filled. */
+.media {
+  transition: filter var(--transition);
 }
 
-.step-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(26, 26, 46, 0.1);
+a:hover > .media,
+.media:hover {
+  filter: brightness(1.03);
 }
 
-/* ── Problem columns ── */
-.problem-col {
-  transition: transform 0.3s ease;
-}
+/* ── Reduced motion ──
+   Everything resolves instantly to its final state. No curtain, no
+   travel, no draw. */
+@media (prefers-reduced-motion: reduce) {
+  .js .animate-on-scroll,
+  .js .animate-on-scroll.in-view,
+  .js .hero-content > *,
+  .js.intro-skip .hero-content > * {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
 
-/* ── Search mock card ── */
-.search-mock {
-  transition: box-shadow 0.3s ease;
-}
+  .js .rule-draw,
+  .js .rule-draw.in-view {
+    transform: scaleX(1);
+    animation: none;
+  }
 
-.search-mock:hover {
-  box-shadow: 0 20px 48px rgba(26, 26, 46, 0.12);
-}
+  .intro,
+  .js .intro { display: none; }
+  body.intro-active { overflow: auto; }
 
-/* ── CTA section ── */
-.cta-card {
-  transition: transform 0.3s ease;
+  .step-item,
+  .use-case-card,
+  .media {
+    transition: none;
+  }
 }
