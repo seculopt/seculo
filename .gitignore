@@ -1,6 +1,3 @@
-﻿# Source photography while it is being trialled. These are 3000-7400px
-# originals at 1-5 MB each; they should not enter git history until they have
-# been resized for the web.
-assets/images/*.jpg
-assets/images/*.jpeg
-assets/images/*.png
+# Site photography is part of the deployed site and MUST be committed —
+# it was previously ignored here, which shipped a live site with no images.
+# If these need optimising, resize them in place; do not un-track them.
