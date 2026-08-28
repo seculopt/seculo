@@ -1,5 +1,6 @@
 // auth.js — login.html logic
-// Magic link: user enters email → Supabase sends link → user clicks → session created
+// Single flow: email + password → signInWithPassword()
+// Also handles auth callback from email confirmation links (onAuthStateChange)
 
 import { supabase } from './supabase-client.js';
 
@@ -31,15 +32,44 @@ const input   = document.getElementById('email-input');
 const btn     = document.getElementById('send-btn');
 const message = document.getElementById('login-message');
 
-// If user is already logged in, redirect to dashboard
-supabase.auth.getSession().then(({ data: { session } }) => {
-  if (session) window.location.href = 'dashboard.html';
+// Handle auth callback: if Supabase redirected here with ?code= (email confirmation),
+// exchange the code for a session and go to dashboard immediately.
+(async function () {
+  const _urlCode = new URLSearchParams(window.location.search).get('code');
+  if (_urlCode) {
+    const { data } = await supabase.auth.exchangeCodeForSession(_urlCode);
+    if (data?.session?.user) { window.location.href = 'dashboard.html'; return; }
+  }
+  // Redirect already-authenticated users to dashboard.
+  // Use getUser() (network check) instead of getSession() (localStorage-only) to avoid
+  // redirecting on stale/partial sessions that would cause a login↔dashboard loop.
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) window.location.href = 'dashboard.html';
+})();
+
+// Catch any subsequent SIGNED_IN event (e.g. magic link via onAuthStateChange)
+supabase.auth.onAuthStateChange(function (event, session) {
+  if (session && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
+    window.location.href = 'dashboard.html';
+  }
 });
+
+// Show/hide password toggle
+if (togglePw) {
+  togglePw.addEventListener('click', function () {
+    const isHidden = pwInput.type === 'password';
+    pwInput.type = isHidden ? 'text' : 'password';
+    togglePw.textContent = isHidden ? '🙈' : '👁';
+  });
+}
 
 form.addEventListener('submit', async function (e) {
   e.preventDefault();
 
-  const email = input.value.trim();
+  const email    = emailInput.value.trim();
+  const password = pwInput ? pwInput.value : '';
+  const lang     = document.documentElement.lang || 'pt';
+
   if (!email) return;
 
   btn.disabled = true;
@@ -69,3 +99,26 @@ form.addEventListener('submit', async function (e) {
   message.textContent = copy.sent;
   message.className = 'auth-message auth-message--success';
 });
+
+// Resend confirmation email
+if (resendBtn) {
+  resendBtn.addEventListener('click', async function () {
+    const email = emailInput.value.trim();
+    const lang  = document.documentElement.lang || 'pt';
+    if (!email) {
+      if (resendMsg) { resendMsg.textContent = lang === 'pt' ? 'Introduz o teu email acima.' : 'Enter your email above.'; resendMsg.style.display = 'block'; }
+      return;
+    }
+    resendBtn.disabled = true;
+    resendBtn.textContent = lang === 'pt' ? 'A enviar...' : 'Sending...';
+    const { error } = await supabase.auth.resend({ type: 'signup', email });
+    resendBtn.disabled = false;
+    resendBtn.textContent = lang === 'pt' ? 'Reenviar email de confirmação' : 'Resend confirmation email';
+    if (resendMsg) {
+      resendMsg.style.display = 'block';
+      resendMsg.textContent = error
+        ? (lang === 'pt' ? 'Erro ao reenviar. Tenta de novo.' : 'Error resending. Please try again.')
+        : (lang === 'pt' ? 'Email reenviado! Verifica a tua caixa de entrada.' : 'Email sent! Check your inbox.');
+    }
+  });
+}
