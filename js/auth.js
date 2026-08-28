@@ -1,36 +1,23 @@
 // auth.js — login.html logic
-// Single flow: email + password → signInWithPassword()
-// Also handles auth callback from email confirmation links (onAuthStateChange)
+// Dual flow (restaurado 28-ago-2026, base commit 93309a1):
+//   · email + password  → signInWithPassword() → dashboard directo
+//   · email solo        → signInWithOtp() (magic link)
+// El release del rediseño (084d2ae) dejó solo el magic link y bloqueó las
+// cuentas demo/white-label sin buzón; el merge previo (e3eca53) referenciaba
+// variables sin declarar y el módulo moría al cargar. Esta versión unifica
+// ambos flujos y conserva el manejo del callback ?code= y el resend.
+// También la usa register.html para el botón de reenviar confirmación.
 
 import { supabase } from './supabase-client.js';
 
-// Runtime copy for the three site languages. The page's static text comes from
-// data-en/pt/es attributes; these are the strings only JS ever writes.
-const COPY = {
-  en: {
-    sending: 'Sending...',
-    submit:  'Send login link',
-    error:   'Something went wrong. Please try again.',
-    sent:    'Link sent! Check your inbox.',
-  },
-  pt: {
-    sending: 'A enviar...',
-    submit:  'Enviar link de acesso',
-    error:   'Ocorreu um erro. Por favor tenta de novo.',
-    sent:    'Link enviado! Verifica o teu email.',
-  },
-  es: {
-    sending: 'Enviando...',
-    submit:  'Enviar enlace de acceso',
-    error:   'Ocurrió un error. Inténtalo de nuevo.',
-    sent:    '¡Enlace enviado! Revisa tu correo.',
-  },
-};
-
-const form    = document.getElementById('login-form');
-const input   = document.getElementById('email-input');
-const btn     = document.getElementById('send-btn');
-const message = document.getElementById('login-message');
+const form      = document.getElementById('login-form');
+const emailInput = document.getElementById('email-input');
+const pwInput   = document.getElementById('password-input');
+const togglePw  = document.getElementById('toggle-pw');
+const btn       = document.getElementById('send-btn');
+const message   = document.getElementById('login-message');
+const resendBtn = document.getElementById('resend-btn');
+const resendMsg = document.getElementById('resend-message');
 
 // Handle auth callback: if Supabase redirected here with ?code= (email confirmation),
 // exchange the code for a session and go to dashboard immediately.
@@ -55,7 +42,7 @@ supabase.auth.onAuthStateChange(function (event, session) {
 });
 
 // Show/hide password toggle
-if (togglePw) {
+if (togglePw && pwInput) {
   togglePw.addEventListener('click', function () {
     const isHidden = pwInput.type === 'password';
     pwInput.type = isHidden ? 'text' : 'password';
@@ -63,47 +50,66 @@ if (togglePw) {
   });
 }
 
-form.addEventListener('submit', async function (e) {
+if (form) form.addEventListener('submit', async function (e) {
   e.preventDefault();
 
   const email    = emailInput.value.trim();
   const password = pwInput ? pwInput.value : '';
   const lang     = document.documentElement.lang || 'pt';
-
   if (!email) return;
 
   btn.disabled = true;
   message.textContent = '';
   message.className = '';
+  btn.textContent = lang === 'pt' ? 'A entrar...' : lang === 'es' ? 'Entrando...' : 'Signing in...';
 
-  const copy = COPY[document.documentElement.lang] || COPY.en;
-  btn.textContent = copy.sending;
+  let error = null;
 
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: 'https://seculopt.com/dashboard.html',
-    },
-  });
+  if (password) {
+    // Mode 1: email + password → sesión directa
+    const { data, error: pwError } = await supabase.auth.signInWithPassword({ email, password });
+    if (pwError) {
+      error = pwError;
+    } else if (data.session) {
+      window.location.href = 'dashboard.html';
+      return;
+    }
+  } else {
+    // Mode 2: magic link (OTP)
+    const { error: otpError } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: 'https://seculopt.com/dashboard.html' },
+    });
+    error = otpError;
+    if (!error) {
+      form.style.display = 'none';
+      message.textContent = lang === 'pt' ? 'Link enviado! Verifica o teu email.'
+                          : lang === 'es' ? '¡Enlace enviado! Revisa tu correo.'
+                          : 'Link sent! Check your inbox.';
+      message.className = 'auth-message auth-message--success';
+      return;
+    }
+  }
 
   if (error) {
     btn.disabled = false;
-    btn.textContent = copy.submit;
-    message.textContent = copy.error;
+    btn.textContent = lang === 'pt' ? 'Entrar' : lang === 'es' ? 'Entrar' : 'Log in';
+    const isCredentialError = error.message && (
+      error.message.toLowerCase().includes('invalid') ||
+      error.message.toLowerCase().includes('credentials') ||
+      error.message.toLowerCase().includes('password')
+    );
+    message.textContent = isCredentialError
+      ? (lang === 'pt' ? 'Email ou password incorretos.' : lang === 'es' ? 'Correo o contraseña incorrectos.' : 'Invalid email or password.')
+      : (lang === 'pt' ? 'Ocorreu um erro. Por favor tenta de novo.' : lang === 'es' ? 'Ocurrió un error. Inténtalo de nuevo.' : 'Something went wrong. Please try again.');
     message.className = 'auth-message auth-message--error';
-    return;
   }
-
-  // Success
-  form.style.display = 'none';
-  message.textContent = copy.sent;
-  message.className = 'auth-message auth-message--success';
 });
 
-// Resend confirmation email
+// Resend confirmation email (register.html)
 if (resendBtn) {
   resendBtn.addEventListener('click', async function () {
-    const email = emailInput.value.trim();
+    const email = emailInput ? emailInput.value.trim() : '';
     const lang  = document.documentElement.lang || 'pt';
     if (!email) {
       if (resendMsg) { resendMsg.textContent = lang === 'pt' ? 'Introduz o teu email acima.' : 'Enter your email above.'; resendMsg.style.display = 'block'; }
