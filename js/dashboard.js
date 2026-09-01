@@ -55,8 +55,6 @@ try {
   console.error('Failed to load dashboard data', e);
 }
 
-document.getElementById('dashLoading').style.display = 'none';
-initDashboard();
 
 // ── Folder sidebar ─────────────────────────────────────────
 function countInFolder(fid) {
@@ -627,3 +625,10 @@ window.copyAllLinks = function() {
     })
     .catch(() => showToast('Erro ao copiar — tenta de novo'));
 };
+
+// El arranque va AL FINAL del módulo: initDashboard() usa CARD_T/getT() y
+// otras const declaradas más abajo; llamarlo antes lanzaba
+// "Cannot access 'CARD_T' before initialization" (TDZ) y el dashboard quedaba
+// en blanco desde el release del rediseño (cazado 01-sep-2026 con la consola).
+document.getElementById('dashLoading').style.display = 'none';
+initDashboard();
