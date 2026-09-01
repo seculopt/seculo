@@ -25,14 +25,18 @@ tierBadge.style.display = 'inline-block';
 // cargar enviaba tokens muertos y el engine caía al tier free (visto en la
 // demo del 28-ago y a diario por David, 01-sep-2026). getSession() de la SDK
 // refresca automáticamente la sesión si está vencida.
-const engineLink = document.getElementById('engineLink');
-engineLink.addEventListener('click', async (e) => {
+async function goToEngine(e) {
   e.preventDefault();
   const s = await getSession();
   if (!s) { window.location.href = 'login.html'; return; }
   const t = s.user?.user_metadata?.tier || tier || 'free';
   window.location.href = `${API}/?load_saved=1#access_token=${encodeURIComponent(s.access_token)}&refresh_token=${encodeURIComponent(s.refresh_token)}&tier=${t}`;
-});
+}
+// TODOS los enlaces del dashboard hacia el engine (Ver no mapa, Abrir Motor,
+// Começar a explorar…) pasan por el mismo flujo: sin esto, los estáticos
+// mandaban al engine sin credenciales y salía la versión free (David, 01-sep).
+document.querySelectorAll('a[href^="https://seculo-api.vercel.app"]').forEach(a =>
+  a.addEventListener('click', goToEngine));
 
 // ── State ──────────────────────────────────────────────────
 let properties = [];
