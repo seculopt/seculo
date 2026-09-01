@@ -20,9 +20,19 @@ const tierBadge = document.getElementById('tierBadge');
 tierBadge.textContent = tier;
 tierBadge.style.display = 'inline-block';
 
-// Update engine link — pass tokens in hash for cross-domain session
+// Engine link — los tokens se generan EN EL CLIC, no al cargar la página:
+// el access_token dura 1 h y el refresh_token rota; un enlace construido al
+// cargar enviaba tokens muertos y el engine caía al tier free (visto en la
+// demo del 28-ago y a diario por David, 01-sep-2026). getSession() de la SDK
+// refresca automáticamente la sesión si está vencida.
 const engineLink = document.getElementById('engineLink');
-engineLink.href = `${API}/?load_saved=1#access_token=${encodeURIComponent(access_token)}&refresh_token=${encodeURIComponent(refresh_token)}&tier=${tier}`;
+engineLink.addEventListener('click', async (e) => {
+  e.preventDefault();
+  const s = await getSession();
+  if (!s) { window.location.href = 'login.html'; return; }
+  const t = s.user?.user_metadata?.tier || tier || 'free';
+  window.location.href = `${API}/?load_saved=1#access_token=${encodeURIComponent(s.access_token)}&refresh_token=${encodeURIComponent(s.refresh_token)}&tier=${t}`;
+});
 
 // ── State ──────────────────────────────────────────────────
 let properties = [];
