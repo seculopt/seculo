@@ -100,14 +100,39 @@
       body: JSON.stringify(payload),
     })
       .then(function (res) { return res.json(); })
-      .then(function () {
-        form.style.display = 'none';
-        if (successMsg) successMsg.style.display = 'block';
+      .then(function (data) {
+        // FormSubmit responde success como STRING "true"/"false". Antes se
+        // mostraba éxito SIN mirar la respuesta (y el catch también): el
+        // formulario estuvo sin activar y cada mensaje se perdió mientras el
+        // cliente veía "enviado" (auditoría 08-sep-2026). Nunca más éxito falso.
+        if (data && String(data.success) === 'true') {
+          form.style.display = 'none';
+          if (successMsg) successMsg.style.display = 'block';
+        } else {
+          showSubmitFailure();
+        }
       })
       .catch(function () {
-        // Network error fallback — still show success to avoid blocking the user
-        form.style.display = 'none';
-        if (successMsg) successMsg.style.display = 'block';
+        showSubmitFailure();
       });
+
+    function showSubmitFailure() {
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = submitBtn.dataset.originalText || 'Send'; }
+      var lang = document.documentElement.lang || 'pt';
+      var msg = lang === 'pt'
+        ? 'Não foi possível enviar a mensagem. Por favor escreve-nos diretamente para hello@seculopt.com'
+        : lang === 'es'
+        ? 'No se pudo enviar el mensaje. Por favor escríbenos directamente a hello@seculopt.com'
+        : 'Your message could not be sent. Please email us directly at hello@seculopt.com';
+      var err = document.getElementById('form-submit-error');
+      if (!err) {
+        err = document.createElement('p');
+        err.id = 'form-submit-error';
+        err.style.cssText = 'color:#b03518;margin-top:0.8rem;font-size:0.9rem';
+        form.appendChild(err);
+      }
+      err.innerHTML = msg.replace('hello@seculopt.com',
+        '<a href="mailto:hello@seculopt.com" style="color:#b03518;text-decoration:underline">hello@seculopt.com</a>');
+    }
   });
 })();
