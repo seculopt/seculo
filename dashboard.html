@@ -22,6 +22,8 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/nav.css" />
   <link rel="stylesheet" href="css/animations.css" />
+  <!-- Leaflet: mini-mapas del modal de confirmación de direcciones del relatório -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
     /* ── Page shell ── */
@@ -342,6 +344,81 @@
     }
     .nav-signout:hover { color: var(--color-primary); text-decoration: underline; }
 
+    /* ── Report (PDF): botón, selección en tarjeta y modal de direcciones ── */
+    .btn-report { position: relative; display: inline-flex; align-items: center; gap: 0.5rem; }
+    .btn-report:disabled { opacity: 0.45; cursor: not-allowed; }
+    .report-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 1.35rem; height: 1.35rem; padding: 0 0.35rem; border-radius: 20px;
+      background: var(--color-primary); color: var(--color-white);
+      font-family: var(--font-mono, 'DM Mono', monospace); font-size: 0.7rem; font-weight: 600;
+    }
+    .prop-btn.report-sel.active { background: var(--color-primary); color: var(--color-white); border-color: var(--color-primary); }
+    .prop-card.in-report { outline: 2px solid var(--color-accent); outline-offset: -2px; }
+
+    .report-overlay {
+      position: fixed; inset: 0; z-index: 9500;
+      background: rgba(20, 20, 24, 0.55);
+      display: flex; align-items: center; justify-content: center; padding: 1rem;
+    }
+    .report-modal {
+      background: var(--color-white); border: 1px solid var(--color-divider); border-radius: 12px;
+      width: min(960px, 100%); max-height: calc(100vh - 2rem);
+      display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 18px 48px rgba(0,0,0,0.22);
+    }
+    .report-modal-head {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+      padding: 1.25rem 1.5rem 1rem; border-bottom: 1px solid var(--color-divider);
+    }
+    .report-modal-head h2 { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; color: var(--color-primary); margin: 0 0 0.35rem; }
+    .report-modal-head p  { font-size: 0.83rem; color: var(--color-mid); margin: 0; line-height: 1.5; }
+    .report-modal-close {
+      background: none; border: none; cursor: pointer; font-size: 1rem; line-height: 1;
+      color: var(--color-mid); padding: 0.25rem; flex-shrink: 0;
+    }
+    .report-modal-close:hover { color: var(--color-primary); }
+    .report-modal-body { overflow-y: auto; padding: 0.75rem 1.5rem; }
+    .rconf-row {
+      display: grid; grid-template-columns: 2rem 96px minmax(0, 1fr) 128px; gap: 0.9rem; align-items: center;
+      padding: 0.85rem 0; border-bottom: 1px solid var(--color-divider);
+    }
+    .rconf-row:last-child { border-bottom: none; }
+    .rconf-num { font-family: var(--font-mono, 'DM Mono', monospace); font-size: 0.8rem; color: var(--color-mid); }
+    .rconf-thumb { width: 96px; height: 72px; object-fit: cover; border-radius: 6px; background: var(--color-bg); }
+    .rconf-thumb-placeholder { width: 96px; height: 72px; border-radius: 6px; background: linear-gradient(135deg, var(--color-raised) 0%, var(--color-sunken) 100%); }
+    .rconf-body { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+    .rconf-title { font-size: 0.86rem; font-weight: 600; color: var(--color-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rconf-label { font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-mid); }
+    .rconf-addr-input {
+      width: 100%; padding: 0.5rem 0.7rem; border-radius: 6px;
+      border: 1px solid var(--color-accent); background: var(--color-white);
+      font-family: var(--font-body); font-size: 0.86rem; color: var(--color-primary); outline: none;
+    }
+    .rconf-addr-input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(0,0,0,0.05); }
+    .rconf-geo-status { display: flex; align-items: center; gap: 0.4rem; font-size: 0.74rem; color: var(--color-mid); }
+    .rconf-geo-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+    .rconf-geo-dot.red    { background: #c0392b; }
+    .rconf-geo-dot.yellow { background: #d68910; }
+    .rconf-geo-dot.green  { background: #1e8449; }
+    .rconf-map { width: 128px; height: 96px; border-radius: 6px; overflow: hidden; border: 1px solid var(--color-divider); background: var(--color-bg); }
+    .report-modal-foot {
+      display: flex; align-items: center; justify-content: flex-end; gap: 0.6rem; flex-wrap: wrap;
+      padding: 1rem 1.5rem; border-top: 1px solid var(--color-divider); background: var(--color-bg);
+    }
+    .report-modal-foot-note { flex: 1 1 100%; font-size: 0.72rem; color: var(--color-mid); }
+    .report-progress { width: 100%; margin-top: 0.5rem; }
+    .report-progress-track { height: 6px; border-radius: 6px; background: var(--color-divider); overflow: hidden; margin-bottom: 0.35rem; }
+    .report-progress-bar { height: 6px; width: 0; border-radius: 6px; background: var(--color-accent); transition: width 0.8s ease; }
+    .report-progress-bar.ok   { background: #1e8449; }
+    .report-progress-bar.fail { background: var(--brand-terracotta); }
+    .report-progress-row { display: flex; justify-content: space-between; font-size: 0.74rem; color: var(--color-mid); }
+    .report-progress-row span:last-child { font-family: var(--font-mono, 'DM Mono', monospace); color: var(--color-primary); }
+    @media (max-width: 640px) {
+      .rconf-row { grid-template-columns: 1.5rem minmax(0, 1fr); }
+      .rconf-thumb, .rconf-thumb-placeholder, .rconf-map { display: none; }
+    }
+
     /* ── Mobile sidebar: horizontal scrollable strip ── */
     @media (max-width: 768px) {
       .dash-body { flex-direction: column; gap: 1rem; }
@@ -425,6 +502,7 @@
         </div>
         <div class="dash-actions btn-group">
           <button class="btn btn-outline" id="copyAllBtn" style="display:none" onclick="copyAllLinks()" data-en="Copy all links" data-pt="Copiar todos os links" data-es="Copiar todos los links">Copy all links</button>
+          <button class="btn btn-outline btn-report" id="reportBtn" style="display:none" onclick="openReportModal()"><span data-en="Generate report" data-pt="Gerar relatório" data-es="Generar informe">Generate report</span><span class="report-badge" id="reportBadge" style="display:none">0</span></button>
           <a href="https://seculo-api.vercel.app/?tier=free" class="btn btn-primary" id="engineLink" data-en="View on map" data-pt="Ver no mapa" data-es="Ver en el mapa">View on map</a>
         </div>
       </div>
@@ -472,9 +550,10 @@
 
   <!-- SCRIPTS -->
   <script src="js/nav.js"></script>
-  <script src="js/lang.js"></script>
+  <script src="js/lang.js?v=2"></script>
   <script src="js/cookies.js"></script>
-  <script type="module" src="js/dashboard.js?v=5"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="js/dashboard.js?v=6"></script>
 
   <!-- Crisp chat -->
   <script>window.$crisp=[];window.CRISP_WEBSITE_ID="ffe7c145-54f8-4fb4-83be-2eba61d6f20d";(function(){var s=document.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;document.getElementsByTagName("head")[0].appendChild(s);})();</script>

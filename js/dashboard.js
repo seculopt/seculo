@@ -43,6 +43,21 @@ let properties = [];
 let folders    = [];
 let activeFolderId = null; // null=All, 'unfiled'=no folder, uuid=folder
 
+// Report (PDF) — declarado aquí, en el nivel superior, para que initDashboard()
+// y buildCard() lo vean sin TDZ. El flujo se construyó en mayo-junio de 2026 y
+// desapareció del dashboard con el release del rediseño (084d2ae, 26-ago-2026);
+// el back (/api/generate-report) siguió funcionando todo el tiempo.
+// Restaurado 23-sep-2026. Mismos tiers que api/generate-report.js.
+const REPORT_TIERS = new Set(['agency', 'professional', 'pro_investor', 'admin',
+                              'lifestyle_match', 'business_match', 'investment_match']);
+const canReport = REPORT_TIERS.has(tier);
+const selectedForReport = new Set();
+const _reportMaps     = {};
+const _reportMarkers  = {};
+const _reportGeoData  = {};
+const _debounceTimers = {};
+const REPORT_MAX = 5;
+
 // ── Load data ──────────────────────────────────────────────
 try {
   const [propsRes, foldsRes] = await Promise.all([
@@ -264,6 +279,7 @@ function initDashboard() {
     renderFolderSidebar();
     renderDashGrid();
   }
+  updateReportBtn();
 }
 
 function renderDashGrid() {
@@ -325,6 +341,19 @@ const CARD_T = {
     toastDeleted: 'Folder deleted',
     toastUpdated: 'Status updated',
     toastMoved:   'Moved',
+    report: {
+      add: 'Add to report', inReport: 'In report', max: 'Maximum 5 properties per report',
+      btn: 'Generate report', btnHint0: 'Click "Add to report" on a property card', btnHint: (n) => `Generate PDF with ${n} propert${n === 1 ? 'y' : 'ies'}`,
+      title: 'Verify property addresses',
+      body: 'Each property needs a confirmed address to place the isochrone and walkability analysis correctly on the map. The address has been pre-filled from the portal: review each one and correct it if needed. The map updates automatically.',
+      label: 'Address (edit if incorrect)', ph: 'Street, number, city — Portugal',
+      legend: 'Green = address found precisely · Yellow = street level · Red = not found, please correct',
+      cancel: 'Cancel', generate: 'Generate report', geocoding: 'Geocoding…', notFound: 'Not found',
+      approx: 'Approximate (confirm address)', building: 'Building-level', street: 'Street-level', approxShort: 'Approximate',
+      generating: 'Generating PDF…', stages: ['Connecting to report server…', 'Fetching isochrones…', 'Generating maps…', 'Building pages…', 'Rendering PDF…', 'Finalizing…'],
+      left: (s) => ` — ~${s}s left`, ready: 'PDF ready — downloading…', failed: 'Generation failed',
+      done: 'Report generated — check your downloads folder', error: 'Error generating report: ',
+    },
     folders: {
       title:         'Folders',
       all:           'All',
@@ -353,6 +382,19 @@ const CARD_T = {
     toastDeleted: 'Pasta eliminada',
     toastUpdated: 'Estado atualizado',
     toastMoved:   'Movido',
+    report: {
+      add: 'Adicionar ao relatório', inReport: 'No relatório', max: 'Máximo de 5 imóveis por relatório',
+      btn: 'Gerar relatório', btnHint0: 'Clique em "Adicionar ao relatório" num cartão', btnHint: (n) => `Gerar PDF com ${n} ${n === 1 ? 'imóvel' : 'imóveis'}`,
+      title: 'Verifique os endereços dos imóveis',
+      body: 'Cada imóvel precisa de um endereço confirmado para colocar a isócrona e a análise de walkability corretamente no mapa. O endereço foi pré-preenchido com os dados do portal: reveja cada um e corrija se necessário. O mapa atualiza automaticamente.',
+      label: 'Endereço (edite se necessário)', ph: 'Rua, número, cidade — Portugal',
+      legend: 'Verde = endereço encontrado com precisão · Amarelo = nível de rua · Vermelho = não encontrado, corrija',
+      cancel: 'Cancelar', generate: 'Gerar relatório', geocoding: 'A geocodificar…', notFound: 'Não encontrado',
+      approx: 'Aproximado (confirme o endereço)', building: 'Nível de edifício', street: 'Nível de rua', approxShort: 'Aproximado',
+      generating: 'A gerar PDF…', stages: ['A ligar ao servidor de relatórios…', 'A obter isócronas…', 'A gerar mapas…', 'A construir páginas…', 'A renderizar PDF…', 'A finalizar…'],
+      left: (s) => ` — ~${s}s restantes`, ready: 'PDF pronto — a transferir…', failed: 'A geração falhou',
+      done: 'Relatório gerado — veja a pasta de transferências', error: 'Erro ao gerar o relatório: ',
+    },
     folders: {
       title:         'Pastas',
       all:           'Todas',
@@ -381,6 +423,19 @@ const CARD_T = {
     toastDeleted: 'Carpeta eliminada',
     toastUpdated: 'Estado actualizado',
     toastMoved:   'Movido',
+    report: {
+      add: 'Añadir al informe', inReport: 'En el informe', max: 'Máximo 5 propiedades por informe',
+      btn: 'Generar informe', btnHint0: 'Pulsa "Añadir al informe" en una tarjeta', btnHint: (n) => `Generar PDF con ${n} propiedad${n === 1 ? '' : 'es'}`,
+      title: 'Verifica las direcciones de las propiedades',
+      body: 'Cada propiedad necesita una dirección confirmada para colocar correctamente la isócrona y el análisis de caminabilidad en el mapa. La dirección se ha rellenado con los datos del portal: revisa cada una y corrígela si es necesario. El mapa se actualiza automáticamente.',
+      label: 'Dirección (edita si es incorrecta)', ph: 'Calle, número, ciudad — Portugal',
+      legend: 'Verde = dirección encontrada con precisión · Amarillo = nivel de calle · Rojo = no encontrada, corrígela',
+      cancel: 'Cancelar', generate: 'Generar informe', geocoding: 'Geocodificando…', notFound: 'No encontrada',
+      approx: 'Aproximada (confirma la dirección)', building: 'Nivel de edificio', street: 'Nivel de calle', approxShort: 'Aproximada',
+      generating: 'Generando PDF…', stages: ['Conectando con el servidor de informes…', 'Obteniendo isócronas…', 'Generando mapas…', 'Construyendo páginas…', 'Renderizando PDF…', 'Finalizando…'],
+      left: (s) => ` — ~${s}s restantes`, ready: 'PDF listo — descargando…', failed: 'La generación falló',
+      done: 'Informe generado — revisa tu carpeta de descargas', error: 'Error al generar el informe: ',
+    },
     folders: {
       title:         'Carpetas',
       all:           'Todas',
@@ -455,6 +510,9 @@ function buildCard(prop) {
         ? `<button class="prop-btn share" data-share="${escHtml(prop.id)}">${t.copy}</button>`
         : ''}
       <button class="prop-btn delete" data-delete="${escHtml(prop.id)}">${t.del}</button>
+      ${canReport
+        ? `<button class="prop-btn report-sel${selectedForReport.has(prop.id) ? ' active' : ''}" data-report="${escHtml(prop.id)}">${selectedForReport.has(prop.id) ? t.report.inReport : t.report.add}</button>`
+        : ''}
       ${folders.length > 0
         ? `<div class="prop-folder-wrap"><select class="prop-folder-select${prop.folder_id ? ' has-folder' : ''}" data-prop-id="${escHtml(prop.id)}"></select></div>`
         : ''}
@@ -497,6 +555,16 @@ function buildCard(prop) {
 
   // Delete button
   card.querySelector('[data-delete]').addEventListener('click', () => deleteProperty(prop.id, card));
+
+  // Report selection button
+  const reportBtn = card.querySelector('[data-report]');
+  if (reportBtn) {
+    if (selectedForReport.has(prop.id)) card.classList.add('in-report');
+    reportBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleReportSelect(prop.id, card, reportBtn);
+    });
+  }
 
   // Folder select
   const folderSel = card.querySelector('.prop-folder-select');
@@ -550,8 +618,10 @@ async function deleteProperty(id, cardEl) {
     setTimeout(() => {
       cardEl.remove();
       properties = properties.filter(p => p.id !== id);
+      selectedForReport.delete(id);
       renderFolderSidebar();
       renderDashGrid();
+      updateReportBtn();
     }, 300);
   } catch (e) {
     showToast('Could not delete — please try again');
@@ -624,6 +694,334 @@ window.copyAllLinks = function() {
       if (btn) { btn.textContent = 'Copiado!'; setTimeout(() => { btn.innerHTML = 'Copiar todos os links'; }, 2500); }
     })
     .catch(() => showToast('Erro ao copiar — tenta de novo'));
+};
+
+// ══════════════════════════════════════════════════════════════
+// REPORT (PDF) — selección en tarjetas → confirmación de direcciones → /api/generate-report
+// ══════════════════════════════════════════════════════════════
+
+function updateReportBtn() {
+  const btn   = document.getElementById('reportBtn');
+  const badge = document.getElementById('reportBadge');
+  if (!btn) return;
+  if (!canReport) { btn.style.display = 'none'; return; }
+  const t = getT();
+  const count = selectedForReport.size;
+  if (badge) { badge.textContent = count; badge.style.display = count ? '' : 'none'; }
+  btn.style.display = properties.length > 0 ? '' : 'none';
+  btn.disabled = count === 0;
+  btn.title = count === 0 ? t.report.btnHint0 : t.report.btnHint(count);
+}
+
+function toggleReportSelect(propId, cardEl, btnEl) {
+  const t = getT();
+  if (selectedForReport.has(propId)) {
+    selectedForReport.delete(propId);
+    cardEl.classList.remove('in-report');
+    btnEl.textContent = t.report.add;
+    btnEl.classList.remove('active');
+  } else {
+    if (selectedForReport.size >= REPORT_MAX) { showToast(t.report.max); return; }
+    selectedForReport.add(propId);
+    cardEl.classList.add('in-report');
+    btnEl.textContent = t.report.inReport;
+    btnEl.classList.add('active');
+  }
+  updateReportBtn();
+}
+
+// ── Nominatim geocode ───────────────────────────────────────
+async function geocodeForReport(address, concelho) {
+  if (!address || address.trim().length < 5) return null;
+  const q = [address.trim(), concelho || '', 'Portugal'].filter(Boolean).join(', ');
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=pt&q=${encodeURIComponent(q)}`,
+      { headers: { 'Accept-Language': 'pt' } }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || !data[0]) return null;
+    return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon), display: data[0].display_name, type: data[0].type };
+  } catch { return null; }
+}
+
+function geoConfidence(type) {
+  if (!type) return 'red';
+  if (['house', 'building', 'apartments', 'residential'].includes(type)) return 'green';
+  if (['road', 'street', 'pedestrian', 'path', 'cycleway'].includes(type)) return 'yellow';
+  return 'red';
+}
+
+function geoLabel(color) {
+  const t = getT();
+  if (color === 'green')  return t.report.building;
+  if (color === 'yellow') return t.report.street;
+  return t.report.approxShort;
+}
+
+function updateMiniMap(propId, lat, lng) {
+  const map = _reportMaps[propId], marker = _reportMarkers[propId];
+  if (!map || !marker) return;
+  marker.setLatLng([lat, lng]);
+  map.setView([lat, lng], 14, { animate: true });
+}
+
+function initMiniMap(propId, containerId, lat, lng) {
+  const container = document.getElementById(containerId);
+  if (!container || !window.L) return;
+  const map = window.L.map(container, {
+    center: [lat, lng], zoom: 16, zoomControl: false, attributionControl: false,
+    dragging: false, scrollWheelZoom: false, doubleClickZoom: false,
+  });
+  window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map);
+  const marker = window.L.circleMarker([lat, lng], { radius: 7, fillColor: '#b8a882', color: '#6b5a3a', weight: 2, fillOpacity: 1 }).addTo(map);
+  _reportMaps[propId]    = map;
+  _reportMarkers[propId] = marker;
+}
+
+function setGeoStatus(propId, color, text) {
+  const dotEl  = document.getElementById(`geoDot-${propId}`);
+  const textEl = document.getElementById(`geoText-${propId}`);
+  if (dotEl)  dotEl.className = `rconf-geo-dot ${color}`;
+  if (textEl) textEl.textContent = text;
+}
+
+// ── Modal ──────────────────────────────────────────────────
+window.openReportModal = function () {
+  const t = getT();
+  if (selectedForReport.size === 0) { showToast(t.report.btnHint0); return; }
+  const selectedProps = properties.filter(p => selectedForReport.has(p.id));
+
+  const overlay = document.createElement('div');
+  overlay.className = 'report-overlay';
+  overlay.id = 'reportOverlay';
+  overlay.innerHTML = `
+    <div class="report-modal" role="dialog" aria-modal="true">
+      <div class="report-modal-head">
+        <div>
+          <h2>${escHtml(t.report.title)}</h2>
+          <p>${escHtml(t.report.body)}</p>
+        </div>
+        <button class="report-modal-close" aria-label="${escHtml(t.report.cancel)}" onclick="closeReportModal()">&#10005;</button>
+      </div>
+      <div class="report-modal-body" id="reportModalBody"></div>
+      <div class="report-modal-foot">
+        <div class="report-modal-foot-note">${escHtml(t.report.legend)}</div>
+        <button class="btn btn-outline" onclick="closeReportModal()">${escHtml(t.report.cancel)}</button>
+        <button class="btn btn-primary" id="reportConfirmBtn" onclick="confirmReport()">${escHtml(t.report.generate)}</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeReportModal(); });
+
+  const body = document.getElementById('reportModalBody');
+  const confirmBtn = document.getElementById('reportConfirmBtn');
+  if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.textContent = t.report.geocoding; }
+
+  selectedProps.forEach((prop, idx) => {
+    const d         = prop.property_data || {};
+    const img       = d.image || d.img || d.thumbnail || '';
+    const title     = d.title || d.address || 'Property';
+    const knownAddr = [d.address, d.localidade, d.concelho].filter(Boolean).join(', ') || d.location || '';
+    const concelho  = d.concelho || '';
+    const mapId     = `rmap-${String(prop.id).replace(/-/g, '')}`;
+
+    const row = document.createElement('div');
+    row.className = 'rconf-row';
+    row.dataset.propId = prop.id;
+
+    const numEl = document.createElement('div');
+    numEl.className = 'rconf-num';
+    numEl.textContent = String(idx + 1).padStart(2, '0');
+    row.appendChild(numEl);
+
+    if (img) {
+      const thumbEl = document.createElement('img');
+      thumbEl.className = 'rconf-thumb'; thumbEl.src = img; thumbEl.alt = '';
+      thumbEl.onerror = function () { this.style.display = 'none'; };
+      row.appendChild(thumbEl);
+    } else {
+      const phEl = document.createElement('div');
+      phEl.className = 'rconf-thumb-placeholder';
+      row.appendChild(phEl);
+    }
+
+    const bodyEl = document.createElement('div');
+    bodyEl.className = 'rconf-body';
+    const titleEl = document.createElement('div');
+    titleEl.className = 'rconf-title'; titleEl.textContent = title;
+    bodyEl.appendChild(titleEl);
+    const labelEl = document.createElement('label');
+    labelEl.className = 'rconf-label'; labelEl.textContent = t.report.label; labelEl.htmlFor = `rconf-in-${idx}`;
+    bodyEl.appendChild(labelEl);
+    const inputEl = document.createElement('input');
+    inputEl.className = 'rconf-addr-input'; inputEl.type = 'text'; inputEl.id = `rconf-in-${idx}`;
+    inputEl.placeholder = t.report.ph; inputEl.value = knownAddr;
+    inputEl.dataset.propId = prop.id; inputEl.dataset.concelho = concelho;
+    bodyEl.appendChild(inputEl);
+    const statusEl = document.createElement('div');
+    statusEl.className = 'rconf-geo-status';
+    statusEl.innerHTML = `<span class="rconf-geo-dot red" id="geoDot-${prop.id}"></span><span id="geoText-${prop.id}">—</span>`;
+    bodyEl.appendChild(statusEl);
+    row.appendChild(bodyEl);
+
+    const mapDiv = document.createElement('div');
+    mapDiv.className = 'rconf-map'; mapDiv.id = mapId;
+    row.appendChild(mapDiv);
+    body.appendChild(row);
+
+    // Re-geocodificar al editar (con debounce)
+    inputEl.addEventListener('input', () => {
+      clearTimeout(_debounceTimers[prop.id]);
+      setGeoStatus(prop.id, 'yellow', t.report.geocoding);
+      _debounceTimers[prop.id] = setTimeout(async () => {
+        const result = await geocodeForReport(inputEl.value, inputEl.dataset.concelho);
+        if (result) {
+          _reportGeoData[prop.id] = result;
+          updateMiniMap(prop.id, result.lat, result.lng);
+          const color = geoConfidence(result.type);
+          setGeoStatus(prop.id, color, geoLabel(color));
+        } else {
+          delete _reportGeoData[prop.id];
+          setGeoStatus(prop.id, 'red', t.report.notFound);
+        }
+      }, 600);
+    });
+
+    // Geocodificación inicial, escalonada (límite de Nominatim)
+    setTimeout(async () => {
+      const result = await geocodeForReport(knownAddr, concelho);
+      if (result) {
+        _reportGeoData[prop.id] = result;
+        const color = geoConfidence(result.type);
+        setGeoStatus(prop.id, color, geoLabel(color));
+        initMiniMap(prop.id, mapId, result.lat, result.lng);
+      } else {
+        setGeoStatus(prop.id, 'red', t.report.approx);
+        initMiniMap(prop.id, mapId, d.lat || 38.72, d.lng || -9.45);
+      }
+      if (idx === selectedProps.length - 1) {
+        const btn = document.getElementById('reportConfirmBtn');
+        if (btn) { btn.disabled = false; btn.textContent = t.report.generate; }
+      }
+    }, 100 + idx * 300);
+  });
+};
+
+window.closeReportModal = function () {
+  document.getElementById('reportOverlay')?.remove();
+  Object.keys(_reportMaps).forEach(id => {
+    try { _reportMaps[id].remove(); } catch {}
+    delete _reportMaps[id];
+    delete _reportMarkers[id];
+  });
+};
+
+// ── Confirmar → PDF ─────────────────────────────────────────
+window.confirmReport = async function () {
+  const t = getT();
+  const selectedProps = properties.filter(p => selectedForReport.has(p.id));
+  const modal = document.getElementById('reportOverlay');
+
+  const config = {
+    generated_at: new Date().toISOString(),
+    lang: (window.getCurrentLang ? window.getCurrentLang() : 'pt') || 'pt',
+    agent: { tier },
+    properties: await Promise.all(selectedProps.map(async (prop, idx) => {
+      const d = prop.property_data || {};
+      const input = modal ? modal.querySelector(`.rconf-addr-input[data-prop-id="${prop.id}"]`) : null;
+      const confirmedAddress = input ? input.value : (d.address || '');
+      let geoResult = _reportGeoData[prop.id];
+      if (!geoResult && !(d.lat || d.lng) && confirmedAddress) {
+        geoResult = await geocodeForReport(confirmedAddress, d.concelho || '');
+        if (geoResult) _reportGeoData[prop.id] = geoResult;
+      }
+      return {
+        id: prop.id, idx: idx + 1,
+        title:  d.title  || d.address || 'Property',
+        portal: d.portal || d.source  || '',
+        url:    d.url    || d.link    || '',
+        price:  d.price  || 0,
+        area_built: d.area || d.areaCons || 0,
+        area_total: d.areaTerr || 0,
+        bedrooms:   d.rooms || d.quartos || 0,
+        image:      d.image || d.img || '',
+        address_portal:    d.address || '',
+        address_confirmed: confirmedAddress,
+        lat: geoResult ? geoResult.lat : (d.lat || 0),
+        lng: geoResult ? geoResult.lng : (d.lng || 0),
+        geo_source: geoResult ? 'nominatim-confirmed' : 'portal-approximate',
+        geo_type:   geoResult ? geoResult.type : 'unknown',
+        concelho:  d.concelho || '', distrito: d.distrito || '',
+        freguesia: d.localidade || d.freguesia || '',
+      };
+    })),
+  };
+
+  const confirmBtn = document.getElementById('reportConfirmBtn');
+  if (confirmBtn) { confirmBtn.disabled = true; confirmBtn.textContent = t.report.generating; }
+
+  // Barra de progreso estimada (la generación tarda ~20-90 s)
+  const STAGES = [5, 18, 35, 55, 72, 88].map((pct, i) => ({ pct, t: [0, 8, 20, 38, 54, 70][i], msg: t.report.stages[i] }));
+  const TOTAL_SECS = 85;
+  const foot = document.querySelector('.report-modal-foot');
+  const prog = document.createElement('div');
+  prog.className = 'report-progress';
+  prog.innerHTML = `
+    <div class="report-progress-track"><div class="report-progress-bar" id="_rp_bar"></div></div>
+    <div class="report-progress-row"><span id="_rp_msg">…</span><span id="_rp_pct">0%</span></div>`;
+  if (foot) foot.appendChild(prog);
+  const bar = document.getElementById('_rp_bar'), msg = document.getElementById('_rp_msg'), pct = document.getElementById('_rp_pct');
+  const startTs = Date.now();
+  const timer = setInterval(() => {
+    const elapsed = (Date.now() - startTs) / 1000;
+    let stage = STAGES[0];
+    for (const s of STAGES) { if (elapsed >= s.t) stage = s; }
+    const next = STAGES[STAGES.indexOf(stage) + 1];
+    let p = stage.pct;
+    if (next) p = stage.pct + (Math.min(elapsed - stage.t, next.t - stage.t) / (next.t - stage.t)) * (next.pct - stage.pct);
+    else p = Math.min(95, stage.pct + (elapsed - stage.t) * 0.15);
+    const remaining = Math.max(0, Math.round(TOTAL_SECS - elapsed));
+    if (bar) bar.style.width = p.toFixed(1) + '%';
+    if (msg) msg.textContent = stage.msg + (remaining > 0 ? t.report.left(remaining) : '');
+    if (pct) pct.textContent = Math.round(p) + '%';
+  }, 800);
+  const finish = (ok) => {
+    clearInterval(timer);
+    if (bar) { bar.style.width = '100%'; bar.classList.add(ok ? 'ok' : 'fail'); }
+    if (msg) msg.textContent = ok ? t.report.ready : t.report.failed;
+    if (pct) pct.textContent = '100%';
+  };
+
+  try {
+    // Sesión fresca: el access_token del arranque puede haber caducado (dura 1 h).
+    const s = await getSession();
+    const token = s?.access_token || access_token;
+    const res = await fetch(`${API}/api/generate-report`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(config),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+      throw new Error(err.error || `HTTP ${res.status}`);
+    }
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = `seculo-report-${new Date().toISOString().slice(0, 10)}.pdf`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    finish(true);
+    setTimeout(() => closeReportModal(), 1200);
+    showToast(t.report.done);
+  } catch (err) {
+    finish(false);
+    if (confirmBtn) { confirmBtn.disabled = false; confirmBtn.textContent = t.report.generate; }
+    showToast(t.report.error + err.message);
+    console.error('[report] error:', err);
+  }
 };
 
 // El arranque va AL FINAL del módulo: initDashboard() usa CARD_T/getT() y
