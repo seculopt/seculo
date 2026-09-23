@@ -401,7 +401,18 @@
     .rconf-geo-dot.red    { background: #c0392b; }
     .rconf-geo-dot.yellow { background: #d68910; }
     .rconf-geo-dot.green  { background: #1e8449; }
-    .rconf-map { width: 128px; height: 96px; border-radius: 6px; overflow: hidden; border: 1px solid var(--color-divider); background: var(--color-bg); }
+    .rconf-map { width: 128px; height: 96px; border-radius: 6px; overflow: hidden; border: 1px solid var(--color-divider); background: var(--color-bg); cursor: crosshair; }
+    .rconf-map .leaflet-control-zoom { display: none; }
+    .rconf-pin { width: 18px; height: 18px; border-radius: 50%; background: var(--color-accent); border: 2px solid var(--color-primary); box-shadow: 0 0 0 3px rgba(255,255,255,0.85); cursor: grab; }
+    .rconf-adjust {
+      align-self: flex-start; margin-top: 0.2rem; padding: 0.25rem 0.6rem; border-radius: 6px;
+      border: 1px solid var(--color-divider); background: var(--color-white); color: var(--color-primary);
+      font-family: var(--font-body); font-size: 0.72rem; cursor: pointer;
+    }
+    .rconf-adjust:hover { border-color: var(--color-accent); background: var(--color-raised); }
+    /* Fila ampliada: el mapa ocupa todo el ancho para colocar el pin con precisión */
+    .rconf-row.expanded .rconf-map { grid-column: 1 / -1; width: 100%; height: 320px; }
+    .rconf-row.expanded .rconf-map .leaflet-control-zoom { display: block; }
     .report-modal-foot {
       display: flex; align-items: center; justify-content: flex-end; gap: 0.6rem; flex-wrap: wrap;
       padding: 1rem 1.5rem; border-top: 1px solid var(--color-divider); background: var(--color-bg);
@@ -417,6 +428,7 @@
     @media (max-width: 640px) {
       .rconf-row { grid-template-columns: 1.5rem minmax(0, 1fr); }
       .rconf-thumb, .rconf-thumb-placeholder, .rconf-map { display: none; }
+      .rconf-row.expanded .rconf-map { display: block; height: 260px; }
     }
 
     /* ── Mobile sidebar: horizontal scrollable strip ── */
@@ -553,7 +565,7 @@
   <script src="js/lang.js?v=2"></script>
   <script src="js/cookies.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script type="module" src="js/dashboard.js?v=6"></script>
+  <script type="module" src="js/dashboard.js?v=7"></script>
 
   <!-- Crisp chat -->
   <script>window.$crisp=[];window.CRISP_WEBSITE_ID="ffe7c145-54f8-4fb4-83be-2eba61d6f20d";(function(){var s=document.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;document.getElementsByTagName("head")[0].appendChild(s);})();</script>

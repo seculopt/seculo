@@ -342,12 +342,13 @@ const CARD_T = {
     toastUpdated: 'Status updated',
     toastMoved:   'Moved',
     report: {
+      manual: 'Confirmed manually on the map', adjust: 'Adjust on map', adjustDone: 'Done', mapHint: 'Drag the pin or click on the map to set the exact location.',
       add: 'Add to report', inReport: 'In report', max: 'Maximum 5 properties per report',
       btn: 'Generate report', btnHint0: 'Click "Add to report" on a property card', btnHint: (n) => `Generate PDF with ${n} propert${n === 1 ? 'y' : 'ies'}`,
       title: 'Verify property addresses',
       body: 'Each property needs a confirmed address to place the isochrone and walkability analysis correctly on the map. The address has been pre-filled from the portal: review each one and correct it if needed. The map updates automatically.',
       label: 'Address (edit if incorrect)', ph: 'Street, number, city — Portugal',
-      legend: 'Green = address found precisely · Yellow = street level · Red = not found, please correct',
+      legend: 'Green = address found precisely · Yellow = street level · Red = not found, please correct. Drag the pin or click on the map to set the exact location.',
       cancel: 'Cancel', generate: 'Generate report', geocoding: 'Geocoding…', notFound: 'Not found',
       approx: 'Approximate (confirm address)', building: 'Building-level', street: 'Street-level', approxShort: 'Approximate',
       generating: 'Generating PDF…', stages: ['Connecting to report server…', 'Fetching isochrones…', 'Generating maps…', 'Building pages…', 'Rendering PDF…', 'Finalizing…'],
@@ -383,12 +384,13 @@ const CARD_T = {
     toastUpdated: 'Estado atualizado',
     toastMoved:   'Movido',
     report: {
+      manual: 'Confirmado manualmente no mapa', adjust: 'Ajustar no mapa', adjustDone: 'Concluir', mapHint: 'Arraste o pino ou clique no mapa para fixar a localização exata.',
       add: 'Adicionar ao relatório', inReport: 'No relatório', max: 'Máximo de 5 imóveis por relatório',
       btn: 'Gerar relatório', btnHint0: 'Clique em "Adicionar ao relatório" num cartão', btnHint: (n) => `Gerar PDF com ${n} ${n === 1 ? 'imóvel' : 'imóveis'}`,
       title: 'Verifique os endereços dos imóveis',
       body: 'Cada imóvel precisa de um endereço confirmado para colocar a isócrona e a análise de walkability corretamente no mapa. O endereço foi pré-preenchido com os dados do portal: reveja cada um e corrija se necessário. O mapa atualiza automaticamente.',
       label: 'Endereço (edite se necessário)', ph: 'Rua, número, cidade — Portugal',
-      legend: 'Verde = endereço encontrado com precisão · Amarelo = nível de rua · Vermelho = não encontrado, corrija',
+      legend: 'Verde = endereço encontrado com precisão · Amarelo = nível de rua · Vermelho = não encontrado, corrija. Arraste o pino ou clique no mapa para fixar a localização exata.',
       cancel: 'Cancelar', generate: 'Gerar relatório', geocoding: 'A geocodificar…', notFound: 'Não encontrado',
       approx: 'Aproximado (confirme o endereço)', building: 'Nível de edifício', street: 'Nível de rua', approxShort: 'Aproximado',
       generating: 'A gerar PDF…', stages: ['A ligar ao servidor de relatórios…', 'A obter isócronas…', 'A gerar mapas…', 'A construir páginas…', 'A renderizar PDF…', 'A finalizar…'],
@@ -424,12 +426,13 @@ const CARD_T = {
     toastUpdated: 'Estado actualizado',
     toastMoved:   'Movido',
     report: {
+      manual: 'Confirmada manualmente en el mapa', adjust: 'Ajustar en el mapa', adjustDone: 'Listo', mapHint: 'Arrastra el pin o haz clic en el mapa para fijar la ubicación exacta.',
       add: 'Añadir al informe', inReport: 'En el informe', max: 'Máximo 5 propiedades por informe',
       btn: 'Generar informe', btnHint0: 'Pulsa "Añadir al informe" en una tarjeta', btnHint: (n) => `Generar PDF con ${n} propiedad${n === 1 ? '' : 'es'}`,
       title: 'Verifica las direcciones de las propiedades',
       body: 'Cada propiedad necesita una dirección confirmada para colocar correctamente la isócrona y el análisis de caminabilidad en el mapa. La dirección se ha rellenado con los datos del portal: revisa cada una y corrígela si es necesario. El mapa se actualiza automáticamente.',
       label: 'Dirección (edita si es incorrecta)', ph: 'Calle, número, ciudad — Portugal',
-      legend: 'Verde = dirección encontrada con precisión · Amarillo = nivel de calle · Rojo = no encontrada, corrígela',
+      legend: 'Verde = dirección encontrada con precisión · Amarillo = nivel de calle · Rojo = no encontrada, corrígela. Arrastra el pin o haz clic en el mapa para fijar la ubicación exacta.',
       cancel: 'Cancelar', generate: 'Generar informe', geocoding: 'Geocodificando…', notFound: 'No encontrada',
       approx: 'Aproximada (confirma la dirección)', building: 'Nivel de edificio', street: 'Nivel de calle', approxShort: 'Aproximada',
       generating: 'Generando PDF…', stages: ['Conectando con el servidor de informes…', 'Obteniendo isócronas…', 'Generando mapas…', 'Construyendo páginas…', 'Renderizando PDF…', 'Finalizando…'],
@@ -748,13 +751,15 @@ async function geocodeForReport(address, concelho) {
 
 function geoConfidence(type) {
   if (!type) return 'red';
+  if (type === 'manual') return 'green';
   if (['house', 'building', 'apartments', 'residential'].includes(type)) return 'green';
   if (['road', 'street', 'pedestrian', 'path', 'cycleway'].includes(type)) return 'yellow';
   return 'red';
 }
 
-function geoLabel(color) {
+function geoLabel(color, type) {
   const t = getT();
+  if (type === 'manual')  return t.report.manual;
   if (color === 'green')  return t.report.building;
   if (color === 'yellow') return t.report.street;
   return t.report.approxShort;
@@ -770,15 +775,35 @@ function updateMiniMap(propId, lat, lng) {
 function initMiniMap(propId, containerId, lat, lng) {
   const container = document.getElementById(containerId);
   if (!container || !window.L) return;
+  // Mapa interactivo: el agente puede arrastrar el pin o hacer clic para colocarlo
+  // (urbanizaciones, caminos rurales y nombres que Nominatim no encuentra).
   const map = window.L.map(container, {
-    center: [lat, lng], zoom: 16, zoomControl: false, attributionControl: false,
-    dragging: false, scrollWheelZoom: false, doubleClickZoom: false,
+    center: [lat, lng], zoom: 16, zoomControl: true, attributionControl: false,
+    dragging: true, scrollWheelZoom: true, doubleClickZoom: false,
   });
-  window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(map);
-  const marker = window.L.circleMarker([lat, lng], { radius: 7, fillColor: '#b8a882', color: '#6b5a3a', weight: 2, fillOpacity: 1 }).addTo(map);
+  window.L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+  const icon = window.L.divIcon({ className: 'rconf-pin', iconSize: [18, 18], iconAnchor: [9, 9] });
+  const marker = window.L.marker([lat, lng], { icon, draggable: true }).addTo(map);
+  const placed = (ll) => {
+    _reportGeoData[propId] = { lat: ll.lat, lng: ll.lng, display: 'manual', type: 'manual' };
+    setGeoStatus(propId, 'green', geoLabel('green', 'manual'));
+  };
+  marker.on('dragend', () => placed(marker.getLatLng()));
+  map.on('click', (e) => { marker.setLatLng(e.latlng); placed(e.latlng); });
   _reportMaps[propId]    = map;
   _reportMarkers[propId] = marker;
 }
+
+// Amplía/reduce el mapa de una fila para ajustar el pin con precisión.
+window.toggleReportMap = function (propId, btn) {
+  const row = document.querySelector(`.rconf-row[data-prop-id="${propId}"]`);
+  const map = _reportMaps[propId];
+  if (!row) return;
+  const t = getT();
+  const big = row.classList.toggle('expanded');
+  if (btn) btn.textContent = big ? t.report.adjustDone : t.report.adjust;
+  if (map) setTimeout(() => { map.invalidateSize(); const m = _reportMarkers[propId]; if (m) map.setView(m.getLatLng(), big ? 17 : 16); }, 50);
+};
 
 function setGeoStatus(propId, color, text) {
   const dotEl  = document.getElementById(`geoDot-${propId}`);
@@ -864,6 +889,10 @@ window.openReportModal = function () {
     statusEl.className = 'rconf-geo-status';
     statusEl.innerHTML = `<span class="rconf-geo-dot red" id="geoDot-${prop.id}"></span><span id="geoText-${prop.id}">—</span>`;
     bodyEl.appendChild(statusEl);
+    const adjBtn = document.createElement('button');
+    adjBtn.type = 'button'; adjBtn.className = 'rconf-adjust'; adjBtn.textContent = t.report.adjust;
+    adjBtn.addEventListener('click', () => window.toggleReportMap(prop.id, adjBtn));
+    bodyEl.appendChild(adjBtn);
     row.appendChild(bodyEl);
 
     const mapDiv = document.createElement('div');
@@ -877,6 +906,7 @@ window.openReportModal = function () {
       setGeoStatus(prop.id, 'yellow', t.report.geocoding);
       _debounceTimers[prop.id] = setTimeout(async () => {
         const result = await geocodeForReport(inputEl.value, inputEl.dataset.concelho);
+        if (_reportGeoData[prop.id] && _reportGeoData[prop.id].type === 'manual' && !result) { setGeoStatus(prop.id, 'green', geoLabel('green', 'manual')); return; }
         if (result) {
           _reportGeoData[prop.id] = result;
           updateMiniMap(prop.id, result.lat, result.lng);
@@ -951,7 +981,7 @@ window.confirmReport = async function () {
         address_confirmed: confirmedAddress,
         lat: geoResult ? geoResult.lat : (d.lat || 0),
         lng: geoResult ? geoResult.lng : (d.lng || 0),
-        geo_source: geoResult ? 'nominatim-confirmed' : 'portal-approximate',
+        geo_source: geoResult ? (geoResult.type === 'manual' ? 'manual-confirmed' : 'nominatim-confirmed') : 'portal-approximate',
         geo_type:   geoResult ? geoResult.type : 'unknown',
         concelho:  d.concelho || '', distrito: d.distrito || '',
         freguesia: d.localidade || d.freguesia || '',
