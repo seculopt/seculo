@@ -1,0 +1,139 @@
+/* ============================================================
+   SÉCULO — portada de PRUEBA con Luneta dentro (20-nov-2026)
+   Solo para /novo/. Usa los tokens de css/style.css; no redefine nada global.
+   Mismo espíritu: fondo cálido, esquinas a 0, líneas finas en vez de cajas,
+   terracota racionada (marca la zona elegida y el control vivo).
+   ============================================================ */
+
+/* ── A · Hero corto ── */
+.nv-hero {
+  padding: clamp(28px, 4.5vw, 64px) 0 clamp(20px, 3vw, 36px);
+  border-bottom: 1px solid var(--rule);
+}
+/* El protagonista es el mapa: el título va en dos líneas y más contenido que en la portada actual */
+.nv-hero .nv-hero__title { font-size: clamp(2rem, 1.2rem + 3vw, 3.6rem); max-width: 17ch; }
+.nv-hero__grid {
+  display: grid;
+  gap: clamp(20px, 3vw, 40px);
+}
+.nv-hero__title {
+  font-family: var(--font-display);
+  font-size: var(--t-hero);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  margin: 0.4em 0 0;
+  max-width: 14ch;
+  color: var(--color-text);
+}
+.nv-hero__sub {
+  font-size: var(--t-lead);
+  line-height: 1.55;
+  color: var(--color-mid);
+  max-width: var(--measure);
+  margin: 0;
+}
+.nv-hero__sub strong { color: var(--color-text); font-weight: 600; }
+
+.nv-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: clamp(20px, 3vw, 32px);
+  border-top: 1px solid var(--rule);
+}
+.nv-stats > div {
+  padding: 14px 12px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.nv-stats > div + div { padding-left: 12px; border-left: 1px solid var(--rule); }
+.nv-stats__n {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.3rem);
+  line-height: 1;
+  color: var(--color-text);
+}
+.nv-stats__l {
+  font-family: var(--font-mono);
+  font-size: var(--t-label);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-mid);
+}
+
+@media (min-width: 900px) {
+  .nv-hero__grid { grid-template-columns: 1.15fr 1fr; align-items: end; }
+}
+
+/* ── B · El mapa ── */
+.nv-mapa { position: relative; }
+.nv-mapa__head { padding-top: 18px; padding-bottom: 12px; }
+.nv-mapa__hint {
+  margin: 0;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  font-size: var(--t-small);
+  color: var(--color-mid);
+}
+.nv-dot {
+  flex: none;
+  width: 8px; height: 8px;
+  background: var(--color-accent);
+  transform: translateY(-1px);
+}
+.nv-mapa__frame {
+  border-top: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule-strong);
+  background: var(--color-sunken);
+}
+.nv-mapa__frame iframe {
+  display: block;
+  width: 100%;
+  height: clamp(520px, 78vh, 920px);
+  border: 0;
+}
+
+/* Barra de la zona elegida: queda pegada abajo mientras el mapa está en pantalla */
+.nv-zona {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--rule-strong);
+  box-shadow: 0 -1px 0 var(--rule);
+}
+.nv-zona__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+.nv-zona__txt { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; min-width: 0; }
+.nv-zona__label {
+  font-family: var(--font-mono);
+  font-size: var(--t-label);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-mid);
+}
+.nv-zona__nome {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.35rem);
+  color: var(--color-text);
+}
+.nv-zona.is-set .nv-zona__nome { color: var(--color-accent); }
+.nv-zona__meta { font-size: var(--t-small); color: var(--color-mid); }
+.nv-zona__btn { white-space: nowrap; }
+.nv-zona__btn.is-off { opacity: 0.38; pointer-events: none; }
+@media (max-width: 599px) {
+  .nv-zona__btn { width: 100%; }
+}
+
+/* ── D · Porquê ── */
+.nv-why { max-width: 820px; }
+.nv-why h2 { margin-bottom: 0.8em; }

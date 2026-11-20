@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Página de PRUEBA del rediseño (20-nov-2026): Luneta dentro de Século como onboarding
+       gratuito. No sustituye a la portada; no se indexa ni se enlaza desde el sitio. -->
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Século Explorer — Market Map</title>
+  <link rel="icon" href="/favicon.ico?v=2" sizes="32x32" />
+  <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
+  <script>document.documentElement.classList.add('js');</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@200;300;400;500;600;700&family=Zalando+Sans+Expanded:wght@400;500;600;700&family=DM+Mono&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/nav.css" />
+  <link rel="stylesheet" href="/css/animations.css" />
+  <link rel="stylesheet" href="/novo/novo.css" />
+</head>
+<body>
+
+  <!-- ══════════════ NAVIGATION ══════════════ -->
+  <nav class="site-nav" id="site-nav">
+    <div class="nav-inner">
+      <a href="/novo/" class="nav-logo" aria-label="Século Explorer — Home">
+        <img src="/assets/logo.svg" alt="Século Explorer" />
+      </a>
+      <ul class="nav-links">
+        <li><a href="#mapa" data-en="Market Map" data-pt="Mapa do Mercado" data-es="Mapa del Mercado">Market Map</a></li>
+        <li><a href="#como" data-en="How It Works" data-pt="Como Funciona" data-es="Cómo Funciona">How It Works</a></li>
+        <li><a href="/products.html" data-en="Plans" data-pt="Planos" data-es="Planes">Plans</a></li>
+        <li><a href="/login.html" class="nav-login" data-en="Log In" data-pt="Entrar" data-es="Entrar">Log In</a></li>
+        <li><a href="#mapa" class="btn btn-primary" data-en="Explore for free" data-pt="Explorar grátis" data-es="Explorar gratis">Explore for free</a></li>
+      </ul>
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="en">EN</button><span>/</span>
+        <button class="lang-btn" data-lang="pt">PT</button><span>/</span>
+        <button class="lang-btn" data-lang="es">ES</button>
+      </div>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+
+  <!-- ══════════════ A — HERO (corto: el protagonista es el mapa) ══════════════ -->
+  <header class="nv-hero">
+    <div class="container nv-hero__grid">
+      <div>
+        <span class="section-label" data-en="Market Map · free" data-pt="Mapa do Mercado · grátis" data-es="Mapa del Mercado · gratis">Market Map · free</span>
+        <h1 class="nv-hero__title"
+          data-en="Understand the market. Then find the home."
+          data-pt="Perceba o mercado. Depois, encontre a casa."
+          data-es="Entiende el mercado. Después, encuentra la casa.">Understand the market. Then find the home.</h1>
+      </div>
+      <div class="nv-hero__side">
+        <p class="nv-hero__sub"
+          data-en="Explore prices, supply and trends across Portugal — by district, municipality and parish — for free, with no sign-up. <strong>When you find your area, see every listing from 11 portals in one place.</strong>"
+          data-pt="Explore preços, oferta e tendências de todo o Portugal — por distrito, concelho e freguesia — grátis e sem registo. <strong>Quando encontrar a sua zona, veja todos os imóveis de 11 portais num só lugar.</strong>"
+          data-es="Explora precios, oferta y tendencias de todo Portugal — por distrito, municipio y parroquia — gratis y sin registro. <strong>Cuando encuentres tu zona, ve todos los inmuebles de 11 portales en un solo lugar.</strong>">Explore prices, supply and trends across Portugal — by district, municipality and parish — for free, with no sign-up. <strong>When you find your area, see every listing from 11 portals in one place.</strong></p>
+        <div class="nv-stats">
+          <div><span class="nv-stats__n">278</span><span class="nv-stats__l" data-en="municipalities" data-pt="concelhos" data-es="municipios">municipalities</span></div>
+          <div><span class="nv-stats__n">11</span><span class="nv-stats__l" data-en="portals combined" data-pt="portais reunidos" data-es="portales reunidos">portals combined</span></div>
+          <div><span class="nv-stats__n">0 €</span><span class="nv-stats__l" data-en="to explore" data-pt="para explorar" data-es="para explorar">to explore</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ══════════════ B — LUNETA (el mapa, dentro de Século) ══════════════ -->
+  <section class="nv-mapa" id="mapa" aria-label="Market map">
+    <div class="container nv-mapa__head">
+      <p class="nv-mapa__hint">
+        <span class="nv-dot" aria-hidden="true"></span>
+        <span data-en="Click an area to pin its profile. Change operation, type and bedrooms in the map panel."
+              data-pt="Clique numa zona para fixar a ficha. Mude a operação, o tipo e a tipologia no painel do mapa."
+              data-es="Haz clic en una zona para fijar su ficha. Cambia operación, tipo y tipología en el panel del mapa.">Click an area to pin its profile. Change operation, type and bedrooms in the map panel.</span>
+      </p>
+    </div>
+    <div class="nv-mapa__frame">
+      <iframe id="lunetaFrame" src="https://luneta.seculopt.com/?embed=seculo" title="Luneta — Mapa do Mercado" loading="eager" allow="fullscreen"></iframe>
+    </div>
+
+    <!-- Barra de la zona elegida: el puente Luneta → Século -->
+    <div class="nv-zona" id="zonaBar" aria-live="polite">
+      <div class="container nv-zona__inner">
+        <div class="nv-zona__txt">
+          <span class="nv-zona__label" data-en="Your area" data-pt="A sua zona" data-es="Tu zona">Your area</span>
+          <span class="nv-zona__nome" id="zonaNome"
+                data-en="Pick an area on the map" data-pt="Escolha uma zona no mapa" data-es="Elige una zona en el mapa">Pick an area on the map</span>
+          <span class="nv-zona__meta" id="zonaMeta"></span>
+        </div>
+        <a class="btn btn-primary nv-zona__btn is-off" id="zonaBtn" href="#mapa" aria-disabled="true"
+           data-en="See listings in this area" data-pt="Ver imóveis nesta zona" data-es="Ver inmuebles en esta zona">See listings in this area</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ C — COMO FUNCIONA (el recorrido nuevo) ══════════════ -->
+  <section class="section steps-section" id="como">
+    <div class="container">
+      <div class="steps-header animate-on-scroll">
+        <span class="section-label" data-en="The Method" data-pt="O Método" data-es="El Método">The Method</span>
+        <h2 data-en="From the market to your property" data-pt="Do mercado ao seu imóvel" data-es="Del mercado a tu inmueble">From the market to your property</h2>
+      </div>
+      <ol class="steps-list">
+        <li class="step-item animate-on-scroll">
+          <span class="step-number">01</span>
+          <div class="step-body">
+            <h3 data-en="Read the market, for free" data-pt="Leia o mercado, grátis" data-es="Lee el mercado, gratis">Read the market, for free</h3>
+            <p data-en="Median prices, €/m², supply and what changed in the last 7 days, for every district, municipality and parish — <strong>with the planning layers (PDM, RAN, REN) on the same map.</strong>"
+               data-pt="Preços medianos, €/m², oferta e o que mudou nos últimos 7 dias, em cada distrito, concelho e freguesia — <strong>com as camadas de ordenamento (PDM, RAN, REN) no mesmo mapa.</strong>"
+               data-es="Precios medianos, €/m², oferta y lo que cambió en los últimos 7 días, en cada distrito, municipio y parroquia — <strong>con las capas de ordenamiento (PDM, RAN, REN) en el mismo mapa.</strong>">Median prices, €/m², supply and what changed in the last 7 days, for every district, municipality and parish — <strong>with the planning layers (PDM, RAN, REN) on the same map.</strong></p>
+          </div>
+        </li>
+        <li class="step-item animate-on-scroll" style="--i: 1">
+          <span class="step-number">02</span>
+          <div class="step-body">
+            <h3 data-en="Choose your area" data-pt="Escolha a sua zona" data-es="Elige tu zona">Choose your area</h3>
+            <p data-en="Compare areas side by side against the national benchmark until you find the one that fits <strong>your budget and the life you picture.</strong>"
+               data-pt="Compare zonas lado a lado com a referência nacional até encontrar a que encaixa <strong>no seu orçamento e na vida que imagina.</strong>"
+               data-es="Compara zonas lado a lado con la referencia nacional hasta encontrar la que encaja <strong>con tu presupuesto y la vida que imaginas.</strong>">Compare areas side by side against the national benchmark until you find the one that fits <strong>your budget and the life you picture.</strong></p>
+          </div>
+        </li>
+        <li class="step-item animate-on-scroll" style="--i: 2">
+          <span class="step-number">03</span>
+          <div class="step-body">
+            <h3 data-en="See every listing in that area" data-pt="Veja todos os imóveis dessa zona" data-es="Ve todos los inmuebles de esa zona">See every listing in that area</h3>
+            <p data-en="One click takes you from the map to Século Explorer with your filters already set: <strong>every portal, without duplicates, scored and pinned on a map.</strong>"
+               data-pt="Um clique leva-o do mapa ao Século Explorer com os filtros já definidos: <strong>todos os portais, sem duplicados, classificados e fixados num mapa.</strong>"
+               data-es="Un clic te lleva del mapa a Século Explorer con los filtros ya puestos: <strong>todos los portales, sin duplicados, puntuados y marcados en un mapa.</strong>">One click takes you from the map to Século Explorer with your filters already set: <strong>every portal, without duplicates, scored and pinned on a map.</strong></p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ D — PORQUÊ (el problema, condensado) ══════════════ -->
+  <section class="section problem-section">
+    <div class="container">
+      <div class="nv-why animate-on-scroll">
+        <span class="section-label" data-en="Why Século" data-pt="Porquê o Século" data-es="Por qué Século">Why Século</span>
+        <h2 data-en="Finding a property shouldn't feel like a second job"
+            data-pt="Procurar propriedade não deve ser um segundo trabalho"
+            data-es="Buscar una propiedad no debería sentirse como un segundo trabajo">Finding a property shouldn't feel like a second job</h2>
+        <ul class="ruled-list">
+          <li><span class="ruled-list__index">01</span><span data-en="Hours lost switching between portals" data-pt="Horas perdidas a alternar entre portais" data-es="Horas perdidas cambiando entre portales">Hours lost switching between portals</span></li>
+          <li><span class="ruled-list__index">02</span><span data-en="The same listing on five different sites, at five different prices" data-pt="O mesmo anúncio em cinco portais diferentes, a cinco preços diferentes" data-es="El mismo anuncio en cinco sitios diferentes, a cinco precios diferentes">The same listing on five different sites, at five different prices</span></li>
+          <li><span class="ruled-list__index">03</span><span data-en="No way to know if a price is fair for the area" data-pt="Sem forma de saber se um preço é justo para a zona" data-es="Sin forma de saber si un precio es justo para la zona">No way to know if a price is fair for the area</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ E — CTA FINAL ══════════════ -->
+  <section class="section cta-section">
+    <div class="container">
+      <div class="cta-block animate-on-scroll">
+        <h2 class="cta-heading" data-en="Start with the map." data-pt="Comece pelo mapa." data-es="Empieza por el mapa.">Start with the map.</h2>
+        <p class="cta-sub" data-en="Every portal. Every listing. One map." data-pt="Cada portal. Cada anúncio. Um mapa." data-es="Cada portal. Cada anuncio. Un mapa.">Every portal. Every listing. One map.</p>
+        <a href="#mapa" class="btn btn-primary cta-btn" data-en="Explore for free" data-pt="Explorar grátis" data-es="Explorar gratis">Explore for free</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════ FOOTER ══════════════ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo">Século Explorer</span>
+          <p class="footer-tagline" data-en="Understand the market, then find your home across 11 Portuguese portals." data-pt="Perceba o mercado e encontre a sua casa em 11 portais portugueses." data-es="Entiende el mercado y encuentra tu hogar en 11 portales portugueses.">Understand the market, then find your home across 11 Portuguese portals.</p>
+        </div>
+        <div>
+          <p class="footer-heading" data-en="Navigation" data-pt="Navegação" data-es="Navegación">Navigation</p>
+          <ul class="footer-links">
+            <li><a href="#mapa" data-en="Market Map" data-pt="Mapa do Mercado" data-es="Mapa del Mercado">Market Map</a></li>
+            <li><a href="#como" data-en="How It Works" data-pt="Como Funciona" data-es="Cómo Funciona">How It Works</a></li>
+            <li><a href="/products.html" data-en="Plans" data-pt="Planos" data-es="Planes">Plans</a></li>
+            <li><a href="/contact.html" data-en="Contact" data-pt="Contacto" data-es="Contacto">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-heading" data-en="Legal" data-pt="Legal" data-es="Legal">Legal</p>
+          <ul class="footer-links">
+            <li><a href="/privacy-policy.html" data-en="Privacy Policy" data-pt="Política de Privacidade" data-es="Política de Privacidad">Privacy Policy</a></li>
+            <li><a href="/terms.html" data-en="Terms &amp; Conditions" data-pt="Termos e Condições" data-es="Términos y Condiciones">Terms &amp; Conditions</a></li>
+            <li><a href="/cookie-policy.html" data-en="Cookie Policy" data-pt="Política de Cookies" data-es="Política de Cookies">Cookie Policy</a></li>
+            <li><a href="/legal-notice.html" data-en="Legal Notice" data-pt="Aviso Legal" data-es="Aviso Legal">Legal Notice</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <p class="footer-heading" data-en="Get Started" data-pt="Começar" data-es="Empezar">Get Started</p>
+          <a href="#mapa" class="btn btn-outline" data-en="Explore for free" data-pt="Explorar grátis" data-es="Explorar gratis">Explore for free</a>
+          <a href="https://www.youtube.com/@seculopt" class="footer-tutorials" target="_blank" rel="noopener" data-en="Video tutorials" data-pt="Tutoriais em vídeo" data-es="Tutoriales en vídeo">Video tutorials</a>
+          <a href="mailto:hello@seculopt.com" class="footer-email">hello@seculopt.com</a>
+          <a href="https://wa.me/351912102647" class="footer-whatsapp" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+      </div>
+      <hr class="footer-divider" />
+      <div class="footer-bottom">
+        <span class="footer-copy" data-en="&copy; 2026 S&eacute;culo Explorer. All rights reserved." data-pt="&copy; 2026 S&eacute;culo Explorer. Todos os direitos reservados." data-es="&copy; 2026 S&eacute;culo Explorer. Todos los derechos reservados.">&copy; 2026 S&eacute;culo Explorer. All rights reserved.</span>
+        <div class="footer-lang">
+          <button class="lang-btn active" data-lang="en">EN</button><span>/</span>
+          <button class="lang-btn" data-lang="pt">PT</button><span>/</span>
+          <button class="lang-btn" data-lang="es">ES</button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/nav.js"></script>
+  <script src="/js/lang.js"></script>
+  <script src="/js/cookies.js"></script>
+  <script src="/novo/novo.js"></script>
+</body>
+</html>
