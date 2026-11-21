@@ -73,30 +73,22 @@
 
   <!-- ══════════════ B — LUNETA (el mapa, dentro de Século) ══════════════ -->
   <section class="nv-mapa" id="mapa" aria-label="Market map">
-    <div class="container nv-mapa__head">
-      <p class="nv-mapa__hint">
-        <span class="nv-dot" aria-hidden="true"></span>
-        <span data-en="Click an area to pin its profile. Change operation, type and bedrooms in the map panel."
-              data-pt="Clique numa zona para fixar a ficha. Mude a operação, o tipo e a tipologia no painel do mapa."
-              data-es="Haz clic en una zona para fijar su ficha. Cambia operación, tipo y tipología en el panel del mapa.">Click an area to pin its profile. Change operation, type and bedrooms in the map panel.</span>
-      </p>
+    <!-- Barra delgada ENCIMA del mapa (21-nov-2026): sin zona = pista; con zona = nombre + botón -->
+    <div class="nv-zona" id="zonaBar" aria-live="polite">
+      <div class="container nv-zona__inner">
+        <p class="nv-zona__txt">
+          <span class="nv-dot" aria-hidden="true"></span>
+          <span class="nv-zona__hint"
+                data-en="Click an area on the map to choose it." data-pt="Clique numa zona do mapa para a escolher." data-es="Haz clic en una zona del mapa para elegirla.">Click an area on the map to choose it.</span>
+          <span class="nv-zona__nome" id="zonaNome"></span>
+          <span class="nv-zona__meta" id="zonaMeta"></span>
+        </p>
+        <a class="btn btn-primary btn-sm nv-zona__btn is-off" id="zonaBtn" href="#mapa" aria-disabled="true"
+           data-en="See listings in this area" data-pt="Ver imóveis nesta zona" data-es="Ver inmuebles en esta zona">See listings in this area</a>
+      </div>
     </div>
     <div class="nv-mapa__frame">
       <iframe id="lunetaFrame" src="https://luneta.seculopt.com/?embed=seculo" title="Luneta — Mapa do Mercado" loading="eager" allow="fullscreen"></iframe>
-    </div>
-
-    <!-- Barra de la zona elegida: el puente Luneta → Século -->
-    <div class="nv-zona" id="zonaBar" aria-live="polite">
-      <div class="container nv-zona__inner">
-        <div class="nv-zona__txt">
-          <span class="nv-zona__label" data-en="Your area" data-pt="A sua zona" data-es="Tu zona">Your area</span>
-          <span class="nv-zona__nome" id="zonaNome"
-                data-en="Pick an area on the map" data-pt="Escolha uma zona no mapa" data-es="Elige una zona en el mapa">Pick an area on the map</span>
-          <span class="nv-zona__meta" id="zonaMeta"></span>
-        </div>
-        <a class="btn btn-primary nv-zona__btn is-off" id="zonaBtn" href="#mapa" aria-disabled="true"
-           data-en="See listings in this area" data-pt="Ver imóveis nesta zona" data-es="Ver inmuebles en esta zona">See listings in this area</a>
-      </div>
     </div>
   </section>
 

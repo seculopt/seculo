@@ -68,15 +68,6 @@
 
 /* ── B · El mapa ── */
 .nv-mapa { position: relative; }
-.nv-mapa__head { padding-top: 18px; padding-bottom: 12px; }
-.nv-mapa__hint {
-  margin: 0;
-  display: flex;
-  gap: 10px;
-  align-items: baseline;
-  font-size: var(--t-small);
-  color: var(--color-mid);
-}
 .nv-dot {
   flex: none;
   width: 8px; height: 8px;
@@ -84,53 +75,53 @@
   transform: translateY(-1px);
 }
 .nv-mapa__frame {
-  border-top: 1px solid var(--rule-strong);
   border-bottom: 1px solid var(--rule-strong);
   background: var(--color-sunken);
 }
 .nv-mapa__frame iframe {
   display: block;
   width: 100%;
-  height: clamp(520px, 78vh, 920px);
+  height: clamp(520px, 82vh, 960px);
   border: 0;
 }
 
-/* Barra de la zona elegida: queda pegada abajo mientras el mapa está en pantalla */
+/* Barra de la zona: UNA línea delgada encima del mapa (21-nov-2026; antes era un banner
+   grande pegado abajo). Sin zona muestra la pista; con zona, nombre + meta + botón. */
 .nv-zona {
-  position: sticky;
-  bottom: 0;
-  z-index: 20;
+  border-top: 1px solid var(--rule-strong);
+  border-bottom: 1px solid var(--rule);
   background: var(--color-bg);
-  border-bottom: 1px solid var(--rule-strong);
-  box-shadow: 0 -1px 0 var(--rule);
 }
 .nv-zona__inner {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 12px 24px;
-  padding-top: 14px;
-  padding-bottom: 14px;
+  gap: 8px 20px;
+  min-height: 52px;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
-.nv-zona__txt { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; min-width: 0; }
-.nv-zona__label {
-  font-family: var(--font-mono);
-  font-size: var(--t-label);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+.nv-zona__txt {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 4px 12px;
+  min-width: 0;
+  flex-wrap: wrap;
+  font-size: var(--t-small);
   color: var(--color-mid);
 }
 .nv-zona__nome {
   font-family: var(--font-display);
-  font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.35rem);
-  color: var(--color-text);
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.15rem);
+  color: var(--color-accent);
 }
-.nv-zona.is-set .nv-zona__nome { color: var(--color-accent); }
-.nv-zona__meta { font-size: var(--t-small); color: var(--color-mid); }
-.nv-zona__btn { white-space: nowrap; }
+.nv-zona__nome:empty, .nv-zona__meta:empty { display: none; }
+.nv-zona.is-set .nv-zona__hint { display: none; }
+.nv-zona__btn { white-space: nowrap; flex: none; min-height: 36px; padding: 8px 16px; }
 .nv-zona__btn.is-off { opacity: 0.38; pointer-events: none; }
 @media (max-width: 599px) {
+  .nv-zona__inner { flex-wrap: wrap; }
   .nv-zona__btn { width: 100%; }
 }
 

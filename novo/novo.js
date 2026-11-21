@@ -39,7 +39,6 @@
     var tp = t(T.tipo[zona.tipoImovel]);
     if (tp) partes.push(tp);
     if (zona.tipologia && zona.tipologia !== 'ALL') partes.push(zona.tipologia);
-    nome.removeAttribute('data-en'); nome.removeAttribute('data-pt'); nome.removeAttribute('data-es');
     nome.textContent = zona.nome;
     meta.textContent = partes.filter(Boolean).join(' · ');
     bar.classList.add('is-set');
